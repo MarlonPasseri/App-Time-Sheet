@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Horas - Registros</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Funcionários</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Projetos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Registros de Horas</h2>
+            <div class="d-flex gap-2">
+                <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="visualizacao" id="detalhado" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="detalhado">Detalhado</label>
+                    
+                    <input type="radio" class="btn-check" name="visualizacao" id="agregado" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="agregado">Agregado Mensal</label>
+                </div>
+                <a href="{{ url_for('registros.adicionar') }}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Adicionar Registro
+                </a>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Filtros</h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('registros.listar') }}" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="funcionario_id" class="form-label">Colaborador</label>
+                        <select class="form-select" id="funcionario_id" name="funcionario_id">
+                            <option value="">Todos</option>
+                            {% for funcionario in funcionarios %}
+                                <option value="{{ funcionario.id }}" {% if filtro_funcionario_id == funcionario.id %}selected{% endif %}>
+                                    {{ funcionario.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="projeto_id" class="form-label">Contrato</label>
+                        <select class="form-select" id="projeto_id" name="projeto_id">
+                            <option value="">Todos</option>
+                            {% for projeto in projetos %}
+                                <option value="{{ projeto.id }}" {% if filtro_projeto_id == projeto.id %}selected{% endif %}>
+                                    {{ projeto.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="mes_ano" class="form-label">Mês/Ano</label>
+                        <input type="month" class="form-control" id="mes_ano" name="mes_ano" value="{{ filtro_mes_ano }}">
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                        <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">Limpar Filtros</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card" id="tabela-detalhada">
+            <div class="card-body">
+                {% if registros %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <a href="?{{ request.query_string.decode() }}&ordenar=colaborador" class="text-decoration-none">
+                                            Colaborador <i class="bi bi-arrow-up-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="?{{ request.query_string.decode() }}&ordenar=contrato" class="text-decoration-none">
+                                            Contrato <i class="bi bi-arrow-up-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>
+                                        <a href="?{{ request.query_string.decode() }}&ordenar=data" class="text-decoration-none">
+                                            Data <i class="bi bi-arrow-up-down"></i>
+                                        </a>
+                                    </th>
+                                    <th>Horas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registro in registros %}
+                                    <tr>
+                                        <td>{{ registro.funcionario }}</td>
+                                        <td>{{ registro.projeto }}</td>
+                                        <td>{{ registro.data }}</td>
+                                        <td>{{ registro.horas_trabalhadas }}</td>
+                                        <td>
+                                            <a href="{{ url_for('registros.editar', id=registro.id) }}" class="btn btn-sm btn-primary">
+                                                Editar
+                                            </a>
+                                            <form action="{{ url_for('registros.remover', id=registro.id) }}" method="POST" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-danger btn-delete">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <td colspan="3"><strong>Total de Horas:</strong></td>
+                                    <td><strong>{{ total_horas }}</strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        Nenhum registro encontrado. <a href="{{ url_for('registros.adicionar') }}">Adicionar um registro</a>.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tabela Agregada (inicialmente oculta) -->
+        <div class="card" id="tabela-agregada" style="display: none;">
+            <div class="card-body">
+                {% if registros_agregados %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Colaborador</th>
+                                    <th>Contrato</th>
+                                    <th>Mês/Ano</th>
+                                    <th>Total de Horas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registro in registros_agregados %}
+                                    <tr>
+                                        <td>{{ registro.colaborador }}</td>
+                                        <td>{{ registro.contrato }}</td>
+                                        <td>{{ registro.mes_ano }}</td>
+                                        <td>{{ registro.total_horas }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-info">
+                                    <td colspan="3"><strong>Total Geral:</strong></td>
+                                    <td><strong>{{ total_horas_agregado }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        Nenhum registro encontrado para agregação.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 Sistema de Controle de Horas</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
+
+    <script>
+        // Script para alternar entre visualização detalhada e agregada
+        document.addEventListener('DOMContentLoaded', function() {
+            const detalhadoRadio = document.getElementById('detalhado');
+            const agregadoRadio = document.getElementById('agregado');
+            const tabelaDetalhada = document.getElementById('tabela-detalhada');
+            const tabelaAgregada = document.getElementById('tabela-agregada');
+            
+            function alternarVisualizacao() {
+                if (detalhadoRadio.checked) {
+                    tabelaDetalhada.style.display = 'block';
+                    tabelaAgregada.style.display = 'none';
+                } else if (agregadoRadio.checked) {
+                    tabelaDetalhada.style.display = 'none';
+                    tabelaAgregada.style.display = 'block';
+                }
+            }
+            
+            detalhadoRadio.addEventListener('change', alternarVisualizacao);
+            agregadoRadio.addEventListener('change', alternarVisualizacao);
+            
+            // Inicializar com visualização detalhada
+            alternarVisualizacao();
+        });
+    </script>
+

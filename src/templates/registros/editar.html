@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Horas - Editar Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Funcionários</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Projetos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Editar Registro de Horas</h2>
+            <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">
+                Voltar para Lista
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('registros.editar', id=registro.id) }}">
+                    <div class="mb-3">
+                        <label for="funcionario_id" class="form-label">Funcionário</label>
+                        <select class="form-select" id="funcionario_id" name="funcionario_id" required>
+                            <option value="">Selecione um funcionário</option>
+                            {% for funcionario in funcionarios %}
+                                <option value="{{ funcionario.id }}" {% if funcionario.id == registro.funcionario_id %}selected{% endif %}>
+                                    {{ funcionario.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projeto_id" class="form-label">Projeto</label>
+                        <select class="form-select" id="projeto_id" name="projeto_id" required>
+                            <option value="">Selecione um projeto</option>
+                            {% for projeto in projetos %}
+                                <option value="{{ projeto.id }}" {% if projeto.id == registro.projeto_id %}selected{% endif %}>
+                                    {{ projeto.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data" class="form-label">Data</label>
+                        <input type="date" class="form-control" id="data" name="data" value="{{ registro.data }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="horas_trabalhadas" class="form-label">Horas Trabalhadas</label>
+                        <input type="number" class="form-control" id="horas_trabalhadas" name="horas_trabalhadas" 
+                               step="0.5" min="0.5" max="24" value="{{ registro.horas_trabalhadas }}" required>
+                        <div class="form-text">Informe o número de horas trabalhadas (ex: 8.5 para 8 horas e 30 minutos)</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 Sistema de Controle de Horas</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
