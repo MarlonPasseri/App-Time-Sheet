@@ -100,8 +100,7 @@
                                 <tr>
                                     <td>{{ registro.funcionario }}</td>
                                     <td>{{ registro.projeto }}</td>
-                                    <td>{{ registro.data }}</td>
-                                    <!-- <td>{{ registro.horas_trabalhadas }}</td> -->
+                                    <td>{{ registro.data | formatar_data }}</td>
                                     <td>{{ registro.horas_trabalhadas|formatar_horas }}</td>
                                     <td>
                                         <a href="{{ url_for('registros.editar', id=registro.id) }}" class="btn btn-sm btn-primary">
@@ -111,7 +110,7 @@
                                             <!-- <button type="submit" class="btn btn-sm btn-danger btn-delete">
                                                 Excluir
                                             </button> -->
-                                            <button r-id="{{ registro.id }}" r-func="{{ registro.funcionario }}" r-proj="{{ registro.projeto }}" r-data="{{ registro.data }}" r-horas="{{ registro.horas_trabalhadas }}" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarExcluir">
+                                            <button r-id="{{ registro.id }}" r-func="{{ registro.funcionario }}" r-proj="{{ registro.projeto }}" r-data="{{ registro.data }}" r-horas="{{ registro.horas_trabalhadas|formatar_horas }}" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalConfirmarExcluir">
                                                 Excluir
                                             </button>
                                         <!-- </form> -->
@@ -122,7 +121,7 @@
                         <tfoot>
                             <tr class="table-info">
                                 <td colspan="3"><strong>Total de Horas:</strong></td>
-                                <td><strong>{{ total_horas }}</strong></td>
+                                <td><strong>{{ total_horas|formatar_horas }}</strong></td>
                                 <td></td>
                             </tr>
                         </tfoot>
@@ -156,14 +155,14 @@
                                     <td>{{ registro.colaborador }}</td>
                                     <td>{{ registro.contrato }}</td>
                                     <td>{{ registro.mes_ano }}</td>
-                                    <td>{{ registro.total_horas }}</td>
+                                    <td>{{ registro.total_horas|formatar_horas }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                         <tfoot>
                             <tr class="table-info">
                                 <td colspan="3"><strong>Total Geral:</strong></td>
-                                <td><strong>{{ total_horas_agregado }}</strong></td>
+                                <td><strong>{{ total_horas_agregado|formatar_horas }}</strong></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -232,7 +231,7 @@
                 </div>
                 <div class="modal-footer">
                     <form id="delete-form" method="POST" class="d-inline">
-                        <button type="button" class="btn btn-primary">Sim</button>
+                        <button type="submit" class="btn btn-primary">Sim</button>
                     </form>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                 </div>
@@ -265,7 +264,7 @@
             horasSpan.textContent = horas;
 
             // atualiza o action do form
-            formExcluir.action = "{{ url_for('registros.remover', id=0) }}".replace('0', id);
+            formExcluir.action = "{{ url_for('registros.remover', id=0) }}".replace("0", id);
         });
     </script>
 {% endblock %}

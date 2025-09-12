@@ -88,16 +88,27 @@
         });
 
         const radios = document.getElementsByName('tipoData');
-        const inputData = document.getElementById('inputData')
+        const inputData = document.getElementById('inputData');
+        const inputHora = document.getElementById('horas_trabalhadas');
+
+        if (document.getElementById('mesAno').checked) {
+            // troca para mês/ano
+            inputHora.removeAttribute('max');
+        } else {
+            // volta para dia/mês/ano
+            inputHora.max = '24';
+        }
 
         radios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (document.getElementById('mesAno').checked) {
                     // troca para mês/ano
                     inputData.type = 'month';
+                    inputHora.removeAttribute('max');
                 } else {
                     // volta para dia/mês/ano
                     inputData.type = 'date';
+                    inputHora.max = '24';
                 }
             });
         });

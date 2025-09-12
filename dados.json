@@ -565,30 +565,6 @@
       "mes_ano_referencia": "2025-06"
     },
     {
-      "id": 14,
-      "funcionario_id": 1,
-      "projeto_id": 9010,
-      "data": "2025-09-11",
-      "horas_trabalhadas": 2.5,
-      "mes_ano_referencia": "2025-09"
-    },
-    {
-      "id": 15,
-      "funcionario_id": 1,
-      "projeto_id": 9010,
-      "data": "2025-09-11",
-      "horas_trabalhadas": 2.5,
-      "mes_ano_referencia": "2025-09"
-    },
-    {
-      "id": 16,
-      "funcionario_id": 6,
-      "projeto_id": 9010,
-      "data": "2025-09-11",
-      "horas_trabalhadas": 2.5,
-      "mes_ano_referencia": "2025-09"
-    },
-    {
       "id": 17,
       "funcionario_id": 1,
       "projeto_id": 9010,
@@ -597,20 +573,12 @@
       "mes_ano_referencia": "2025-09"
     },
     {
-      "id": 18,
+      "id": 21,
       "funcionario_id": 1,
       "projeto_id": 9010,
-      "data": "2025-09-11",
-      "horas_trabalhadas": 13.0,
+      "data": "2025-09",
+      "horas_trabalhadas": 25.0,
       "mes_ano_referencia": "2025-09"
-    },
-    {
-      "id": 19,
-      "funcionario_id": 1,
-      "projeto_id": 9010,
-      "data": "2025-10",
-      "horas_trabalhadas": 15.0,
-      "mes_ano_referencia": "2025-10"
     }
   ],
   "usuarios": [
