@@ -1,3 +1,10 @@
+# from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, send_file, session
+# from src.models.database import db
+# from src.utils.auth_utils import login_required, admin_required
+# from src.utils.relatorio_personalizado import adaptar_exportacao_relatorio_mensal
+# from src.routes.registros import registros_bp
+# from datetime import datetime
+
 @registros_bp.route('/exportar/personalizado', methods=['POST'])
 @login_required
 def exportar_personalizado():

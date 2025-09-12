@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Controle de Horas - Colaboradores</title>
+{% endblock %}
+
+{% block main %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Lista de Colaboradores</h2>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('colaboradores.adicionar') }}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Adicionar Colaborador
+            </a>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImportarColaboradores">
+                    <i class="bi bi-upload"></i> Importar Lista
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            {% if funcionarios %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="tabelaFuncionarios">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for funcionario in funcionarios %}
+                                <tr>
+                                    <td>{{ funcionario.id }}</td>
+                                    <td>{{ funcionario.nome }}</td>
+                                    <td>
+                                        <a href="{{ url_for('colaboradores.editar', id=funcionario.id) }}" class="btn btn-sm btn-primary">
+                                            Editar
+                                        </a>
+                                        <form action="{{ url_for('colaboradores.remover', id=funcionario.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-delete">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    Nenhum colaborador cadastrado. <a href="{{ url_for('colaboradores.adicionar') }}">Adicionar um colaborador</a>.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <!-- Modal para Importar Colaboradores -->
+    <div class="modal fade" id="modalImportarColaboradores" tabindex="-1" aria-labelledby="modalImportarColaboradoresLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalImportarColaboradoresLabel">Importar Lista de Colaboradores</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ url_for('contratos.importar_lista') }}" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="arquivo_colaboradores" class="form-label">Arquivo Excel (.xlsx)</label>
+                            <input type="file" class="form-control" id="arquivo_colaboradores" name="arquivo_colaboradores" accept=".xlsx,.xls" required>
+                            <div class="form-text">
+                                O arquivo deve conter as colunas: ID e Nome (ou GP e Nome)
+                            </div>
+                        </div>
+                        <div class="alert alert-info">
+                            <strong>Formato esperado:</strong><br>
+                            - Coluna A: ID/GP do contrato<br>
+                            - Coluna B: Nome do contrato<br>
+                            - Primeira linha pode conter cabeçalhos
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Importar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

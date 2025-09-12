@@ -2,34 +2,34 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from src.models.database import db
 from src.utils.auth_utils import login_required, admin_required
 
-projetos_bp = Blueprint('projetos', __name__)
+contratos_bp = Blueprint('contratos', __name__)
 
-@projetos_bp.route('/')
+@contratos_bp.route('/')
 @login_required
 def listar():
-    """Exibe a lista de projetos."""
+    """Exibe a lista de contratos."""
     projetos = db.listar_projetos()
-    return render_template('projetos/listar.html', projetos=projetos)
+    return render_template('contratos/listar.html', projetos=projetos)
 
-@projetos_bp.route('/detalhes/<int:id>')
+@contratos_bp.route('/detalhes/<int:id>')
 @admin_required
 def detalhes(id):
     """Exibe os detalhes de um projeto. Acesso restrito a administradores."""
     projeto = db.obter_projeto(id)
     if not projeto:
         flash('Projeto não encontrado!', 'danger')
-        return redirect(url_for('projetos.listar'))
+        return redirect(url_for('contratos.listar'))
     
-    return render_template('projetos/detalhes.html', projeto=projeto, db=db)
+    return render_template('contratos/detalhes.html', projeto=projeto, db=db)
 
 # API para uso em AJAX
-@projetos_bp.route('/api/listar', methods=['GET'])
+@contratos_bp.route('/api/listar', methods=['GET'])
 def api_listar():
-    """Retorna a lista de projetos em formato JSON."""
+    """Retorna a lista de contratos em formato JSON."""
     projetos = db.listar_projetos()
     return jsonify([p.to_dict() for p in projetos])
 
-@projetos_bp.route('/importar_lista', methods=['POST'])
+@contratos_bp.route('/importar_lista', methods=['POST'])
 @admin_required
 def importar_lista():
     """Importa uma lista de contratos a partir de um arquivo Excel."""
@@ -40,16 +40,16 @@ def importar_lista():
     try:
         if 'arquivo_contratos' not in request.files:
             flash('Nenhum arquivo foi selecionado!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         arquivo = request.files['arquivo_contratos']
         if arquivo.filename == '':
             flash('Nenhum arquivo foi selecionado!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         if not arquivo.filename.lower().endswith(('.xlsx', '.xls')):
             flash('Formato de arquivo inválido! Use apenas arquivos Excel (.xlsx ou .xls)', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         # Lê o arquivo Excel
         df = pd.read_excel(arquivo)
@@ -57,7 +57,7 @@ def importar_lista():
         # Verifica se o arquivo tem pelo menos 2 colunas
         if len(df.columns) < 2:
             flash('O arquivo deve ter pelo menos 2 colunas (ID e Nome)!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         # Assume que as duas primeiras colunas são ID e Nome
         df.columns = ['id', 'nome'] + list(df.columns[2:])
@@ -103,5 +103,5 @@ def importar_lista():
     except Exception as e:
         flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
     
-    return redirect(url_for('projetos.listar'))
+    return redirect(url_for('contratos.listar'))
 

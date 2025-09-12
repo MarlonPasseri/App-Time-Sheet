@@ -512,7 +512,20 @@ class BancoDeDados:
             registro.data = data
             # Atualizar o mês/ano de referência
             if isinstance(data, str):
-                data_obj = datetime.strptime(data, "%Y-%m-%d")
+                # data_obj = datetime.strptime(data, "%Y-%m-%d")
+                # registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
+
+                try:
+                    # Tenta com dia
+                    data_obj = datetime.strptime(data, "%Y-%m-%d")
+                except ValueError:
+                    try:
+                        # Se não tiver dia, não assume dia 01
+                        data_obj = datetime.strptime(data, "%Y-%m")
+                        # data = data + "-01"
+                    except ValueError:
+                        data_obj = None
+                
                 registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
             elif isinstance(data, datetime):
                 registro.mes_ano_referencia = data.strftime("%Y-%m")
@@ -568,18 +581,33 @@ class RegistroHoras:
         self.id = id
         self.funcionario_id = funcionario_id
         self.projeto_id = projeto_id
-        self.data = data
+        # self.data = data
         self.horas_trabalhadas = horas_trabalhadas
         
         # Calcular o mês/ano de referência automaticamente
         if isinstance(data, str):
-            data_obj = datetime.strptime(data, "%Y-%m-%d")
+            # data_obj = datetime.strptime(data, "%Y-%m-%d")
+            # self.mes_ano_referencia = data_obj.strftime("%Y-%m")
+
+            try:
+                # Tenta com dia
+                data_obj = datetime.strptime(data, "%Y-%m-%d")
+            except ValueError:
+                try:
+                    # Se não tiver dia, não assume dia 01
+                    data_obj = datetime.strptime(data, "%Y-%m")
+                    # data = data + "-01"
+                except ValueError:
+                    data_obj = None
+            
+            # self.data = data
             self.mes_ano_referencia = data_obj.strftime("%Y-%m")
         elif isinstance(data, datetime):
             self.mes_ano_referencia = data.strftime("%Y-%m")
         else:
             self.mes_ano_referencia = None
     
+        self.data = data
     def to_dict(self):
         return {
             'id': self.id,

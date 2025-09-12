@@ -19,6 +19,10 @@
     {
       "id": 5,
       "nome": "Guilherme Fernandes"
+    },
+    {
+      "id": 6,
+      "nome": "Brennda"
     }
   ],
   "projetos": [
@@ -559,6 +563,54 @@
       "data": "2025-06-12",
       "horas_trabalhadas": 9.0,
       "mes_ano_referencia": "2025-06"
+    },
+    {
+      "id": 14,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-09-11",
+      "horas_trabalhadas": 2.5,
+      "mes_ano_referencia": "2025-09"
+    },
+    {
+      "id": 15,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-09-11",
+      "horas_trabalhadas": 2.5,
+      "mes_ano_referencia": "2025-09"
+    },
+    {
+      "id": 16,
+      "funcionario_id": 6,
+      "projeto_id": 9010,
+      "data": "2025-09-11",
+      "horas_trabalhadas": 2.5,
+      "mes_ano_referencia": "2025-09"
+    },
+    {
+      "id": 17,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-09-11",
+      "horas_trabalhadas": 2.5,
+      "mes_ano_referencia": "2025-09"
+    },
+    {
+      "id": 18,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-09-11",
+      "horas_trabalhadas": 13.0,
+      "mes_ano_referencia": "2025-09"
+    },
+    {
+      "id": 19,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-10",
+      "horas_trabalhadas": 15.0,
+      "mes_ano_referencia": "2025-10"
     }
   ],
   "usuarios": [
@@ -577,6 +629,14 @@
       "senha_hash": "8d84c33305d5cb0ff0db30b72b9a7ce1f18876e66112ed9e4dfaa2efded5d223",
       "tipo": "funcionario",
       "funcionario_id": 4
+    },
+    {
+      "id": 3,
+      "nome": "Brennda",
+      "email": "brennda@geoprojetos.com.br",
+      "senha_hash": "12c4713bd3dbc94668feb0216f9dd82993cf96ff77dc34240d32cd73ef0f782c",
+      "tipo": "funcionario",
+      "funcionario_id": 6
     }
   ]
 }

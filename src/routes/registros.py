@@ -104,12 +104,18 @@ def adicionar():
         funcionario_id = request.form.get('funcionario_id', type=int)
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
+        type_data = request.form.get('tipoData')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
+            print(data_str)
             # Converte a data para o formato correto
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                if type_data == 'dmy':
+                    data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                else:
+                    data = datetime.strptime(data_str, '%Y-%m').strftime('%Y-%m')
+                
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
                     projeto_id=projeto_id,
@@ -119,7 +125,7 @@ def adicionar():
                 
                 if registro:
                     flash('Registro de horas adicionado com sucesso!', 'success')
-                    return redirect(url_for('registros.listar'))
+                    return redirect(url_for('registros.adicionar'))
                 else:
                     flash('Erro ao adicionar registro de horas!', 'danger')
             except ValueError:
@@ -144,12 +150,17 @@ def editar(id):
         funcionario_id = request.form.get('funcionario_id', type=int)
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
+        type_data = request.form.get('tipoData')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                # data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                if type_data == 'dmy':
+                    data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                else:
+                    data = datetime.strptime(data_str, '%Y-%m').strftime('%Y-%m')
                 if db.atualizar_registro_horas(
                     id=id,
                     funcionario_id=funcionario_id,
@@ -224,6 +235,8 @@ def exportar_excel():
     for registro in registros:
         funcionario = db.obter_funcionario(registro.funcionario_id)
         projeto = db.obter_projeto(registro.projeto_id)
+        print(registro)
+        print('passei aqui')
         
         dados.append({
             'ID': registro.id,

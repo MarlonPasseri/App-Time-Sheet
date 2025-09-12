@@ -116,6 +116,4 @@ Para dúvidas ou problemas, consulte o guia de acesso à rede incluído no pacot
 
 ---
 **Versão:** 2.0  
-**Data:** Junho 2025  
-**Desenvolvido por:** Manus AI
-
+**Data:** Junho 2025

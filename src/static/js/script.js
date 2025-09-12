@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Confirmação para exclusão
+    // Confirmação para exclusão - EXCLUIR NAO EXISTE MAIS!!!
     const deleteButtons = document.querySelectorAll('.btn-delete');
     if (deleteButtons) {
         deleteButtons.forEach(function(button) {
