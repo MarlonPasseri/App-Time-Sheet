@@ -1,79 +1,78 @@
 {% extends "base.html" %}
 
-{% block title %}Bem-vindo ao Digimax - Controle de Horas{% endblock %}
+{% block title %}Início - App Time Sheet{% endblock %}
+
+{% block page_header %}Bem-vindo ao App Time Sheet{% endblock %}
 
 {% block content %}
-<div class="hero-section text-center py-5">
-    <div class="container">
-        <h1 class="display-4 text-dark mb-3">Bem-vindo ao <span class="text-accent-pink">Digimax</span></h1>
-        <p class="lead text-light mb-4">Gerencie as horas trabalhadas por colaboradores em cada contrato de forma simples e eficiente.</p>
-        <a href="{{ url_for("registros.adicionar") }}" class="btn btn-primary btn-lg">Registrar Horas</a>
-    </div>
-</div>
-
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card mb-4">
-                <div class="card-header">Visão Geral</div>
-                <div class="card-body">
-                    <p class="card-text">Utilize o menu de navegação para acessar as diferentes funcionalidades do sistema. Cadastre colaboradores, gerencie contratos e registre as horas trabalhadas de forma intuitiva.</p>
-                    <p class="card-text">Com o Digimax, você tem controle total sobre a alocação de recursos e o progresso dos seus projetos.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">Colaboradores</div>
-                <div class="card-body">
-                    <p class="card-text">Cadastre e gerencie os colaboradores da empresa, atribuindo-os a diferentes projetos.</p>
-                    <a href="{{ url_for("funcionarios.listar") }}" class="btn btn-primary">Gerenciar Colaboradores</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">Contratos</div>
-                <div class="card-body">
-                    <p class="card-text">Visualize e gerencie a lista de contratos e projetos ativos da sua empresa.</p>
-                    <a href="{{ url_for("projetos.listar") }}" class="btn btn-primary">Ver Contratos</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-header">Registros de Horas</div>
-                <div class="card-body">
-                    <p class="card-text">Acompanhe e registre as horas trabalhadas por cada colaborador em seus respectivos projetos.</p>
-                    <a href="{{ url_for("registros.listar") }}" class="btn btn-primary">Ver Registros</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">Exportar Relatórios</div>
-                <div class="card-body">
-                    <p class="card-text">Gere relatórios detalhados em formato Excel com cálculos automáticos para análise.</p>
-                    <a href="{{ url_for("registros.exportar") }}" class="btn btn-primary">Exportar</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card mb-4">
-                <div class="card-header">Configurações de Perfil</div>
-                <div class="card-body">
-                    <p class="card-text">Acesse e atualize suas informações de perfil e configurações de conta.</p>
-                    <a href="{{ url_for("auth.perfil") }}" class="btn btn-primary">Meu Perfil</a>
-                </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-title">Gerencie suas horas de trabalho de forma eficiente.</h2>
+                <p class="text-muted">Com o App Time Sheet, você pode registrar suas horas, gerenciar colaboradores e contratos, e gerar relatórios detalhados.</p>
+                {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for("auth.registro") }}" class="btn btn-primary mt-3">Comece Agora</a>
+                {% else %}
+                    <p class="text-muted mt-3">Navegue pelo menu lateral para acessar as funcionalidades.</p>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
+
+{% if current_user.is_authenticated %}
+<div class="row mt-4">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Meus Registros Recentes</h5>
+                {% if registros_recentes %}
+                    <ul class="list-group list-group-flush">
+                        {% for registro in registros_recentes %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ registro.data }}</strong>: {{ registro.horas_trabalhadas }} horas em {{ registro.projeto }}
+                                </div>
+                                <a href="{{ url_for("registros.editar", id=registro.id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="text-end mt-3">
+                        <a href="{{ url_for("registros.listar") }}" class="btn btn-sm btn-info">Ver Todos</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhum registro recente encontrado. <a href="{{ url_for("registros.adicionar") }}">Adicionar um registro</a>.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Meus Projetos Ativos</h5>
+                {% if projetos_ativos %}
+                    <ul class="list-group list-group-flush">
+                        {% for projeto in projetos_ativos %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ projeto.nome }}</strong>
+                                </div>
+                                <a href="{{ url_for("projetos.detalhes", id=projeto.id) }}" class="btn btn-sm btn-secondary">Ver Detalhes</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="text-end mt-3">
+                        <a href="{{ url_for("projetos.listar") }}" class="btn btn-sm btn-info">Ver Todos</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted">Nenhum projeto ativo encontrado.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 

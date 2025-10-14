@@ -1,47 +1,44 @@
 /* ===================================
-   Digimax - Digital Marketing Agency
+   App Time Sheet - Tema Claro
    Estilo CSS Personalizado
    =================================== */
 
 /* Importação de fontes do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
 /* ===================================
    1. VARIÁVEIS CSS
    =================================== */
 :root {
     /* Cores Principais */
-    --color-primary: #7c3aed;        /* Roxo vibrante */
-    --color-secondary: #ec4899;      /* Rosa vibrante */
-    --color-accent-pink: #f472b6;    /* Rosa claro */
-    --color-accent-purple: #a78bfa;  /* Roxo claro */
+    --color-primary: #4a90e2;        /* Azul vibrante */
+    --color-secondary: #50e3c2;      /* Verde água vibrante */
+    --color-accent-blue: #7ed6df;    /* Azul claro */
+    --color-accent-green: #a8e6cf;   /* Verde claro */
     
     /* Cores de Fundo */
-    --color-bg-dark: #0f0a1f;        /* Roxo escuro profundo */
-    --color-bg-darker: #0a0614;      /* Roxo ainda mais escuro */
-    --color-bg-card: #1a1330;        /* Roxo escuro para cards */
-    --color-bg-card-hover: #221a3d;  /* Roxo escuro para hover */
+    --color-bg-light: #f8f9fa;       /* Fundo claro principal */
+    --color-bg-lighter: #ffffff;     /* Fundo ainda mais claro */
+    --color-bg-card: #ffffff;        /* Fundo branco para cards */
+    --color-bg-card-hover: #f0f0f0;  /* Cinza claro para hover */
     
     /* Cores de Texto */
+    --color-text-dark: #343a40;
+    --color-text-muted: #6c757d;
     --color-text-light: #ffffff;
-    --color-text-muted: #a0a0b8;
-    --color-text-dark: #2d2d3a;
     
     /* Cores de Borda */
-    --color-border: #2d2550;
-    --color-border-light: #3d3565;
+    --color-border: #dee2e6;
+    --color-border-light: #ced4da;
     
     /* Sombras */
-    --shadow-sm: 0 2px 8px rgba(124, 58, 237, 0.1);
-    --shadow-md: 0 4px 16px rgba(124, 58, 237, 0.15);
-    --shadow-lg: 0 8px 32px rgba(124, 58, 237, 0.2);
-    --shadow-xl: 0 16px 48px rgba(124, 58, 237, 0.25);
-    --shadow-glow: 0 0 30px rgba(124, 58, 237, 0.4);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
     
     /* Gradientes */
-    --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
-    --gradient-secondary: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-    --gradient-dark: linear-gradient(180deg, #0f0a1f 0%, #1a1330 100%);
+    --gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    --gradient-secondary: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent-green) 100%);
     
     /* Tipografia */
     --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -57,10 +54,10 @@
     --spacing-2xl: 4rem;
     
     /* Border Radius */
-    --radius-sm: 0.5rem;
-    --radius-md: 1rem;
-    --radius-lg: 1.5rem;
-    --radius-xl: 2rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
     
     /* Transições */
     --transition-fast: 0.2s ease;
@@ -85,12 +82,8 @@ html {
 body {
     font-family: var(--font-family-primary);
     line-height: var(--line-height-base);
-    color: var(--color-text-light);
-    background: var(--color-bg-dark);
-    background-image: 
-        radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
-    background-attachment: fixed;
+    color: var(--color-text-dark);
+    background-color: var(--color-bg-light);
     overflow-x: hidden;
 }
 
@@ -101,32 +94,32 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     line-height: 1.2;
     margin-bottom: var(--spacing-md);
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
 }
 
 h1 {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 900;
     letter-spacing: -0.02em;
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     font-weight: 800;
 }
 
 h3 {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
 }
 
 h4 {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 600;
 }
 
 h5 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 600;
 }
 
@@ -150,88 +143,175 @@ a:hover {
     color: var(--color-secondary);
 }
 
-.text-accent-pink {
-    color: var(--color-accent-pink);
+.text-primary {
+    color: var(--color-primary) !important;
 }
 
-.text-accent-purple {
-    color: var(--color-accent-purple);
+.text-secondary {
+    color: var(--color-secondary) !important;
 }
 
 .text-muted {
-    color: var(--color-text-muted);
+    color: var(--color-text-muted) !important;
+}
+
+.text-light {
+    color: var(--color-text-light) !important;
 }
 
 .text-dark {
-    color: var(--color-text-dark);
+    color: var(--color-text-dark) !important;
 }
 
 /* ===================================
-   4. NAVBAR
+   4. LAYOUT PRINCIPAL (SIDEBAR + CONTEÚDO)
    =================================== */
-.navbar {
-    background: rgba(15, 10, 31, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--color-border);
-    padding: var(--spacing-md) 0;
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--color-bg-lighter);
+    border-right: 1px solid var(--color-border);
+    padding: var(--spacing-lg) var(--spacing-md);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
     position: sticky;
     top: 0;
-    z-index: 1000;
-    transition: all var(--transition-base);
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 999;
 }
 
-.navbar.scrolled {
-    background: rgba(15, 10, 31, 0.98);
-    box-shadow: var(--shadow-md);
+.sidebar-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
 }
 
-.navbar-brand {
-    font-size: 1.5rem;
+.sidebar-header .app-logo {
+    font-size: 1.8rem;
     font-weight: 800;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    transition: transform var(--transition-fast);
+    color: var(--color-primary);
+    text-decoration: none;
 }
 
-.navbar-brand:hover {
-    transform: scale(1.05);
+.sidebar-header .app-name {
+    font-size: 1.2rem;
+    color: var(--color-text-dark);
+    margin-top: var(--spacing-xs);
 }
 
-.nav-link {
-    color: var(--color-text-muted) !important;
-    font-weight: 500;
-    padding: var(--spacing-xs) var(--spacing-md) !important;
-    border-radius: var(--radius-sm);
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.sidebar-menu-item {
+    margin-bottom: var(--spacing-sm);
+}
+
+.sidebar-menu-link {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-md);
     transition: all var(--transition-fast);
+}
+
+.sidebar-menu-link:hover {
+    background-color: var(--color-bg-card-hover);
+    color: var(--color-primary);
+}
+
+.sidebar-menu-link.active {
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-menu-link.active:hover {
+    color: var(--color-text-light);
+}
+
+.sidebar-menu-link i {
+    margin-right: var(--spacing-sm);
+    font-size: 1.1rem;
+}
+
+.main-content-area {
+    flex-grow: 1;
+    padding: var(--spacing-xl);
+    background-color: var(--color-bg-light);
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.content-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.user-profile-dropdown {
     position: relative;
 }
 
-.nav-link::after {
-    content: '';
+.user-profile-dropdown .dropdown-toggle {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-dark);
+    text-decoration: none;
+}
+
+.user-profile-dropdown .dropdown-toggle img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: var(--spacing-xs);
+    border: 2px solid var(--color-primary);
+}
+
+.user-profile-dropdown .dropdown-menu {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: var(--gradient-primary);
-    transition: width var(--transition-base);
+    right: 0;
+    background-color: var(--color-bg-lighter);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    list-style: none;
+    padding: var(--spacing-xs) 0;
+    min-width: 150px;
+    z-index: 1000;
+    display: none;
 }
 
-.nav-link:hover {
-    color: var(--color-text-light) !important;
-    background: rgba(124, 58, 237, 0.1);
+.user-profile-dropdown.show .dropdown-menu {
+    display: block;
 }
 
-.nav-link:hover::after {
-    width: 80%;
+.user-profile-dropdown .dropdown-item {
+    display: block;
+    padding: var(--spacing-xs) var(--spacing-md);
+    color: var(--color-text-dark);
+    text-decoration: none;
+    transition: background-color var(--transition-fast);
 }
 
-.nav-link.active {
-    color: var(--color-text-light) !important;
-    background: rgba(124, 58, 237, 0.15);
+.user-profile-dropdown .dropdown-item:hover {
+    background-color: var(--color-bg-card-hover);
 }
 
 /* ===================================
@@ -250,7 +330,7 @@ a:hover {
 }
 
 .btn::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -269,34 +349,54 @@ a:hover {
 .btn-primary {
     background: var(--gradient-primary);
     color: var(--color-text-light);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .btn-secondary {
-    background: var(--color-bg-card);
-    color: var(--color-text-light);
+    background-color: var(--color-bg-card-hover);
+    color: var(--color-text-dark);
     border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover {
-    background: var(--color-bg-card-hover);
+    background-color: var(--color-border-light);
     border-color: var(--color-border-light);
     transform: translateY(-2px);
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    background-color: #dc3545;
     color: var(--color-text-light);
 }
 
 .btn-danger:hover {
+    background-color: #c82333;
     transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: var(--color-text-light);
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: var(--color-text-light);
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    transform: translateY(-2px);
 }
 
 .btn-sm {
@@ -310,7 +410,7 @@ a:hover {
 }
 
 /* ===================================
-   6. CARDS
+   6. CARDS (Estilo adaptado para tema claro)
    =================================== */
 .card {
     background: var(--color-bg-card);
@@ -329,10 +429,11 @@ a:hover {
 }
 
 .card-header {
-    background: transparent;
+    background: var(--color-bg-lighter);
     border-bottom: 1px solid var(--color-border);
     padding-bottom: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
+    color: var(--color-text-dark);
 }
 
 .card-body {
@@ -343,6 +444,7 @@ a:hover {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
+    color: var(--color-text-dark);
 }
 
 /* ===================================
@@ -352,17 +454,17 @@ a:hover {
     display: block;
     margin-bottom: var(--spacing-xs);
     font-weight: 500;
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
 }
 
 .form-control,
 .form-select {
     width: 100%;
     padding: 0.75rem 1rem;
-    background: var(--color-bg-darker);
+    background: var(--color-bg-lighter);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    color: var(--color-text-light);
+    color: var(--color-text-dark);
     font-family: var(--font-family-primary);
     transition: all var(--transition-fast);
 }
@@ -371,7 +473,7 @@ a:hover {
 .form-select:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
 
 .form-control::placeholder {
@@ -379,7 +481,7 @@ a:hover {
 }
 
 .form-check-input {
-    background-color: var(--color-bg-darker);
+    background-color: var(--color-bg-lighter);
     border-color: var(--color-border);
 }
 
@@ -398,8 +500,8 @@ a:hover {
 }
 
 .table thead th {
-    background: var(--color-bg-darker);
-    color: var(--color-text-light);
+    background: var(--color-bg-lighter);
+    color: var(--color-text-dark);
     font-weight: 600;
     padding: var(--spacing-md);
     border-bottom: 2px solid var(--color-border);
@@ -409,7 +511,7 @@ a:hover {
 .table tbody td {
     padding: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-muted);
+    color: var(--color-text-dark);
 }
 
 .table tbody tr {
@@ -421,7 +523,7 @@ a:hover {
 }
 
 .table-hover tbody tr:hover {
-    background: rgba(124, 58, 237, 0.05);
+    background: rgba(74, 144, 226, 0.05);
 }
 
 /* ===================================
@@ -435,60 +537,59 @@ a:hover {
 }
 
 .alert-success {
-    background: rgba(34, 197, 94, 0.1);
-    border-color: rgba(34, 197, 94, 0.3);
-    color: #86efac;
+    background: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #28a745;
 }
 
 .alert-danger {
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: #fca5a5;
+    background: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
 }
 
 .alert-warning {
-    background: rgba(251, 191, 36, 0.1);
-    border-color: rgba(251, 191, 36, 0.3);
-    color: #fde047;
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffc107;
 }
 
 .alert-info {
-    background: rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.3);
-    color: #93c5fd;
+    background: rgba(23, 162, 184, 0.1);
+    border-color: rgba(23, 162, 184, 0.3);
+    color: #17a2b8;
 }
 
 /* ===================================
    10. FOOTER
    =================================== */
-footer {
-    background: var(--color-bg-darker);
+.footer {
+    background-color: var(--color-bg-lighter);
     border-top: 1px solid var(--color-border);
-    padding: var(--spacing-2xl) 0;
-    margin-top: var(--spacing-2xl);
+    padding: var(--spacing-lg) 0;
+    text-align: center;
+    color: var(--color-text-muted);
+    margin-top: auto; /* Empurra o footer para baixo */
 }
 
-footer p {
-    color: var(--color-text-muted);
+.footer p {
     margin: 0;
 }
 
-footer a {
-    color: var(--color-text-muted);
-    transition: color var(--transition-fast);
+.footer a {
+    color: var(--color-primary);
+    text-decoration: none;
 }
 
-footer a:hover {
-    color: var(--color-text-light);
+.footer a:hover {
+    text-decoration: underline;
 }
 
 /* ===================================
    11. UTILIDADES
    =================================== */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-lg);
+.container-fluid {
+    padding: 0 var(--spacing-xl);
 }
 
 .row {
@@ -538,65 +639,42 @@ footer a:hover {
 }
 
 /* ===================================
-   12. ANIMAÇÕES
+   12. RESPONSIVIDADE
    =================================== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+@media (max-width: 992px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: none;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .sidebar-menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sidebar-menu-item {
+        margin: var(--spacing-xs);
+    }
+
+    .main-content-area {
+        padding: var(--spacing-lg);
+    }
+
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .content-header h1 {
+        margin-bottom: var(--spacing-sm);
     }
 }
 
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.5;
-    }
-}
-
-.fade-in {
-    animation: fadeIn 0.6s ease-out;
-}
-
-.slide-in-left {
-    animation: slideInLeft 0.6s ease-out;
-}
-
-.slide-in-right {
-    animation: slideInRight 0.6s ease-out;
-}
-
-/* ===================================
-   13. RESPONSIVIDADE
-   =================================== */
 @media (max-width: 768px) {
     h1 {
         font-size: 2.5rem;
@@ -608,14 +686,6 @@ footer a:hover {
     
     h3 {
         font-size: 1.5rem;
-    }
-    
-    .navbar-brand {
-        font-size: 1.25rem;
-    }
-    
-    .card {
-        padding: var(--spacing-md);
     }
     
     .btn {
@@ -632,91 +702,28 @@ footer a:hover {
         font-size: 1.75rem;
     }
     
-    .container {
+    .container-fluid {
         padding: 0 var(--spacing-md);
     }
 }
 
 /* ===================================
-   14. MODAL
-   =================================== */
-.modal-content {
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-}
-
-.modal-header {
-    border-bottom: 1px solid var(--color-border);
-}
-
-.modal-footer {
-    border-top: 1px solid var(--color-border);
-}
-
-.modal-title {
-    color: var(--color-text-light);
-}
-
-/* ===================================
-   15. BADGES E TAGS
-   =================================== */
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.badge-primary {
-    background: var(--gradient-primary);
-    color: var(--color-text-light);
-}
-
-.badge-secondary {
-    background: var(--color-bg-card);
-    color: var(--color-text-light);
-    border: 1px solid var(--color-border);
-}
-
-/* ===================================
-   16. SCROLLBAR PERSONALIZADA
+   13. SCROLLBAR PERSONALIZADA
    =================================== */
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-bg-darker);
+    background: var(--color-bg-light);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: var(--color-border-light);
     border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-border-light);
-}
-
-/* ===================================
-   17. EFEITOS ESPECIAIS
-   =================================== */
-.glow-effect {
-    box-shadow: var(--shadow-glow);
-}
-
-.gradient-text {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.glass-effect {
-    background: rgba(26, 19, 48, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-border);
 }
 

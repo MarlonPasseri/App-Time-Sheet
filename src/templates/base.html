@@ -3,126 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Controle de Horas{% endblock %}</title>
+    <title>{% block title %}App Time Sheet{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css") }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    {% block head_extra %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for("index") }}">Digimax</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for("index") }}">Início</a>
-                    </li>
-                    {% if session.user_id %}
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'funcionarios.listar' %}active{% endif %}" href="{{ url_for("funcionarios.listar") }}">Colaboradores</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'projetos.listar' %}active{% endif %}" href="{{ url_for("projetos.listar") }}">Contratos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'registros.listar' %}active{% endif %}" href="{{ url_for("registros.listar") }}">Registros de Horas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.endpoint == 'registros.exportar' %}active{% endif %}" href="{{ url_for("registros.exportar") }}">Exportar Relatórios</a>
-                        </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if session.user_id %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for("auth.perfil") }}">👤 Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary" href="{{ url_for("auth.logout") }}">Sair</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link btn btn-primary" href="{{ url_for("auth.login") }}">Login</a>
-                        </li>
-                    {% endif %}
-                </ul>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <a href="{{ url_for("index") }}" class="app-logo">App Time Sheet</a>
+                <span class="app-name">Controle de Horas</span>
             </div>
-        </div>
-    </nav>
-
-    <div class="main-content">
-        <div class="container mt-4">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="{{ url_for("index") }}" class="sidebar-menu-link {% if request.endpoint == 'index' %}active{% endif %}">
+                        <i class="bi bi-house-door"></i> Início
+                    </a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.is_admin %}
+                        <li class="sidebar-menu-item">
+                            <a href="{{ url_for("funcionarios.listar") }}" class="sidebar-menu-link {% if request.endpoint.startswith('funcionarios') %}active{% endif %}">
+                                <i class="bi bi-people"></i> Colaboradores
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="{{ url_for("projetos.listar") }}" class="sidebar-menu-link {% if request.endpoint.startswith('projetos') %}active{% endif %}>
+                                <i class="bi bi-folder"></i> Contratos
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="sidebar-menu-item">
+                        <a href="{{ url_for("registros.listar") }}" class="sidebar-menu-link {% if request.endpoint.startswith('registros') and not request.endpoint == 'registros.exportar' %}active{% endif %}>
+                            <i class="bi bi-clock"></i> Registros de Horas
+                        </a>
+                    </li>
+                    <li class="sidebar-menu-item">
+                        <a href="{{ url_for("registros.exportar") }}" class="sidebar-menu-link {% if request.endpoint == 'registros.exportar' %}active{% endif %}>
+                            <i class="bi bi-file-earmark-excel"></i> Exportar Relatórios
+                        </a>
+                    </li>
                 {% endif %}
-            {% endwith %}
+            </ul>
+            <div class="sidebar-footer">
+                {% if current_user.is_authenticated %}
+                    <div class="user-profile-dropdown">
+                        <a href="#" class="dropdown-toggle" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/40/4a90e2/ffffff?text={{ current_user.nome[0]|upper }}" alt="Avatar">
+                            <span>{{ current_user.nome }}</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for("auth.perfil") }}">Meu Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for("auth.logout") }}">Sair</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for("auth.login") }}" class="btn btn-primary w-100">Login</a>
+                {% endif %}
+            </div>
+        </nav>
 
-            {% block content %}{% endblock %}
+        <!-- Main Content Area -->
+        <div class="main-content-area">
+            <header class="content-header">
+                <h1>{% block page_header %}{% endblock %}</h1>
+                {% if current_user.is_authenticated %}
+                    <div class="user-profile-dropdown d-none d-lg-flex">
+                        <a href="#" class="dropdown-toggle" id="userDropdownDesktop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://via.placeholder.com/40/4a90e2/ffffff?text={{ current_user.nome[0]|upper }}" alt="Avatar">
+                            <span>{{ current_user.nome }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownDesktop">
+                            <li><a class="dropdown-item" href="{{ url_for("auth.perfil") }}">Meu Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for("auth.logout") }}">Sair</a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+            </header>
+
+            <main>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="container-fluid mt-3">
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </main>
+
+            <footer class="footer">
+                <p>&copy; 2025 App Time Sheet. Todos os direitos reservados.</p>
+            </footer>
         </div>
     </div>
 
-    <footer class="py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="text-white">Digimax</h5>
-                    <p class="text-muted">Transformando ideias em excelência digital. Eleve sua marca com nossas soluções inovadoras e estratégias digitais.</p>
-                    <div class="social-icons">
-                        <a href="#" class="text-light me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5 class="text-white">Serviços</h5>
-                    <ul class="list-unstyled text-muted">
-                        <li><a href="#">Web Development</a></li>
-                        <li><a href="#">Digital Marketing</a></li>
-                        <li><a href="#">Graphic Design</a></li>
-                        <li><a href="#">Content Writing</a></li>
-                        <li><a href="#">Search Engine Optimization</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5 class="text-white">Suporte</h5>
-                    <ul class="list-unstyled text-muted">
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Client Support</a></li>
-                        <li><a href="#">Sales Support</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h5 class="text-white">Empresa</h5>
-                    <ul class="list-unstyled text-muted">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Team</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Article & News</a></li>
-                        <li><a href="#">Legal Notice</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="border-color my-4">
-            <div class="text-center text-muted">
-                <p class="mb-0">&copy; 2025 Digimax. All rights reserved. Powered by ManusCreative.</p>
-                <p class="mb-0"><a href="#" class="text-muted me-2">Terms of use</a> <a href="#" class="text-muted me-2">Privacy Policy</a> <a href="#" class="text-muted">Cookie Policy</a></p>
-            </div>
-        </div>
-    </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script> <!-- Font Awesome para ícones sociais -->
     <script src="{{ url_for("static", filename="js/script.js") }}"></script>
-    {% block scripts_extra %}{% endblock %}
+    <script>
+        // Script para o dropdown do perfil de usuário
+        document.addEventListener("DOMContentLoaded", function() {
+            const userDropdown = document.getElementById("userDropdown");
+            if (userDropdown) {
+                userDropdown.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const dropdownMenu = this.nextElementSibling;
+                    dropdownMenu.classList.toggle("show");
+                });
+                document.addEventListener("click", function(e) {
+                    if (!userDropdown.contains(e.target)) {
+                        const dropdownMenu = userDropdown.nextElementSibling;
+                        if (dropdownMenu && dropdownMenu.classList.contains("show")) {
+                            dropdownMenu.classList.remove("show");
+                        }
+                    }
+                });
+            }
+
+            const userDropdownDesktop = document.getElementById("userDropdownDesktop");
+            if (userDropdownDesktop) {
+                userDropdownDesktop.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const dropdownMenu = this.nextElementSibling;
+                    dropdownMenu.classList.toggle("show");
+                });
+                document.addEventListener("click", function(e) {
+                    if (!userDropdownDesktop.contains(e.target)) {
+                        const dropdownMenu = userDropdownDesktop.nextElementSibling;
+                        if (dropdownMenu && dropdownMenu.classList.contains("show")) {
+                            dropdownMenu.classList.remove("show");
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
+
