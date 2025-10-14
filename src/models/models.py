@@ -242,7 +242,22 @@ class BancoDeDados:
             self.salvar_dados()
             return True
         return False
-    
+
+    def listar_registros_horas(self, funcionario_id=None, projeto_id=None, mes_ano=None):
+        """Lista todos os registros de horas, com filtros opcionais."""
+        registros_filtrados = self.registros_horas
+
+        if funcionario_id is not None:
+            registros_filtrados = [r for r in registros_filtrados if r.funcionario_id == funcionario_id]
+
+        if projeto_id is not None:
+            registros_filtrados = [r for r in registros_filtrados if r.projeto_id == projeto_id]
+            
+        if mes_ano is not None:
+            registros_filtrados = [r for r in registros_filtrados if r.mes_ano_referencia == mes_ano]
+            
+        return registros_filtrados
+
     # Métodos para Registros de Horas com controle de acesso
     def listar_registros_horas_por_usuario(self, usuario_id, funcionario_id=None, projeto_id=None, mes_ano=None):
         """
@@ -280,21 +295,6 @@ class BancoDeDados:
             return registros_filtrados
         
         return []
-
-    def listar_registros_horas(self, funcionario_id=None, projeto_id=None, mes_ano=None):
-        """Lista todos os registros de horas, com filtros opcionais."""
-        registros_filtrados = self.registros_horas
-        
-        if funcionario_id is not None:
-            registros_filtrados = [r for r in registros_filtrados if r.funcionario_id == funcionario_id]
-        
-        if projeto_id is not None:
-            registros_filtrados = [r for r in registros_filtrados if r.projeto_id == projeto_id]
-            
-        if mes_ano is not None:
-            registros_filtrados = [r for r in registros_filtrados if r.mes_ano_referencia == mes_ano]
-            
-        return registros_filtrados
 
     def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas):
         """Adiciona um novo registro de horas."""
