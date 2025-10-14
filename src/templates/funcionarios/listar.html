@@ -1,115 +1,51 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Horas - Colaboradores</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('funcionarios.listar') }}">Colaboradores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Contratos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if session.user_id %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+{% block title %}Colaboradores - Digimax{% endblock %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Lista de Colaboradores</h2>
-            <a href="{{ url_for('funcionarios.adicionar') }}" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Adicionar Colaborador
-            </a>
-        </div>
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-dark">Colaboradores</h2>
+    <a href="{{ url_for("funcionarios.adicionar") }}" class="btn btn-primary">Adicionar Colaborador</a>
+</div>
 
-        <div class="card">
-            <div class="card-body">
-                {% if funcionarios %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="tabelaFuncionarios">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for funcionario in funcionarios %}
-                                    <tr>
-                                        <td>{{ funcionario.id }}</td>
-                                        <td>{{ funcionario.nome }}</td>
-                                        <td>
-                                            <a href="{{ url_for('funcionarios.editar', id=funcionario.id) }}" class="btn btn-sm btn-primary">
-                                                Editar
-                                            </a>
-                                            <form action="{{ url_for('funcionarios.remover', id=funcionario.id) }}" method="POST" class="d-inline">
-                                                <button type="submit" class="btn btn-sm btn-danger btn-delete">
-                                                    Excluir
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="alert alert-info">
-                        Nenhum colaborador cadastrado. <a href="{{ url_for('funcionarios.adicionar') }}">Adicionar um colaborador</a>.
-                    </div>
-                {% endif %}
-            </div>
+<div class="card">
+    <div class="card-body">
+        {% if funcionarios %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Cargo</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for funcionario in funcionarios %}
+                    <tr>
+                        <td>{{ funcionario.id }}</td>
+                        <td>{{ funcionario.nome }}</td>
+                        <td>{{ funcionario.cargo }}</td>
+                        <td>{{ funcionario.email }}</td>
+                        <td>
+                            <a href="{{ url_for("funcionarios.editar", id=funcionario.id) }}" class="btn btn-sm btn-secondary">Editar</a>
+                            <form action="{{ url_for("funcionarios.remover", id=funcionario.id) }}" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm("Tem certeza que deseja remover este colaborador?");">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% else %}
+        <div class="alert alert-info" role="alert">
+            Nenhum colaborador cadastrado ainda.
+        </div>
+        {% endif %}
     </div>
+</div>
+{% endblock %}
 
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>

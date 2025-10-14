@@ -27,8 +27,8 @@ def listar():
     if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
         funcionario_id = usuario.funcionario_id
     
-    # Obtém os registros filtrados
-    registros = db.listar_registros_horas(
+    # Obtém os registros filtrados com controle de acesso
+    registros = db.listar_registros_horas_por_usuario(
         usuario_id=usuario_id,
         funcionario_id=funcionario_id,
         projeto_id=projeto_id,
@@ -219,8 +219,8 @@ def exportar_excel():
     tipo_relatorio = request.form.get("tipo_relatorio", "padrao")
     usuario_id = session.get("usuario_id")
     
-    # Obtém os registros filtrados
-    registros = db.listar_registros_horas(
+    # Obtém os registros filtrados com controle de acesso
+    registros = db.listar_registros_horas_por_usuario(
         usuario_id=usuario_id,
         funcionario_id=funcionario_id,
         projeto_id=projeto_id,
