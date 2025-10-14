@@ -131,7 +131,7 @@ def adicionar():
     
     return render_template('registros/adicionar.html', funcionarios=funcionarios, projetos=projetos)
 
-@registros_bp.route("/editar/<int:id>", methods=["GET", "POST"])
+@registros_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar(id):
     """Edita um registro de horas existente."""
@@ -176,7 +176,7 @@ def editar(id):
         projetos=projetos
     )
 
-@registros_bp.route("/remover/<int:id>", methods=["POST"])
+@registros_bp.route('/remover/<int:id>', methods=['POST'])
 @login_required
 def remover(id):
     """Remove um registro de horas."""
@@ -187,7 +187,7 @@ def remover(id):
     
     return redirect(url_for('registros.listar'))
 
-@registros_bp.route("/exportar", methods=["GET"])
+@registros_bp.route('/exportar', methods=['GET'])
 @login_required
 def exportar():
     """Exibe a página de exportação de relatórios."""
@@ -209,7 +209,7 @@ def exportar():
         meses_anos=meses_anos
     )
 
-@registros_bp.route("/exportar/excel", methods=["POST"])
+@registros_bp.route('/exportar/excel', methods=['POST'])
 @login_required
 def exportar_excel():
     """Exporta os registros filtrados para um arquivo Excel."""
@@ -263,7 +263,13 @@ def exportar_excel():
     elif tipo_relatorio == 'por_projeto':
         _gerar_relatorio_por_projeto(df, temp_file.name)
     elif tipo_relatorio == 'mensal':
-        _gerar_relatorio_mensal(df, temp_file.name)
+        # Adaptação para o novo relatório mensal personalizado
+        caminho_saida_relatorio = adaptar_exportacao_relatorio_mensal(db, funcionario_id, projeto_id, mes_ano)
+        if caminho_saida_relatorio:
+            temp_file.name = caminho_saida_relatorio
+        else:
+            flash('Erro ao gerar relatório mensal personalizado!', 'danger')
+            return redirect(url_for('registros.exportar'))
     else:
         _gerar_relatorio_padrao(df, temp_file.name)
     
@@ -273,239 +279,30 @@ def exportar_excel():
     # Envia o arquivo para download
     return send_file(
         temp_file.name,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         as_attachment=True,
-        download_name=nome_arquivo,
-        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        download_name=nome_arquivo
     )
 
-@registros_bp.route('/exportar/personalizado', methods=['POST'])
-@login_required
-def exportar_personalizado():
-    """Exporta os registros para Excel no formato personalizado do template."""
-    funcionario_id = request.form.get('funcionario_id', type=int)
-    projeto_id = request.form.get('projeto_id', type=int)
-    mes_ano = request.form.get('mes_ano')
-    
-    # Verificar se o usuário é administrador ou funcionário
-    usuario_id = session.get('usuario_id')
-    usuario = db.obter_usuario(usuario_id)
-    
-    # Se for funcionário, força o filtro pelo seu próprio ID
-    if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
-        funcionario_id = usuario.funcionario_id
-    
-    # Usar o formato personalizado do template
-    try:
-        arquivo_excel = adaptar_exportacao_relatorio_mensal(
-            db=db,
-            funcionario_id=funcionario_id,
-            projeto_id=projeto_id,
-            mes_ano=mes_ano
-        )
-        
-        # Enviar o arquivo
-        return send_file(
-            arquivo_excel,
-            as_attachment=True,
-            download_name=f"controle_horas_template_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx",
-            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-    except Exception as e:
-        flash(f'Erro ao gerar relatório personalizado: {str(e)}', 'danger')
-        return redirect(url_for('registros.exportar'))
-
-def _gerar_relatorio_padrao(df, arquivo):
-    """Gera um relatório padrão com todos os registros."""
-    # Remove colunas de IDs internos
-    df_export = df.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
-    
-    # Cria um escritor Excel
-    writer = pd.ExcelWriter(arquivo, engine='xlsxwriter')
-    
-    # Escreve os dados na planilha
-    df_export.to_excel(writer, sheet_name='Registros', index=False)
-    
-    # Obtém o objeto de planilha
-    workbook = writer.book
-    worksheet = writer.sheets['Registros']
-    
-    # Adiciona uma linha de total
-    total_row = len(df_export) + 1
-    worksheet.write(total_row, 0, 'Total')
-    worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
-    
-    # Formata a coluna de horas
-    format_horas = workbook.add_format({'num_format': '0.00'})
-    worksheet.set_column('D:D', 10, format_horas)
-    
-    # Formata a coluna de data
-    format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-    worksheet.set_column('C:C', 12, format_data)
-    
-    # Ajusta a largura das colunas
-    worksheet.set_column('A:A', 20)  # Funcionário
-    worksheet.set_column('B:B', 30)  # Projeto
-    worksheet.set_column('E:E', 10)  # Mês/Ano
-    
-    # Salva o arquivo
+def _gerar_relatorio_padrao(df, caminho_saida):
+    writer = pd.ExcelWriter(caminho_saida, engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Registros de Horas', index=False)
     writer.close()
 
-def _gerar_relatorio_por_funcionario(df, arquivo):
-    """Gera um relatório agrupado por funcionário."""
-    # Cria um escritor Excel
-    writer = pd.ExcelWriter(arquivo, engine='xlsxwriter')
-    
-    # Agrupa por funcionário
-    for funcionario, grupo in df.groupby('Funcionário'):
-        # Remove colunas desnecessárias
-        df_export = grupo.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
-        
-        # Escreve os dados na planilha
-        sheet_name = funcionario[:31]  # Limita o nome da planilha a 31 caracteres
-        df_export.to_excel(writer, sheet_name=sheet_name, index=False)
-        
-        # Obtém o objeto de planilha
-        workbook = writer.book
-        worksheet = writer.sheets[sheet_name]
-        
-        # Adiciona uma linha de total
-        total_row = len(df_export) + 1
-        worksheet.write(total_row, 0, 'Total')
-        worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
-        
-        # Formata a coluna de horas
-        format_horas = workbook.add_format({'num_format': '0.00'})
-        worksheet.set_column('D:D', 10, format_horas)
-        
-        # Formata a coluna de data
-        format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        worksheet.set_column('C:C', 12, format_data)
-        
-        # Ajusta a largura das colunas
-        worksheet.set_column('A:A', 20)  # Funcionário
-        worksheet.set_column('B:B', 30)  # Projeto
-        worksheet.set_column('E:E', 10)  # Mês/Ano
-    
-    # Adiciona uma planilha de resumo
-    resumo = df.groupby('Funcionário')['Horas'].sum().reset_index()
-    resumo.to_excel(writer, sheet_name='Resumo', index=False)
-    
-    worksheet = writer.sheets['Resumo']
-    total_row = len(resumo) + 1
-    worksheet.write(total_row, 0, 'Total Geral')
-    worksheet.write_formula(total_row, 1, f'=SUM(B2:B{total_row})')
-    
-    # Salva o arquivo
+def _gerar_relatorio_por_funcionario(df, caminho_saida):
+    writer = pd.ExcelWriter(caminho_saida, engine='xlsxwriter')
+    for funcionario, df_func in df.groupby('Funcionário'):
+        df_func.to_excel(writer, sheet_name=funcionario[:31], index=False) # Limita o nome da aba a 31 caracteres
     writer.close()
 
-def _gerar_relatorio_por_projeto(df, arquivo):
-    """Gera um relatório agrupado por projeto."""
-    # Cria um escritor Excel
-    writer = pd.ExcelWriter(arquivo, engine='xlsxwriter')
-    
-    # Agrupa por projeto
-    for projeto, grupo in df.groupby('Projeto'):
-        # Remove colunas desnecessárias
-        df_export = grupo.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
-        
-        # Escreve os dados na planilha
-        sheet_name = projeto[:31]  # Limita o nome da planilha a 31 caracteres
-        df_export.to_excel(writer, sheet_name=sheet_name, index=False)
-        
-        # Obtém o objeto de planilha
-        workbook = writer.book
-        worksheet = writer.sheets[sheet_name]
-        
-        # Adiciona uma linha de total
-        total_row = len(df_export) + 1
-        worksheet.write(total_row, 0, 'Total')
-        worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
-        
-        # Formata a coluna de horas
-        format_horas = workbook.add_format({'num_format': '0.00'})
-        worksheet.set_column('D:D', 10, format_horas)
-        
-        # Formata a coluna de data
-        format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        worksheet.set_column('C:C', 12, format_data)
-        
-        # Ajusta a largura das colunas
-        worksheet.set_column('A:A', 20)  # Funcionário
-        worksheet.set_column('B:B', 30)  # Projeto
-        worksheet.set_column('E:E', 10)  # Mês/Ano
-    
-    # Adiciona uma planilha de resumo
-    resumo = df.groupby('Projeto')['Horas'].sum().reset_index()
-    resumo.to_excel(writer, sheet_name='Resumo', index=False)
-    
-    worksheet = writer.sheets['Resumo']
-    total_row = len(resumo) + 1
-    worksheet.write(total_row, 0, 'Total Geral')
-    worksheet.write_formula(total_row, 1, f'=SUM(B2:B{total_row})')
-    
-    # Salva o arquivo
+def _gerar_relatorio_por_projeto(df, caminho_saida):
+    writer = pd.ExcelWriter(caminho_saida, engine='xlsxwriter')
+    for projeto, df_proj in df.groupby('Projeto'):
+        df_proj.to_excel(writer, sheet_name=projeto[:31], index=False) # Limita o nome da aba a 31 caracteres
     writer.close()
 
-def _gerar_relatorio_mensal(df, arquivo):
-    """Gera um relatório mensal com matriz de funcionários x projetos."""
-    # Cria um escritor Excel
-    writer = pd.ExcelWriter(arquivo, engine='xlsxwriter')
-    
-    # Agrupa por mês/ano
-    for mes_ano, grupo in df.groupby('Mês/Ano'):
-        # Cria uma tabela dinâmica: Funcionários nas linhas, Projetos nas colunas
-        pivot = pd.pivot_table(
-            grupo,
-            values='Horas',
-            index=['Funcionário'],
-            columns=['Projeto'],
-            aggfunc='sum',
-            fill_value=0
-        )
-        
-        # Adiciona uma coluna de total por funcionário
-        pivot['Total'] = pivot.sum(axis=1)
-        
-        # Adiciona uma linha de total por projeto
-        totais = pivot.sum().to_frame().T
-        totais.index = ['Total']
-        pivot_final = pd.concat([pivot, totais])
-        
-        # Escreve os dados na planilha
-        sheet_name = mes_ano if mes_ano else 'Sem Data'
-        pivot_final.to_excel(writer, sheet_name=sheet_name)
-        
-        # Obtém o objeto de planilha
-        workbook = writer.book
-        worksheet = writer.sheets[sheet_name]
-        
-        # Formata os números
-        format_horas = workbook.add_format({'num_format': '0.00'})
-        
-        # Aplica formato a todas as células de dados
-        for col in range(1, len(pivot_final.columns) + 1):
-            for row in range(1, len(pivot_final) + 1):
-                worksheet.write(row, col, pivot_final.iloc[row-1, col-1], format_horas)
-        
-        # Destaca a coluna e linha de totais
-        format_total = workbook.add_format({
-            'bold': True,
-            'num_format': '0.00',
-            'bg_color': '#E0E0E0'
-        })
-        
-        # Aplica formato à coluna de total
-        for row in range(1, len(pivot_final)):
-            worksheet.write(row, len(pivot_final.columns), pivot_final.iloc[row-1, -1], format_total)
-        
-        # Aplica formato à linha de total
-        for col in range(1, len(pivot_final.columns) + 1):
-            worksheet.write(len(pivot_final), col, pivot_final.iloc[-1, col-1], format_total)
-        
-        # Ajusta a largura das colunas
-        worksheet.set_column(0, 0, 20)  # Coluna de funcionários
-        for col in range(1, len(pivot_final.columns) + 1):
-            worksheet.set_column(col, col, 12)
-    
-    # Salva o arquivo
+def _gerar_relatorio_mensal(df, caminho_saida):
+    writer = pd.ExcelWriter(caminho_saida, engine='xlsxwriter')
+    for mes_ano, df_mes in df.groupby('Mês/Ano'):
+        df_mes.to_excel(writer, sheet_name=mes_ano, index=False)
     writer.close()

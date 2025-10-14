@@ -23,7 +23,7 @@ def detalhes(id):
     return render_template('projetos/detalhes.html', projeto=projeto, db=db)
 
 # API para uso em AJAX
-@projetos_bp.route("/api/listar", methods=["GET"])
+@projetos_bp.route('/api/listar', methods=['GET'])
 @login_required
 def api_listar():
     """Retorna a lista de projetos em formato JSON."""
@@ -105,4 +105,3 @@ def importar_lista():
         flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
     
     return redirect(url_for('projetos.listar'))
-

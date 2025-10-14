@@ -279,208 +279,10 @@ class BancoDeDados:
             
             return registros_filtrados
         
-        # Se não tiver permissão ou não for associado a um funcionário
         return []
-    
-    def adicionar_registro_horas_por_usuario(self, usuario_id, projeto_id, data, horas_trabalhadas):
-        """Adiciona um novo registro de horas com controle de acesso."""
-        usuario = self.obter_usuario(usuario_id)
-        if not usuario:
-            return None, "Usuário não encontrado"
-        
-        # Se for administrador, pode adicionar para qualquer funcionário
-        if usuario.is_admin():
-            # Neste caso, o administrador precisa especificar o funcionário_id em outra função
-            return None, "Administrador deve usar a função específica para adicionar registros"
-        
-        # Se for funcionário, só pode adicionar para si mesmo
-        if usuario.is_funcionario() and usuario.funcionario_id:
-            funcionario_id = usuario.funcionario_id
-            registro = self.adicionar_registro_horas(funcionario_id, projeto_id, data, horas_trabalhadas)
-            if registro:
-                return registro, "Registro adicionado com sucesso"
-            else:
-                return None, "Erro ao adicionar registro"
-        
-        return None, "Usuário sem permissão ou não associado a um funcionário"
-    
-    def editar_registro_horas_por_usuario(self, usuario_id, registro_id, projeto_id=None, data=None, horas_trabalhadas=None):
-        """Edita um registro de horas com controle de acesso."""
-        usuario = self.obter_usuario(usuario_id)
-        if not usuario:
-            return False, "Usuário não encontrado"
-        
-        registro = self.obter_registro_horas(registro_id)
-        if not registro:
-            return False, "Registro não encontrado"
-        
-        # Se for administrador, pode editar qualquer registro
-        if usuario.is_admin():
-            if self.atualizar_registro_horas(registro_id, None, projeto_id, data, horas_trabalhadas):
-                return True, "Registro atualizado com sucesso"
-            else:
-                return False, "Erro ao atualizar registro"
-        
-        # Se for funcionário, só pode editar seus próprios registros
-        if usuario.is_funcionario() and usuario.funcionario_id:
-            if registro.funcionario_id != usuario.funcionario_id:
-                return False, "Sem permissão para editar este registro"
-            
-            # Não permitir alterar o funcionário associado ao registro
-            if self.atualizar_registro_horas(registro_id, None, projeto_id, data, horas_trabalhadas):
-                return True, "Registro atualizado com sucesso"
-            else:
-                return False, "Erro ao atualizar registro"
-        
-        return False, "Usuário sem permissão ou não associado a um funcionário"
-    
-    def remover_registro_horas_por_usuario(self, usuario_id, registro_id):
-        """Remove um registro de horas com controle de acesso."""
-        usuario = self.obter_usuario(usuario_id)
-        if not usuario:
-            return False, "Usuário não encontrado"
-        
-        registro = self.obter_registro_horas(registro_id)
-        if not registro:
-            return False, "Registro não encontrado"
-        
-        # Se for administrador, pode remover qualquer registro
-        if usuario.is_admin():
-            if self.remover_registro_horas(registro_id):
-                return True, "Registro removido com sucesso"
-            else:
-                return False, "Erro ao remover registro"
-        
-        # Se for funcionário, só pode remover seus próprios registros
-        if usuario.is_funcionario() and usuario.funcionario_id:
-            if registro.funcionario_id != usuario.funcionario_id:
-                return False, "Sem permissão para remover este registro"
-            
-            if self.remover_registro_horas(registro_id):
-                return True, "Registro removido com sucesso"
-            else:
-                return False, "Erro ao remover registro"
-        
-        return False, "Usuário sem permissão ou não associado a um funcionário"
-    
-    # Métodos para Funcionários
-    def adicionar_funcionario(self, nome):
-        """Adiciona um novo funcionário."""
-        # Gera um novo ID (maior ID existente + 1)
-        novo_id = 1
-        if self.funcionarios:
-            novo_id = max(f.id for f in self.funcionarios if f.id is not None) + 1
-        
-        funcionario = Funcionario(id=novo_id, nome=nome)
-        self.funcionarios.append(funcionario)
-        self.salvar_dados()
-        return funcionario
-    
-    def obter_funcionario(self, id):
-        """Obtém um funcionário pelo ID."""
-        for funcionario in self.funcionarios:
-            if funcionario.id == id:
-                return funcionario
-        return None
-    
-    def listar_funcionarios(self):
-        """Lista todos os funcionários."""
-        return self.funcionarios
-    
-    def atualizar_funcionario(self, id, nome):
-        """Atualiza um funcionário existente."""
-        funcionario = self.obter_funcionario(id)
-        if funcionario:
-            funcionario.nome = nome
-            self.salvar_dados()
-            return True
-        return False
-    
-    def remover_funcionario(self, id):
-        """Remove um funcionário pelo ID."""
-        funcionario = self.obter_funcionario(id)
-        if funcionario:
-            self.funcionarios.remove(funcionario)
-            self.salvar_dados()
-            return True
-        return False
-    
-    # Métodos para Projetos
-    def adicionar_projeto(self, nome):
-        """Adiciona um novo projeto."""
-        # Gera um novo ID (maior ID existente + 1)
-        novo_id = 1
-        if self.projetos:
-            novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
-        
-        projeto = Projeto(id=novo_id, nome=nome)
-        self.projetos.append(projeto)
-        self.salvar_dados()
-        return projeto
-    
-    def obter_projeto(self, id):
-        """Obtém um projeto pelo ID."""
-        for projeto in self.projetos:
-            if projeto.id == id:
-                return projeto
-        return None
-    
-    def listar_projetos(self):
-        """Lista todos os projetos."""
-        return self.projetos
-    
-    def atualizar_projeto(self, id, nome):
-        """Atualiza um projeto existente."""
-        projeto = self.obter_projeto(id)
-        if projeto:
-            projeto.nome = nome
-            self.salvar_dados()
-            return True
-        return False
-    
-    def remover_projeto(self, id):
-        """Remove um projeto pelo ID."""
-        projeto = self.obter_projeto(id)
-        if projeto:
-            self.projetos.remove(projeto)
-            self.salvar_dados()
-            return True
-        return False
-    
-    # Métodos para Registros de Horas
-    def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas):
-        """Adiciona um novo registro de horas."""
-        # Verifica se o funcionário e o projeto existem
-        funcionario = self.obter_funcionario(funcionario_id)
-        projeto = self.obter_projeto(projeto_id)
-        if not funcionario or not projeto:
-            return None
-        
-        # Gera um novo ID (maior ID existente + 1)
-        novo_id = 1
-        if self.registros_horas:
-            novo_id = max(r.id for r in self.registros_horas if r.id is not None) + 1
-        
-        registro = RegistroHoras(
-            id=novo_id,
-            funcionario_id=funcionario_id,
-            projeto_id=projeto_id,
-            data=data,
-            horas_trabalhadas=horas_trabalhadas
-        )
-        self.registros_horas.append(registro)
-        self.salvar_dados()
-        return registro
-    
-    def obter_registro_horas(self, id):
-        """Obtém um registro de horas pelo ID."""
-        for registro in self.registros_horas:
-            if registro.id == id:
-                return registro
-        return None
-    
+
     def listar_registros_horas(self, funcionario_id=None, projeto_id=None, mes_ano=None):
-        """Lista registros de horas com filtros opcionais."""
+        """Lista todos os registros de horas, com filtros opcionais."""
         registros_filtrados = self.registros_horas
         
         if funcionario_id is not None:
@@ -488,12 +290,42 @@ class BancoDeDados:
         
         if projeto_id is not None:
             registros_filtrados = [r for r in registros_filtrados if r.projeto_id == projeto_id]
-        
+            
         if mes_ano is not None:
             registros_filtrados = [r for r in registros_filtrados if r.mes_ano_referencia == mes_ano]
-        
+            
         return registros_filtrados
-    
+
+    def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas):
+        """Adiciona um novo registro de horas."""
+        # Gera um novo ID (maior ID existente + 1)
+        novo_id = 1
+        if self.registros_horas:
+            novo_id = max(r.id for r in self.registros_horas if r.id is not None) + 1
+        
+        # Calcula o mês/ano de referência
+        mes_ano_referencia = datetime.strptime(data, '%Y-%m-%d').strftime('%Y-%m')
+        
+        registro = RegistroHoras(
+            id=novo_id,
+            funcionario_id=funcionario_id,
+            projeto_id=projeto_id,
+            data=data,
+            horas_trabalhadas=horas_trabalhadas,
+            mes_ano_referencia=mes_ano_referencia
+        )
+        
+        self.registros_horas.append(registro)
+        self.salvar_dados()
+        return registro
+
+    def obter_registro_horas(self, id):
+        """Obtém um registro de horas pelo ID."""
+        for registro in self.registros_horas:
+            if registro.id == id:
+                return registro
+        return None
+
     def atualizar_registro_horas(self, id, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None):
         """Atualiza um registro de horas existente."""
         registro = self.obter_registro_horas(id)
@@ -501,32 +333,21 @@ class BancoDeDados:
             return False
         
         if funcionario_id is not None:
-            funcionario = self.obter_funcionario(funcionario_id)
-            if not funcionario:
-                return False
             registro.funcionario_id = funcionario_id
         
         if projeto_id is not None:
-            projeto = self.obter_projeto(projeto_id)
-            if not projeto:
-                return False
             registro.projeto_id = projeto_id
         
-        if data is not None:
+        if data:
             registro.data = data
-            # Atualizar o mês/ano de referência
-            if isinstance(data, str):
-                data_obj = datetime.strptime(data, "%Y-%m-%d")
-                registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
-            elif isinstance(data, datetime):
-                registro.mes_ano_referencia = data.strftime("%Y-%m")
+            registro.mes_ano_referencia = datetime.strptime(data, '%Y-%m-%d').strftime('%Y-%m')
         
         if horas_trabalhadas is not None:
             registro.horas_trabalhadas = horas_trabalhadas
         
         self.salvar_dados()
         return True
-    
+
     def remover_registro_horas(self, id):
         """Remove um registro de horas pelo ID."""
         registro = self.obter_registro_horas(id)
@@ -536,54 +357,145 @@ class BancoDeDados:
             return True
         return False
 
-# Manter as classes existentes
+    # Métodos para Funcionários
+    def adicionar_funcionario(self, nome):
+        """Adiciona um novo funcionário."""
+        novo_id = 1
+        if self.funcionarios:
+            novo_id = max(f.id for f in self.funcionarios if f.id is not None) + 1
+        
+        funcionario = Funcionario(id=novo_id, nome=nome)
+        self.funcionarios.append(funcionario)
+        self.salvar_dados()
+        return funcionario
+
+    def obter_funcionario(self, id):
+        """Obtém um funcionário pelo ID."""
+        for funcionario in self.funcionarios:
+            if funcionario.id == id:
+                return funcionario
+        return None
+
+    def listar_funcionarios(self):
+        """Lista todos os funcionários."""
+        return self.funcionarios
+
+    def atualizar_funcionario(self, id, nome):
+        """Atualiza um funcionário existente."""
+        funcionario = self.obter_funcionario(id)
+        if funcionario:
+            funcionario.nome = nome
+            self.salvar_dados()
+            return True
+        return False
+
+    def remover_funcionario(self, id):
+        """Remove um funcionário pelo ID."""
+        funcionario = self.obter_funcionario(id)
+        if funcionario:
+            self.funcionarios.remove(funcionario)
+            self.salvar_dados()
+            return True
+        return False
+
+    # Métodos para Projetos
+    def adicionar_projeto(self, nome):
+        """Adiciona um novo projeto."""
+        novo_id = 1
+        if self.projetos:
+            novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
+        
+        projeto = Projeto(id=novo_id, nome=nome)
+        self.projetos.append(projeto)
+        self.salvar_dados()
+        return projeto
+
+    def adicionar_projeto_com_id_customizado(self, id_customizado, nome):
+        """Adiciona um novo projeto com um ID customizado (string ou int)."""
+        # Verifica se o ID já existe
+        if any(p.id == id_customizado for p in self.projetos):
+            return None, "ID de projeto já existe"
+        
+        projeto = Projeto(id=id_customizado, nome=nome)
+        self.projetos.append(projeto)
+        self.salvar_dados()
+        return projeto, "Projeto adicionado com sucesso"
+
+    def obter_projeto(self, id):
+        """Obtém um projeto pelo ID."""
+        for projeto in self.projetos:
+            if projeto.id == id:
+                return projeto
+        return None
+
+    def obter_projeto_por_id_string(self, id_string):
+        """Obtém um projeto pelo ID, que pode ser string."""
+        for projeto in self.projetos:
+            if str(projeto.id) == str(id_string):
+                return projeto
+        return None
+
+    def listar_projetos(self):
+        """Lista todos os projetos."""
+        return self.projetos
+
+    def atualizar_projeto(self, id, nome):
+        """Atualiza um projeto existente."""
+        projeto = self.obter_projeto(id)
+        if projeto:
+            projeto.nome = nome
+            self.salvar_dados()
+            return True
+        return False
+
+    def remover_projeto(self, id):
+        """Remove um projeto pelo ID."""
+        projeto = self.obter_projeto(id)
+        if projeto:
+            self.projetos.remove(projeto)
+            self.salvar_dados()
+            return True
+        return False
+
 class Funcionario:
-    def __init__(self, id=None, nome=None):
+    def __init__(self, id, nome):
         self.id = id
         self.nome = nome
-    
+
     def to_dict(self):
         return {
             'id': self.id,
             'nome': self.nome
         }
-    
+
     @classmethod
     def from_dict(cls, data):
-        return cls(id=data.get('id'), nome=data.get('nome'))
+        return cls(id=data['id'], nome=data['nome'])
 
 class Projeto:
-    def __init__(self, id=None, nome=None):
+    def __init__(self, id, nome):
         self.id = id
         self.nome = nome
-    
+
     def to_dict(self):
         return {
             'id': self.id,
             'nome': self.nome
         }
-    
+
     @classmethod
     def from_dict(cls, data):
-        return cls(id=data.get('id'), nome=data.get('nome'))
+        return cls(id=data['id'], nome=data['nome'])
 
 class RegistroHoras:
-    def __init__(self, id=None, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None):
+    def __init__(self, id, funcionario_id, projeto_id, data, horas_trabalhadas, mes_ano_referencia):
         self.id = id
         self.funcionario_id = funcionario_id
         self.projeto_id = projeto_id
         self.data = data
         self.horas_trabalhadas = horas_trabalhadas
-        
-        # Calcular o mês/ano de referência automaticamente
-        if isinstance(data, str):
-            data_obj = datetime.strptime(data, "%Y-%m-%d")
-            self.mes_ano_referencia = data_obj.strftime("%Y-%m")
-        elif isinstance(data, datetime):
-            self.mes_ano_referencia = data.strftime("%Y-%m")
-        else:
-            self.mes_ano_referencia = None
-    
+        self.mes_ano_referencia = mes_ano_referencia
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -593,16 +505,15 @@ class RegistroHoras:
             'horas_trabalhadas': self.horas_trabalhadas,
             'mes_ano_referencia': self.mes_ano_referencia
         }
-    
+
     @classmethod
     def from_dict(cls, data):
-        registro = cls(
-            id=data.get('id'),
-            funcionario_id=data.get('funcionario_id'),
-            projeto_id=data.get('projeto_id'),
-            data=data.get('data'),
-            horas_trabalhadas=data.get('horas_trabalhadas')
+        return cls(
+            id=data['id'],
+            funcionario_id=data['funcionario_id'],
+            projeto_id=data['projeto_id'],
+            data=data['data'],
+            horas_trabalhadas=data['horas_trabalhadas'],
+            mes_ano_referencia=data['mes_ano_referencia']
         )
-        if 'mes_ano_referencia' in data:
-            registro.mes_ano_referencia = data.get('mes_ano_referencia')
-        return registro
+
