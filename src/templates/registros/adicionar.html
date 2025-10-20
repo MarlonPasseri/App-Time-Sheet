@@ -6,6 +6,8 @@
     <title>App Time Sheet - Adicionar Registro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- CSS do Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -69,7 +71,7 @@
                         <select class="form-select" id="projeto_id" name="projeto_id" required>
                             <option value="">Selecione um projeto</option>
                             {% for projeto in projetos %}
-                                <option value="{{ projeto.id }}">{{ projeto.nome }}</option>
+                                <option value="{{ projeto.id }}">{{ projeto.id }} | {{ projeto.nome }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -97,5 +99,17 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- jQuery e JS do Select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#projeto_id').select2({
+                placeholder: "Selecione ou pesquise um projeto",
+                allowClear: true
+            });
+        });
+    </script>
 </body>
 </html>

@@ -8,8 +8,8 @@
   --secondary-color: #50e3c2;
   --accent-color: #f8cd88;
   --light-bg: #fdfdfd;
+  --light-text: #000000;
   --dark-text: #ffffff;
-  --light-text: #fff;
   --danger-color: #e74c3c;
   --warning-color: #f39c12;
   --info-color: #fae8ac;
@@ -19,13 +19,39 @@
   --transition: all 0.3s ease;
 }
 
+/* ===== TAGS ===== */
+
+/* ===== All ===== */
+* {
+  scroll-behavior: smooth;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 /* ===== Body ===== */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--light-bg);
-  color: var(--dark-text);
+  color: var(--light-text);
   line-height: 1.6;
 }
+
+p {
+  margin-bottom: 0;
+}
+
+/* ===== Footer ===== */
+footer {
+  background-color: #f8f9fa;
+  color: var(--light-text);
+  padding: 1.5rem 0;
+  text-align: center;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
+}
+
+
+/* ===== CLASSES ===== */
 
 /* ===== Navbar ===== */
 .navbar {
@@ -172,15 +198,6 @@ body {
 .alert-danger { background-color: rgba(231,76,60,0.15); color: #c0392b; }
 .alert-warning { background-color: rgba(243,156,18,0.15); color: #d35400; }
 .alert-info { background-color: rgba(74,144,226,0.15); color: #2980b9; }
-
-/* ===== Footer ===== */
-footer {
-  background-color: #f8f9fa;
-  color: #555;
-  padding: 1.5rem 0;
-  text-align: center;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.05);
-}
 
 /* ===== Animações ===== */
 .fade-in {
