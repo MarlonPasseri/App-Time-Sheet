@@ -559,6 +559,14 @@
       "data": "2025-10-20",
       "horas_trabalhadas": 12.0,
       "mes_ano_referencia": "2025-10"
+    },
+    {
+      "id": 15,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "2025-10-20",
+      "horas_trabalhadas": 2.0,
+      "mes_ano_referencia": "2025-10"
     }
   ],
   "usuarios": [

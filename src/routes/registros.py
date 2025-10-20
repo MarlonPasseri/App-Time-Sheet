@@ -48,7 +48,7 @@ def listar():
         registro_view = {
             'id': registro.id,
             'funcionario': funcionario.nome if funcionario else 'Desconhecido',
-            'projeto': projeto.nome if projeto else 'Desconhecido',
+            'projeto': f"{projeto.id} | {projeto.nome}" if projeto else 'Desconhecido',
             'data': registro.data,
             'horas_trabalhadas': registro.horas_trabalhadas,
             'mes_ano_referencia': registro.mes_ano_referencia
