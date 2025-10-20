@@ -476,97 +476,99 @@
       "id": 1,
       "funcionario_id": 1,
       "projeto_id": 656,
-      "data": "2025-06-05",
-      "horas_trabalhadas": 10.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 10.0
     },
     {
       "id": 2,
       "funcionario_id": 2,
       "projeto_id": 1796,
-      "data": "2025-06-05",
-      "horas_trabalhadas": 10.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 10.0
     },
     {
       "id": 3,
       "funcionario_id": 3,
       "projeto_id": 2516,
-      "data": "2025-06-05",
-      "horas_trabalhadas": 8.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 8.0
     },
     {
       "id": 4,
       "funcionario_id": 4,
       "projeto_id": 1881,
-      "data": "2025-06-05",
-      "horas_trabalhadas": 9.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 9.0
     },
     {
       "id": 5,
       "funcionario_id": 2,
       "projeto_id": 1003,
-      "data": "2025-06-05",
-      "horas_trabalhadas": 4.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 4.0
     },
     {
       "id": 6,
       "funcionario_id": 5,
       "projeto_id": 656,
-      "data": "2025-06-02",
-      "horas_trabalhadas": 4.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 4.0
     },
     {
       "id": 7,
       "funcionario_id": 5,
       "projeto_id": 669,
-      "data": "2025-06-02",
-      "horas_trabalhadas": 4.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 4.0
     },
     {
       "id": 8,
       "funcionario_id": 5,
       "projeto_id": 1796,
-      "data": "2025-06-03",
-      "horas_trabalhadas": 7.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 7.0
     },
     {
       "id": 9,
       "funcionario_id": 5,
       "projeto_id": 1796,
-      "data": "2025-06-04",
-      "horas_trabalhadas": 7.5,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 7.5
     },
     {
       "id": 12,
       "funcionario_id": 5,
       "projeto_id": 3040,
-      "data": "2025-06-02",
-      "horas_trabalhadas": 1.0,
-      "mes_ano_referencia": "2025-06"
+      "data": "06-2025",
+      "horas_trabalhadas": 1.0
     },
     {
       "id": 14,
       "funcionario_id": 1,
       "projeto_id": 2857,
-      "data": "2025-10-20",
-      "horas_trabalhadas": 12.0,
-      "mes_ano_referencia": "2025-10"
+      "data": "10-2025",
+      "horas_trabalhadas": 12.0
     },
     {
       "id": 15,
       "funcionario_id": 1,
       "projeto_id": 9010,
-      "data": "2025-10-20",
-      "horas_trabalhadas": 2.0,
-      "mes_ano_referencia": "2025-10"
+      "data": "10-2025",
+      "horas_trabalhadas": 2.0
+    },
+    {
+      "id": 16,
+      "funcionario_id": 1,
+      "projeto_id": 9021,
+      "data": "11-2025",
+      "horas_trabalhadas": 5.0
+    },
+    {
+      "id": 17,
+      "funcionario_id": 1,
+      "projeto_id": 9014,
+      "data": "12-2025",
+      "horas_trabalhadas": 20.0
     }
   ],
   "usuarios": [
