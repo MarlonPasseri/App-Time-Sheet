@@ -3,124 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Horas - Início</title>
+    <title>App Time Sheet</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0,123,255,0.8), rgba(0,123,255,0.8)), url('{{ url_for("static", filename="img/hero-bg.jpg") }}') no-repeat center center;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+        .btn-hero {
+            font-size: 1.2rem;
+            padding: 12px 30px;
+            transition: 0.3s;
+        }
+        .btn-hero:hover {
+            transform: scale(1.05);
+        }
+
+        /* Features */
+        .feature-icon {
+            font-size: 3rem;
+            color: #0d6efd;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+        .feature-icon:hover {
+            color: #0056b3;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #212529;
+            color: white;
+            padding: 40px 0;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Colaboradores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Contratos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if session.user_id %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">App Time Sheet</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="#hero">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="#features">Funcionalidades</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">Como Funciona</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('registros.exportar') }}">Relatórios</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                {% if session.user_id %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a></li>
+                {% endif %}
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+<!-- Hero Section -->
+<section class="hero" id="hero">
+    <div class="container">
+        <h1>Gerencie Horas e Contratos com Eficiência</h1>
+        <p>App Time Sheet é a forma mais simples de registrar, monitorar e exportar as horas de seus colaboradores.</p>
+        <a href="{{ url_for('registros.adicionar') }}" class="btn btn-light btn-hero">Registrar Horas</a>
+    </div>
+</section>
 
-        <div class="jumbotron">
-            <h1 class="display-4">Bem-vindo ao Sistema de Controle de Horas</h1>
-            <p class="lead">Gerencie as horas trabalhadas por colaboradores em cada contrato de forma simples e eficiente.</p>
-            <hr class="my-4">
-            <p>Utilize o menu acima para navegar entre as funcionalidades do sistema.</p>
-        </div>
-
-        <div class="row mt-5">
+<!-- Features Section -->
+<section id="features">
+    <div class="container">
+        <h2 class="section-title">Funcionalidades Principais</h2>
+        <div class="row text-center g-5">
             <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Colaboradores</h5>
-                        <p class="card-text">Cadastre e gerencie os colaboradores da empresa.</p>
-                        <a href="{{ url_for('funcionarios.listar') }}" class="btn btn-primary">Acessar</a>
-                    </div>
-                </div>
+                <i class="bi bi-people-fill feature-icon"></i>
+                <h4>Colaboradores</h4>
+                <p>Cadastre e gerencie colaboradores de forma prática e rápida.</p>
+                <a href="{{ url_for('funcionarios.listar') }}" class="btn btn-primary mt-2">Acessar</a>
             </div>
             <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Contratos</h5>
-                        <p class="card-text">Visualize a lista de contratos disponíveis.</p>
-                        <a href="{{ url_for('projetos.listar') }}" class="btn btn-primary">Acessar</a>
-                    </div>
-                </div>
+                <i class="bi bi-folder-fill feature-icon"></i>
+                <h4>Contratos</h4>
+                <p>Visualize, organize e gerencie contratos da empresa com facilidade.</p>
+                <a href="{{ url_for('projetos.listar') }}" class="btn btn-primary mt-2">Acessar</a>
             </div>
             <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Registrar Horas</h5>
-                        <p class="card-text">Registre as horas trabalhadas por colaborador em cada contrato.</p>
-                        <a href="{{ url_for('registros.adicionar') }}" class="btn btn-primary">Acessar</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Consultar Registros</h5>
-                        <p class="card-text">Visualize e filtre os registros de horas trabalhadas.</p>
-                        <a href="{{ url_for('registros.listar') }}" class="btn btn-primary">Acessar</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Exportar Relatórios</h5>
-                        <p class="card-text">Gere relatórios em Excel com cálculos automáticos.</p>
-                        <a href="{{ url_for('registros.exportar') }}" class="btn btn-primary">Acessar</a>
-                    </div>
-                </div>
+                <i class="bi bi-clock-fill feature-icon"></i>
+                <h4>Registros de Horas</h4>
+                <p>Registre, filtre e exporte as horas trabalhadas em cada contrato.</p>
+                <a href="{{ url_for('registros.listar') }}" class="btn btn-primary mt-2">Acessar</a>
             </div>
         </div>
     </div>
+</section>
 
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
+<!-- About Section -->
+<section id="about" class="bg-light">
+    <div class="container">
+        <h2 class="section-title">Como Funciona</h2>
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <p class="lead">Nosso sistema permite que você registre, monitore e exporte todas as horas trabalhadas pelos colaboradores em poucos cliques. Tudo é feito de forma organizada e segura, para que você possa focar no crescimento do seu negócio.</p>
+                <ul class="list-unstyled">
+                    <li>✅ Registro rápido de horas</li>
+                    <li>✅ Controle de contratos e colaboradores</li>
+                    <li>✅ Exportação de relatórios em Excel</li>
+                </ul>
+                <a href="{{ url_for('registros.adicionar') }}" class="btn btn-primary mt-3">Comece Agora</a>
+            </div>
+            <div class="col-md-6 text-center">
+                <img src="{{ url_for('static', filename='img/dashboard-preview.png') }}" class="img-fluid rounded shadow" alt="Preview do sistema">
+            </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<!-- Call to Action -->
+<section class="text-white" style="background-color:#0d6efd;">
+    <div class="container text-center py-5">
+        <h2 class="mb-4">Pronto para gerenciar suas horas?</h2>
+        <a href="{{ url_for('registros.adicionar') }}" class="btn btn-light btn-lg">Registrar Horas Agora</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container text-center">
+        <p>&copy; 2025 Sistema de Controle de Horas | Desenvolvido por Sua Empresa</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
