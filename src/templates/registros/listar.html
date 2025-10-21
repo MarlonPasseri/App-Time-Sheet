@@ -133,7 +133,7 @@
                                         <td>{{ registro.funcionario }}</td>
                                         <td>{{ registro.projeto }}</td>
                                         <td>{{ registro.data }}</td>
-                                        <td>{{ registro.horas_trabalhadas }}</td>
+                                        <td>{{ registro.horas_trabalhadas | formatar_horas }}</td>
                                         <td>
                                             <a href="{{ url_for('registros.editar', id=registro.id) }}" class="btn btn-sm btn-primary">
                                                 Editar
@@ -150,7 +150,7 @@
                             <tfoot>
                                 <tr class="table-info">
                                     <td colspan="3"><strong>Total de Horas:</strong></td>
-                                    <td><strong>{{ total_horas }}</strong></td>
+                                    <td><strong>{{ total_horas | formatar_horas }}</strong></td>
                                     <td></td>
                                 </tr>
                             </tfoot>

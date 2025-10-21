@@ -33,5 +33,13 @@ def home():
     else:
         return redirect(url_for('auth.login'))
 
+@app.template_filter('formatar_horas')
+def formatar_horas(horas):
+    if horas is None:
+        return "0h"
+    horas_inteiras = int(horas)
+    minutos = int(round((horas - horas_inteiras) * 60))
+    return f"{horas_inteiras}h {f'{minutos}min' if minutos else ''}"
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
