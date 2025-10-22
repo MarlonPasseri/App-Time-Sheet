@@ -107,7 +107,7 @@
                             <select class="form-select" id="projeto_id" name="projeto_id">
                                 <option value="">Todos</option>
                                 {% for projeto in projetos %}
-                                    <option value="{{ projeto.id }}">{{ projeto.id }} - {{ projeto.nome }}</option>
+                                    <option value="{{ projeto.id }}">{{ projeto.id }} | {{ projeto.nome }}</option>
                                 {% endfor %}
                             </select>
                         </div>

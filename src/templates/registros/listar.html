@@ -133,7 +133,7 @@
                                         <td>{{ registro.funcionario }}</td>
                                         <td>{{ registro.projeto }}</td>
                                         <td>{{ registro.data }}</td>
-                                        <td>{{ registro.horas_trabalhadas | formatar_horas }}</td>
+                                        <td>{{ registro.horas_trabalhadas }}</td>
                                         <td>
                                             <a href="{{ url_for('registros.editar', id=registro.id) }}" class="btn btn-sm btn-primary">
                                                 Editar
@@ -241,4 +241,3 @@
             alternarVisualizacao();
         });
     </script>
-
