@@ -64,34 +64,15 @@ def listar():
     elif ordenar == 'data':
         registros_view.sort(key=lambda x: x['data'], reverse=True)  # Mais recente primeiro
     
-    # Prepara dados agregados por mês/ano
-    registros_agregados = {}
-    for registro_view in registros_view:
-        chave = (registro_view['funcionario'], registro_view['projeto'], registro_view['data'])
-        if chave not in registros_agregados:
-            registros_agregados[chave] = {
-                'colaborador': registro_view['funcionario'],
-                'contrato': registro_view['projeto'],
-                'mes_ano': registro_view['data'],
-                'total_horas': 0
-            }
-        registros_agregados[chave]['total_horas'] += registro_view['horas_trabalhadas']
-    
-    # Converte para lista e ordena por mês/ano
-    registros_agregados_list = list(registros_agregados.values())
-    registros_agregados_list.sort(key=lambda x: (x['mes_ano'], x['colaborador'], x['contrato']), reverse=True)
-    
     return render_template(
         'registros/listar.html',
         registros=registros_view,
-        registros_agregados=registros_agregados_list,
         funcionarios=funcionarios,
         projetos=projetos,
         filtro_funcionario_id=funcionario_id,
         filtro_projeto_id=projeto_id,
         filtro_mes_ano=mes_ano,
         total_horas=total_horas,
-        total_horas_agregado=total_horas
     )
 
 @registros_bp.route('/adicionar', methods=['GET', 'POST'])
@@ -119,7 +100,7 @@ def adicionar():
                 
                 if registro:
                     flash('Registro de horas adicionado com sucesso!', 'success')
-                    return redirect(url_for('registros.listar'))
+                    return redirect(url_for('registros.adicionar'))
                 else:
                     flash('Erro ao adicionar registro de horas!', 'danger')
             except ValueError:
@@ -230,8 +211,8 @@ def exportar_excel():
             'Funcionário': funcionario.nome if funcionario else 'Desconhecido',
             'Projeto': projeto.nome if projeto else 'Desconhecido',
             # 'Data': registro.data,
-            'Horas': registro.horas_trabalhadas,
             'Mês/Ano': registro.data,
+            'Horas': registro.horas_trabalhadas,
             'ID_Funcionario': registro.funcionario_id,
             'ID_Projeto': registro.projeto_id
         })
@@ -309,7 +290,10 @@ def exportar_personalizado():
 def _gerar_relatorio_padrao(df, arquivo):
     """Gera um relatório padrão com todos os registros."""
     # Remove colunas de IDs internos
-    df_export = df.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
+    df_export = (
+        df.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
+        .sort_values(by='Mês/Ano', key=lambda col: pd.to_datetime(col, format='%m-%Y'))
+    )
     
     # Cria um escritor Excel
     writer = pd.ExcelWriter(arquivo, engine='xlsxwriter')
@@ -328,16 +312,9 @@ def _gerar_relatorio_padrao(df, arquivo):
     
     # Formata a coluna de horas
     format_horas = workbook.add_format({'num_format': '0.00'})
-    worksheet.set_column('D:D', 10, format_horas)
     
-    # Formata a coluna de data
-    # format_data = workbook.add_format({'num_format': 'mm-yyyy'})
-    # worksheet.set_column('C:C', 12, format_data)
-    
-    # Ajusta a largura das colunas
-    worksheet.set_column('A:A', 20)  # Funcionário
-    worksheet.set_column('B:B', 30)  # Projeto
-    worksheet.set_column('E:E', 10)  # Mês/Ano
+    # Aplica tamanho padrao nas colunas
+    aplicar_padrao_colunas(worksheet)
     
     # Salva o arquivo
     writer.close()
@@ -350,7 +327,10 @@ def _gerar_relatorio_por_funcionario(df, arquivo):
     # Agrupa por funcionário
     for funcionario, grupo in df.groupby('Funcionário'):
         # Remove colunas desnecessárias
-        df_export = grupo.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
+        df_export = (
+        grupo.drop(columns=['ID', 'ID_Funcionario', 'ID_Projeto'])
+        .sort_values(by='Mês/Ano', key=lambda col: pd.to_datetime(col, format='%m-%Y'))
+    )
         
         # Escreve os dados na planilha
         sheet_name = funcionario[:31]  # Limita o nome da planilha a 31 caracteres
@@ -367,22 +347,16 @@ def _gerar_relatorio_por_funcionario(df, arquivo):
         
         # Formata a coluna de horas
         format_horas = workbook.add_format({'num_format': '0.00'})
-        worksheet.set_column('D:D', 10, format_horas)
         
-        # Formata a coluna de data
-        # format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        # worksheet.set_column('C:C', 12, format_data)
-        
-        # Ajusta a largura das colunas
-        worksheet.set_column('A:A', 20)  # Funcionário
-        worksheet.set_column('B:B', 30)  # Projeto
-        worksheet.set_column('E:E', 10)  # Mês/Ano
+        # Aplica tamanho padrao nas colunas
+        aplicar_padrao_colunas(worksheet)
     
     # Adiciona uma planilha de resumo
     resumo = df.groupby('Funcionário')['Horas'].sum().reset_index()
     resumo.to_excel(writer, sheet_name='Resumo', index=False)
     
     worksheet = writer.sheets['Resumo']
+    aplicar_padrao_colunas(worksheet)
     total_row = len(resumo) + 1
     worksheet.write(total_row, 0, 'Total Geral')
     worksheet.write_formula(total_row, 1, f'=SUM(B2:B{total_row})')
@@ -415,22 +389,16 @@ def _gerar_relatorio_por_projeto(df, arquivo):
         
         # Formata a coluna de horas
         format_horas = workbook.add_format({'num_format': '0.00'})
-        worksheet.set_column('D:D', 10, format_horas)
         
-        # Formata a coluna de data
-        # format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        # worksheet.set_column('C:C', 12, format_data)
-        
-        # Ajusta a largura das colunas
-        worksheet.set_column('A:A', 20)  # Funcionário
-        worksheet.set_column('B:B', 30)  # Projeto
-        worksheet.set_column('E:E', 10)  # Mês/Ano
+        # Aplica tamanho padrao nas colunas
+        aplicar_padrao_colunas(worksheet)
     
     # Adiciona uma planilha de resumo
     resumo = df.groupby('Projeto')['Horas'].sum().reset_index()
     resumo.to_excel(writer, sheet_name='Resumo', index=False)
     
     worksheet = writer.sheets['Resumo']
+    aplicar_padrao_colunas(worksheet)
     total_row = len(resumo) + 1
     worksheet.write(total_row, 0, 'Total Geral')
     worksheet.write_formula(total_row, 1, f'=SUM(B2:B{total_row})')
@@ -501,3 +469,16 @@ def _gerar_relatorio_mensal(df, arquivo):
     
     # Salva o arquivo
     writer.close()
+
+# Padrão de tamanho de cada coluna nas planilhas
+PADRAO_COLUNAS = {
+    'A:A': 30,  # Funcionário
+    'B:B': 30,  # Projeto
+    'C:C': 10,  # Horas
+    'D:D': 10   # Mês/Ano
+}
+
+# Aplica os tamanhos padrões
+def aplicar_padrao_colunas(worksheet):
+    for coluna, largura in PADRAO_COLUNAS.items():
+        worksheet.set_column(coluna, largura)

@@ -569,6 +569,13 @@
       "projeto_id": 9014,
       "data": "12-2025",
       "horas_trabalhadas": 20.0
+    },
+    {
+      "id": 18,
+      "funcionario_id": 1,
+      "projeto_id": 9010,
+      "data": "10-2025",
+      "horas_trabalhadas": 7.5
     }
   ],
   "usuarios": [
