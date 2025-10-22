@@ -51,7 +51,7 @@ def listar():
             'projeto': f"{projeto.id} | {projeto.nome}" if projeto else 'Desconhecido',
             'data': registro.data,
             'horas_trabalhadas': registro.horas_trabalhadas,
-            'mes_ano_referencia': registro.mes_ano_referencia
+            # 'mes_ano_referencia': registro.mes_ano_referencia
         }
         registros_view.append(registro_view)
         total_horas += registro.horas_trabalhadas
@@ -67,12 +67,12 @@ def listar():
     # Prepara dados agregados por mês/ano
     registros_agregados = {}
     for registro_view in registros_view:
-        chave = (registro_view['funcionario'], registro_view['projeto'], registro_view['mes_ano_referencia'])
+        chave = (registro_view['funcionario'], registro_view['projeto'], registro_view['data'])
         if chave not in registros_agregados:
             registros_agregados[chave] = {
                 'colaborador': registro_view['funcionario'],
                 'contrato': registro_view['projeto'],
-                'mes_ano': registro_view['mes_ano_referencia'],
+                'mes_ano': registro_view['data'],
                 'total_horas': 0
             }
         registros_agregados[chave]['total_horas'] += registro_view['horas_trabalhadas']
@@ -109,7 +109,7 @@ def adicionar():
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                data = datetime.strptime(data_str, '%Y-%m').strftime('%m-%Y')
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
                     projeto_id=projeto_id,
@@ -149,7 +149,7 @@ def editar(id):
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
             try:
-                data = datetime.strptime(data_str, '%Y-%m-%d').strftime('%Y-%m-%d')
+                data = datetime.strptime(data_str, '%Y-%m').strftime('%m-%Y')
                 if db.atualizar_registro_horas(
                     id=id,
                     funcionario_id=funcionario_id,
@@ -192,8 +192,8 @@ def exportar():
     # Obtém a lista de meses/anos disponíveis
     meses_anos = set()
     for registro in db.registros_horas:
-        if registro.mes_ano_referencia:
-            meses_anos.add(registro.mes_ano_referencia)
+        if registro.data:
+            meses_anos.add(registro.data)
     
     meses_anos = sorted(list(meses_anos))
     
@@ -229,9 +229,9 @@ def exportar_excel():
             'ID': registro.id,
             'Funcionário': funcionario.nome if funcionario else 'Desconhecido',
             'Projeto': projeto.nome if projeto else 'Desconhecido',
-            'Data': registro.data,
+            # 'Data': registro.data,
             'Horas': registro.horas_trabalhadas,
-            'Mês/Ano': registro.mes_ano_referencia,
+            'Mês/Ano': registro.data,
             'ID_Funcionario': registro.funcionario_id,
             'ID_Projeto': registro.projeto_id
         })
@@ -331,8 +331,8 @@ def _gerar_relatorio_padrao(df, arquivo):
     worksheet.set_column('D:D', 10, format_horas)
     
     # Formata a coluna de data
-    format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-    worksheet.set_column('C:C', 12, format_data)
+    # format_data = workbook.add_format({'num_format': 'mm-yyyy'})
+    # worksheet.set_column('C:C', 12, format_data)
     
     # Ajusta a largura das colunas
     worksheet.set_column('A:A', 20)  # Funcionário
@@ -370,8 +370,8 @@ def _gerar_relatorio_por_funcionario(df, arquivo):
         worksheet.set_column('D:D', 10, format_horas)
         
         # Formata a coluna de data
-        format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        worksheet.set_column('C:C', 12, format_data)
+        # format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
+        # worksheet.set_column('C:C', 12, format_data)
         
         # Ajusta a largura das colunas
         worksheet.set_column('A:A', 20)  # Funcionário
@@ -418,8 +418,8 @@ def _gerar_relatorio_por_projeto(df, arquivo):
         worksheet.set_column('D:D', 10, format_horas)
         
         # Formata a coluna de data
-        format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
-        worksheet.set_column('C:C', 12, format_data)
+        # format_data = workbook.add_format({'num_format': 'yyyy-mm-dd'})
+        # worksheet.set_column('C:C', 12, format_data)
         
         # Ajusta a largura das colunas
         worksheet.set_column('A:A', 20)  # Funcionário

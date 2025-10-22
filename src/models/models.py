@@ -486,7 +486,7 @@ class BancoDeDados:
             registros_filtrados = [r for r in registros_filtrados if r.projeto_id == projeto_id]
         
         if mes_ano is not None:
-            registros_filtrados = [r for r in registros_filtrados if r.mes_ano_referencia == mes_ano]
+            registros_filtrados = [r for r in registros_filtrados if r.data == datetime.strptime(mes_ano, "%Y-%m").strftime("%m-%Y")]
         
         return registros_filtrados
     
@@ -509,13 +509,15 @@ class BancoDeDados:
             registro.projeto_id = projeto_id
         
         if data is not None:
-            registro.data = data
+            # registro.data = data
             # Atualizar o mês/ano de referência
             if isinstance(data, str):
-                data_obj = datetime.strptime(data, "%Y-%m-%d")
-                registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
+                data_obj = datetime.strptime(data, "%Y-%m")
+                # registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
+                registro.data = data_obj.strftime("%m-%Y")
             elif isinstance(data, datetime):
-                registro.mes_ano_referencia = data.strftime("%Y-%m")
+                # registro.mes_ano_referencia = data.strftime("%Y-%m")
+                registro.data = data.strftime("%m-%Y")
         
         if horas_trabalhadas is not None:
             registro.horas_trabalhadas = horas_trabalhadas
@@ -572,13 +574,13 @@ class RegistroHoras:
         self.horas_trabalhadas = horas_trabalhadas
         
         # Calcular o mês/ano de referência automaticamente
-        if isinstance(data, str):
-            data_obj = datetime.strptime(data, "%Y-%m-%d")
-            self.mes_ano_referencia = data_obj.strftime("%Y-%m")
-        elif isinstance(data, datetime):
-            self.mes_ano_referencia = data.strftime("%Y-%m")
-        else:
-            self.mes_ano_referencia = None
+        # if isinstance(data, str):
+        #     data_obj = datetime.strptime(data, "%Y-%m-%d")
+        #     self.mes_ano_referencia = data_obj.strftime("%Y-%m")
+        # elif isinstance(data, datetime):
+        #     self.mes_ano_referencia = data.strftime("%Y-%m")
+        # else:
+        #     self.mes_ano_referencia = None
     
     def to_dict(self):
         return {
@@ -587,7 +589,7 @@ class RegistroHoras:
             'projeto_id': self.projeto_id,
             'data': self.data,
             'horas_trabalhadas': self.horas_trabalhadas,
-            'mes_ano_referencia': self.mes_ano_referencia
+            # 'mes_ano_referencia': self.mes_ano_referencia
         }
     
     @classmethod
@@ -599,6 +601,6 @@ class RegistroHoras:
             data=data.get('data'),
             horas_trabalhadas=data.get('horas_trabalhadas')
         )
-        if 'mes_ano_referencia' in data:
-            registro.mes_ano_referencia = data.get('mes_ano_referencia')
+        # if 'mes_ano_referencia' in data:
+        #     registro.mes_ano_referencia = data.get('mes_ano_referencia')
         return registro
