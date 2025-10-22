@@ -1,10 +1,6 @@
 {
   "funcionarios": [
     {
-      "id": 1,
-      "nome": "Marlon Passeri"
-    },
-    {
       "id": 2,
       "nome": "Leonardo"
     },
@@ -19,6 +15,14 @@
     {
       "id": 5,
       "nome": "Guilherme Fernandes"
+    },
+    {
+      "id": 6,
+      "nome": "Teste3"
+    },
+    {
+      "id": 7,
+      "nome": "Marlon Passeri"
     }
   ],
   "projetos": [
@@ -576,6 +580,27 @@
       "projeto_id": 9010,
       "data": "10-2025",
       "horas_trabalhadas": 7.5
+    },
+    {
+      "id": 19,
+      "funcionario_id": 1,
+      "projeto_id": 656,
+      "data": "10-2025",
+      "horas_trabalhadas": 80.0
+    },
+    {
+      "id": 20,
+      "funcionario_id": 6,
+      "projeto_id": 9010,
+      "data": "10-2025",
+      "horas_trabalhadas": 40.0
+    },
+    {
+      "id": 21,
+      "funcionario_id": 1,
+      "projeto_id": 2950,
+      "data": "10-2025",
+      "horas_trabalhadas": 100.0
     }
   ],
   "usuarios": [
@@ -594,6 +619,14 @@
       "senha_hash": "8d84c33305d5cb0ff0db30b72b9a7ce1f18876e66112ed9e4dfaa2efded5d223",
       "tipo": "funcionario",
       "funcionario_id": 4
+    },
+    {
+      "id": 3,
+      "nome": "Teste3",
+      "email": "teste3@geoprojetos.com.br",
+      "senha_hash": "289160db0d9f39f9ae1754c4ec9c16f90b50e32e09c5fb5481ae642b3d3d1a36",
+      "tipo": "funcionario",
+      "funcionario_id": 6
     }
   ]
 }
