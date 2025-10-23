@@ -211,8 +211,8 @@ def exportar_excel():
             'Funcionário': funcionario.nome if funcionario else 'Desconhecido',
             'Projeto': projeto.nome if projeto else 'Desconhecido',
             # 'Data': registro.data,
-            'Mês/Ano': registro.data,
             'Horas': registro.horas_trabalhadas,
+            'Mês/Ano': registro.data,
             'ID_Funcionario': registro.funcionario_id,
             'ID_Projeto': registro.projeto_id
         })
@@ -308,7 +308,7 @@ def _gerar_relatorio_padrao(df, arquivo):
     # Adiciona uma linha de total
     total_row = len(df_export) + 1
     worksheet.write(total_row, 0, 'Total')
-    worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
+    worksheet.write_formula(total_row, 2, f'=SUM(C2:C{total_row})')
     
     # Formata a coluna de horas
     format_horas = workbook.add_format({'num_format': '0.00'})
@@ -343,7 +343,7 @@ def _gerar_relatorio_por_funcionario(df, arquivo):
         # Adiciona uma linha de total
         total_row = len(df_export) + 1
         worksheet.write(total_row, 0, 'Total')
-        worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
+        worksheet.write_formula(total_row, 2, f'=SUM(C2:C{total_row})')
         
         # Formata a coluna de horas
         format_horas = workbook.add_format({'num_format': '0.00'})
@@ -385,7 +385,7 @@ def _gerar_relatorio_por_projeto(df, arquivo):
         # Adiciona uma linha de total
         total_row = len(df_export) + 1
         worksheet.write(total_row, 0, 'Total')
-        worksheet.write_formula(total_row, 3, f'=SUM(D2:D{total_row})')
+        worksheet.write_formula(total_row, 2, f'=SUM(C2:C{total_row})')
         
         # Formata a coluna de horas
         format_horas = workbook.add_format({'num_format': '0.00'})
@@ -474,8 +474,8 @@ def _gerar_relatorio_mensal(df, arquivo):
 PADRAO_COLUNAS = {
     'A:A': 30,  # Funcionário
     'B:B': 30,  # Projeto
-    'C:C': 10,  # Horas
-    'D:D': 10   # Mês/Ano
+    'C:C': 10,  # Mês/Ano
+    'D:D': 10   # Horas
 }
 
 # Aplica os tamanhos padrões
