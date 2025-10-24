@@ -8,6 +8,7 @@ from src.routes.projetos import projetos_bp
 from src.routes.registros import registros_bp
 from src.routes.auth import auth_bp
 from src.utils.auth_utils import login_required
+from src.utils.dashboards import calcular_horas_por_projeto, calcular_horas_por_mes
 import secrets
 
 app = Flask(__name__)
@@ -22,12 +23,22 @@ app.register_blueprint(auth_bp, url_prefix='/auth')
 @app.route('/')
 @login_required
 def index():
-    """Página inicial."""
-    return render_template('index.html')
+    """Página inicial com gráficos de horas."""
+
+    usuario_id = session.get('usuario_id')
+
+    projetos, horas = calcular_horas_por_projeto(usuario_id)
+    meses, horas_mensais = calcular_horas_por_mes(usuario_id)
+
+    usuario = session.get('usuario_nome')
+
+    # Passar os dados para o template
+    return render_template('index.html', projetos=projetos, horas=horas, meses=meses, horas_mensais=horas_mensais, usuario=usuario)
 
 @app.route('/home')
 def home():
     """Redirecionamento para página inicial ou login."""
+    
     if 'usuario_id' in session:
         return redirect(url_for('index'))
     else:
@@ -40,6 +51,7 @@ def formatar_horas(horas):
     horas_inteiras = int(horas)
     minutos = int(round((horas - horas_inteiras) * 60))
     return f"{horas_inteiras}h {f'{minutos}min' if minutos else ''}"
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

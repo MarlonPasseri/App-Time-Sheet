@@ -1,163 +1,307 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+
+<html class="light" lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Time Sheet</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Dashboard Geoprojetos</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#005A9C",
+                        "secondary": "#F4F7FA",
+                        "text-primary": "#333333",
+                        "accent-success": "#4CAF50",
+                        "accent-warning": "#FFC107",
+                        "background-light": "#F4F7FA",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
     <style>
-        /* Hero */
-        .hero {
-            background: linear-gradient(rgba(5, 103, 250, 0.37), rgba(4, 102, 248, 0.8)), url('{{ url_for("static", filename="img/hero-bg.jpg") }}') no-repeat center center;
-            background-size: cover;
-            color: white;
-            text-align: center;
-            padding: 120px 20px;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
-        }
-        .btn-hero {
-            font-size: 1.2rem;
-            padding: 12px 30px;
-            transition: 0.3s;
-        }
-        .btn-hero:hover {
-            transform: scale(1.05);
-        }
-
-        /* Features */
-        .feature-icon {
-            font-size: 3rem;
-            color: #fefeffff;
-            margin-bottom: 15px;
-            transition: 0.3s;
-        }
-        .feature-icon:hover {
-            color: #0056b3;
-        }
-
-        /* Sections */
-        section {
-            padding: 80px 0;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 0;
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
         }
     </style>
 </head>
-<body>
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">App Time Sheet</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="#hero">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="#features">Funcionalidades</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">Como Funciona</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('registros.exportar') }}">Relatórios</a></li>
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                {% if session.user_id %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a></li>
-                {% endif %}
-            </ul>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-primary dark:text-gray-200">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+        <div class="flex h-full grow">
+            <!-- SideNavBar -->
+            <div class="flex flex-col w-64 bg-white dark:bg-gray-800 shadow-md" style="position: fixed; height: 100%;">
+                <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                    <img alt="Logo Geoprojetos" class="h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKpsuwAUuHFhhLtMS-THsimquUkUnrgTYs0NnpN1YnGbFng79Oox8kdq7iQY1Vc9OA-4zuMJ0W6yh_kcjLcvgdP-qrj5v6cE6tx9ARAFG6V414tI_iSMl0BaJwRQmnc0oG3NryxYaRd1DEi5rO1lLbsIT2EtnUiOIC2d-UWwYKrViqoy_lkubnG0eTGNor6OJlApfo49oCd4-VqZ2GfK66PJ8j2f3gAtPcdsrBLB_6vryDaXkiCHZHB4-Q4Kv3KMKPDCd-uLcd_uo"/>
+                </div>
+                <div class="flex flex-col flex-1 p-4 gap-2">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <p class="text-sm font-bold">Dashboard</p>
+                    </div>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.listar') }}">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <p class="text-sm font-medium">Registro de Horas</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
+                        <span class="material-symbols-outlined">assessment</span>
+                        <p class="text-sm font-medium">Relatórios</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('projetos.listar') }}">
+                        <span class="material-symbols-outlined">business_center</span>
+                        <p class="text-sm font-medium">Contratos</p>
+                    </a>
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto">
+                        <span class="material-symbols-outlined">settings</span>
+                        <p class="text-sm font-medium">Configurações</p>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 border-t dark:border-gray-700">
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of João Silva" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJFJf3RMKzPN1I5FTAHSDx95SJayt58O2538iAyH5USx7EkaFoyRlk2md2Tw3K6vnCPxyeQf8K4XKHdKEJG_DqyCKR_K201zO2aDZuv2Y4jtClDsH4Kp91qjU4iYFGoTWxft8hagIbn6rFBYuNZSucY7qXaZUwuXgnub5RPh_YssYnsyCLatacAga0-PnkA9QJ7BdrdZ77TDlcV0F4qjPUVgRD0pnt8RkM7NUVbBHJCRMhxs7jgqdlkPFFOkfIDk3hVXDq3BBmEw0");'></div>
+                        <div class="flex flex-col">
+                            <h1 class="text-text-primary dark:text-white text-base font-semibold">{{ usuario }}</h1>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Desenvolvedor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Main Content -->
+            <div class="flex-1 p-8 overflow-y-auto" style="margin-left: 16rem;">
+                <div class="layout-content-container flex flex-col max-w-full flex-1">
+                    <!-- HeadlineText -->
+                    <h1 class="text-text-primary dark:text-white tracking-light text-[32px] font-bold leading-tight">Dashboard</h1>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1 mb-6">Bem-vindo de volta, {{ usuario }}! Aqui está um resumo da sua semana.</p>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Left Column -->
+                        <div class="lg:col-span-2 flex flex-col gap-6">
+                            <!-- SectionHeader -->
+                            <h2 class="text-text-primary dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Fique por Dentro</h2>
+                            <!-- Carousel -->
+                            <div class="flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory scrollbar-hide">
+                                <div class="flex-shrink-0 w-72 flex flex-col gap-4 rounded-lg bg-white dark:bg-gray-800 shadow-md snap-start">
+                                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-t-lg" data-alt="An abstract image representing a new health plan benefit." style='background-image: url("https://wallpapers.com/images/hd/balloons-background-x2f7uvp2r5342vn7.jpg");'></div>
+                                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                                        <div>
+                                            <p class="text-text-primary dark:text-white text-base font-semibold">40 anos de Geoprojetos</p>
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Como será o evento de aniversário da empresa.</p>
+                                        </div>
+                                        <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+                                            <span class="truncate">Ler mais</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 w-72 flex flex-col gap-4 rounded-lg bg-white dark:bg-gray-800 shadow-md snap-start">
+                                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-t-lg" data-alt="An abstract image showing system update visuals." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDvqLcvbc52Wi0aXyCN66WhdLwdSWimFaf835tQTjEHKn4RG16NYDAoZOwWIeaCn7B0HUnWPOqBqZiGw4Jcc0WK4co3nR_yj2tRpdzlLwRQlrLdp9I5ejORsEFEUmkPdCny638_trcVhNLlTM_MivByb4ZARW9dXoDUSa0UOdbwOC4vyHkAjRbkDEfJbxUajAo-RvLFKrdPL4mAQpIWSV950f08Ci9UCzHy2RqSvnune6R2iOpFWBfOazFEIEZmDXdvgVzHKyXz2L8");'></div>
+                                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                                        <div>
+                                            <p class="text-text-primary dark:text-white text-base font-semibold">Atualização no sistema X</p>
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Confira as novidades da última atualização.</p>
+                                        </div>
+                                        <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+                                            <span class="truncate">Ler mais</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 w-72 flex flex-col gap-4 rounded-lg bg-white dark:bg-gray-800 shadow-md snap-start">
+                                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-t-lg" data-alt="A festive image from the end-of-year party." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBAIk5Uu4dKvQGGYl7oLZjVAZKRLIdFGCqoxz0_VJ2PFcr-RqY_TD0gGHRewCp8ajDMWfzoqNBkf6-kbUhXdGemGfh3LFhVi_w2kwjWL1wVavoc_bS0RCuHDiTqHF6qWqaRPM2Nd4kF-uIQWE9NzuynIR77zDtJoCj013qnC6P7IotZmNCv1x9eRFR7SHddTCgeSdrq_4P_2NaeJqsNx8uFKoHnIuOv-_pg2BAts2bt6DJlyXQhjPxX2INWb3Ag-xDACCTIWEKU3Oc");'></div>
+                                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                                        <div>
+                                            <p class="text-text-primary dark:text-white text-base font-semibold">Confraternização de fim de ano</p>
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Veja as fotos da nossa festa de fim de ano.</p>
+                                        </div>
+                                        <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+                                            <span class="truncate">Ler mais</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0 w-72 flex flex-col gap-4 rounded-lg bg-white dark:bg-gray-800 shadow-md snap-start">
+                                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-t-lg" data-alt="An abstract image representing a new health plan benefit." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAVRG-X58HdkxVQEZM8J4xZHvA8MBWCgXQFyZV_yS6a2hblL_YR9o4iOx_hUY4-R-jllnSBapvsSyACxx_OXJeUXlWVtjG06wmK3Yuo4RH9Iph9VMn6NtCUDh_sWdpp5NAZt-nJ5bmahPgSPp2aX99N0Zs-DTIbxQanvN9x6X7b9P57SVD1BSe75KXHkRxcymhGWKXG4ph7M6yuZzCJdSvasOBY2lwWesGS77F3SZ9DJ8PK6peuFo_gb19KiUAvH0ULj1RZAZTWXJE");'></div>
+                                    <div class="flex flex-col flex-1 justify-between p-4 pt-0 gap-4">
+                                        <div>
+                                            <p class="text-text-primary dark:text-white text-base font-semibold">Novo benefício para funcionários</p>
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Saiba mais sobre o novo plano de saúde.</p>
+                                        </div>
+                                        <button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-300 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 dark:hover:bg-primary/30 transition-colors">
+                                            <span class="truncate">Ler mais</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- SectionHeader -->
+                            <h2 class="text-text-primary dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">Sua Semana em Números</h2>
+                            <!-- === Charts Section === -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                                    <h3 class="font-bold text-lg p-6 pb-1">Horas por Contrato</h3>
+                                    <div id="grafico-horas">
+                                        <!-- <img class="w-full h-auto" data-alt="A donut chart showing time distribution: 40% Development, 25% Meetings, 20% Support, 15% Planning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCpbJ-DBA6k6Dy2cWYVVNb7xdi77F5PQr_PbhmUkCmR1KWIEj8pkFtFyyk0XBOdSjZJTzxpoeV5DgNfgZhsI07i9iYwthFOHopF0tL_nv9MDaizoGwBY75qiKgVd5MEfCyMVs1bCCEjB7xUa6sP_fJduSV5E4OW39myA_bv_ddpaaxQsMvQ2qPUz_3h43-lCzJJaWfynAZur1RH54gCNw4GFpn3A4thCTaag8_9_uZ9muhn4MEKC4Z06HGDJ9NSP1SRm5jc7YR-D0"/> -->
+                                    </div>
+                                </div>
+                                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                                    <h3 class="font-bold text-lg p-6 pb-1">Evolução das Horas no Mês</h3>
+                                    <div id="grafico-hora-mes">
+                                        <!-- <img class="w-full h-auto" data-alt="A line chart showing hours worked throughout the month, with a general upward trend." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtBoMEpeJVwGABWH6rnmjj0n2M1_C_z-23WGLz8aFCcC6tDJZmYAMn9qAn78TmE-xDAdmSI8l9zw-qjM5hexAeUj501dWpDzDs6S574gAYL9APO3K09kjASb5J-2RcQysr7qBl4nDKsrMiq2xPgrhrUkRm5VW6UQaNR2SoIV2iXgNGrC4JXI8cuGuFrOPAjVvdAg3jCldMORLojRCvvzC1FxpcWjGhps7wI8MNk09Cu_BooVwGQXCHiePpgVtr0BR6g2bbRr4rOlU"/> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Column -->
+                        <div class="lg:col-span-1">
+                            <div class="flex flex-col gap-6">
+                                <!-- Quick Actions -->
+                                <div class="flex flex-col gap-4">
+                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors shadow-md" href="{{ url_for('registros.listar') }}">
+                                        <span class="material-symbols-outlined">add_circle</span>
+                                        <span>Registrar Minhas Horas</span>
+                                    </a>
+                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-gray-200 dark:bg-gray-700 text-text-primary dark:text-white text-base font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow-md" href="{{ url_for('registros.exportar') }}">
+                                        <span class="material-symbols-outlined">picture_as_pdf</span>
+                                        <span>Ver Meus Relatórios</span>
+                                    </a>
+                                </div>
+                                <!-- Weekly Hours Summary -->
+                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-semibold text-lg text-gray-500 dark:text-gray-400">Horas da Semana</h3>
+                                        <p class="text-4xl font-bold text-primary mt-1">32/40h</p>
+                                    </div>
+                                    <div class="w-20 h-20 flex items-center justify-center rounded-full bg-accent-success/10 text-accent-success">
+                                        <span class="material-symbols-outlined" style="font-size: 48px;">check_circle</span>
+                                    </div>
+                                </div>
+                                <!-- Projects in Progress -->
+                                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                                    <h3 class="font-bold text-lg mb-4">Projetos em Andamento</h3>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <p class="font-medium">Sistema de Gestão Interna</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">75%</p>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                <div class="bg-primary h-2.5 rounded-full" style="width: 75%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <p class="font-medium">App Mobile Vendas</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">40%</p>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                <div class="bg-accent-warning h-2.5 rounded-full" style="width: 40%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="flex justify-between mb-1">
+                                                <p class="font-medium">Dashboard de BI</p>
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">90%</p>
+                                            </div>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                <div class="bg-accent-success h-2.5 rounded-full" style="width: 90%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
 
-<!-- Hero Section -->
-<section class="hero" id="hero">
-    <div class="container">
-        <h1>Gerencie Horas e Contratos com Eficiência</h1>
-        <p>App Time Sheet é a forma mais simples de registrar, monitorar e exportar as horas de seus colaboradores.</p>
-        <a href="{{ url_for('registros.adicionar') }}" class="btn btn-light btn-hero">Registrar Horas</a>
-    </div>
-</section>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script>
+    (function() {
+        // == Gráfico de Pizza: Horas por Projeto ==
+        let projetosGrafico = {{ projetos|tojson|safe }};
+        let horasProjetoGrafico = {{ horas|tojson|safe }};
 
-<!-- Features Section -->
-<section id="features">
-    <div class="container">
-        <h2 class="section-title">Funcionalidades Principais</h2>
-        <div class="row text-center g-5">
-            <div class="col-md-4">
-                <i class="bi bi-people-fill feature-icon"></i>
-                <h4>Colaboradores</h4>
-                <p>Cadastre e gerencie colaboradores de forma prática e rápida.</p>
-                <a href="{{ url_for('funcionarios.listar') }}" class="btn btn-primary mt-2">Acessar</a>
-            </div>
-            <div class="col-md-4">
-                <i class="bi bi-folder-fill feature-icon"></i>
-                <h4>Contratos</h4>
-                <p>Visualize, organize e gerencie contratos da empresa com facilidade.</p>
-                <a href="{{ url_for('projetos.listar') }}" class="btn btn-primary mt-2">Acessar</a>
-            </div>
-            <div class="col-md-4">
-                <i class="bi bi-clock-fill feature-icon"></i>
-                <h4>Registros de Horas</h4>
-                <p>Registre, filtre e exporte as horas trabalhadas em cada contrato.</p>
-                <a href="{{ url_for('registros.listar') }}" class="btn btn-primary mt-2">Acessar</a>
-            </div>
-        </div>
-    </div>
-</section>
+        if (!projetosGrafico || projetosGrafico.length === 0) {
+            document.getElementById('grafico-horas').innerHTML = "<p>Nenhum dado disponível.</p>";
+            return;
+        }
 
-<!-- About Section -->
-<section id="about" class="bg-light">
-    <div class="container">
-        <h2 class="section-title">Como Funciona</h2>
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <p class="lead">Nosso sistema permite que você registre, monitore e exporte todas as horas trabalhadas pelos colaboradores em poucos cliques. Tudo é feito de forma organizada e segura, para que você possa focar no crescimento do seu negócio.</p>
-                <ul class="list-unstyled">
-                    <li>✅ Registro rápido de horas</li>
-                    <li>✅ Controle de contratos e colaboradores</li>
-                    <li>✅ Exportação de relatórios em Excel</li>
-                </ul>
-                <a href="{{ url_for('registros.adicionar') }}" class="btn btn-primary mt-3">Comece Agora</a>
-            </div>
-            <div class="col-md-6 text-center">
-                <img src="{{ url_for('static', filename='img/dashboard-preview.png') }}" class="img-fluid rounded shadow" alt="Preview do sistema">
-            </div>
-        </div>
-    </div>
-</section>
+        const dataProjetos = {
+            labels: projetosGrafico,   // cada fatia representa um projeto
+            values: horasProjetoGrafico,      // valores correspondentes às horas
+            type: 'pie',
+            text: horasProjetoGrafico.map(h => h + ' h'),
+            textinfo: 'label+text',
+            hoverinfo: 'label+text+percent',
+            textposition: 'inside', // 'inside', 'outside' ou 'auto'
+            // hovertemplate: "%{label}: %{text}<extra></extra>",
+            marker: {
+                colors: ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880'],
+                line: {
+                    color: '#FFFFFF',
+                    width: 1
+                }
+            }
+        };
 
-<!-- Call to Action -->
-<section class="text-white" style="background-color:#0d6efd;">
-    <div class="container text-center py-5">
-        <h2 class="mb-4">Pronto para gerenciar suas horas?</h2>
-        <a href="{{ url_for('registros.adicionar') }}" class="btn btn-light btn-lg">Registrar Horas Agora</a>
-    </div>
-</section>
+        const layoutProjetos = {
+            margin: { t: 15, b: 5, l: 5, r: 5},
+            // paper_bgcolor: '#f5f5f5',  // fundo total do gráfico (incluindo bordas)
+            // plot_bgcolor: '#000000', // fundo da plotagem
+            showlegend: false,
+            hovermode: 'closest', // ou 'x' / 'y'
+            // hoverdistance: 5, // distância em pixels para ativar o hover
+        };
 
-<!-- Footer -->
-<footer>
-    <div class="container text-center">
-        <p>&copy; 2025 Sistema de Controle de Horas | Desenvolvido por Sua Empresa</p>
-    </div>
-</footer>
+        Plotly.newPlot('grafico-horas', [dataProjetos], layoutProjetos, {responsive: true});
+    })();
+    (function() {
+            // == Gráfico de Linhas: Evolução das Horas no Mês ==
+            let MesesGrafico = {{ meses|tojson|safe }};
+            let horasMesesGrafico = {{ horas_mensais|tojson|safe }};
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+            if (!horasMesesGrafico || horasMesesGrafico.length === 0) {
+                document.getElementById('grafico-hora-mes').innerHTML = "<p>Nenhum dado disponível.</p>";
+                return;
+            }
+
+        let dataMeses = {
+            x: MesesGrafico,
+            y: horasMesesGrafico,
+            type: 'bar',
+            text: horasMesesGrafico.map(h => h.toFixed(2) + 'h'),
+            textposition: 'outside',
+            marker: { 
+            color: '#005a9c',
+            line: { color: '#005593', width: 1 }
+        },
+        };
+
+        const layoutMeses = {
+            // title: 'Horas Trabalhadas por Projeto',
+            // xaxis: { title: 'Meses' },
+            // yaxis: { title: 'Horas Trabalhadas' },
+            margin: { t: 50, b: 100 }
+        };
+
+        Plotly.newPlot('grafico-hora-mes', [dataMeses], layoutMeses, {responsive: true});
+
+    })();
+    </script>
+
 </body>
 </html>
