@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)  # Chave secreta para sessões
 
 # Registrar blueprints
-app.register_blueprint(funcionarios_bp, url_prefix='/funcionarios')
+app.register_blueprint(funcionarios_bp, url_prefix='/colaboradores')
 app.register_blueprint(projetos_bp, url_prefix='/contratos')
 app.register_blueprint(registros_bp, url_prefix='/registros')
 app.register_blueprint(auth_bp, url_prefix='/auth')

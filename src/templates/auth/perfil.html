@@ -19,7 +19,7 @@
                     </li>
                     {% if session.get('usuario_tipo') == 'administrador' %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Funcionários</a>
+                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Funcionários</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('contratos.listar') }}">Projetos</a>

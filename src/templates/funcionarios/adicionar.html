@@ -20,7 +20,7 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('funcionarios.listar') }}">Colaboradores</a>
+                        <a class="nav-link active" href="{{ url_for('colaboradores.listar') }}">Colaboradores</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('contratos.listar') }}">Contratos</a>
@@ -57,20 +57,20 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Adicionar Colaborador</h2>
-            <a href="{{ url_for('funcionarios.listar') }}" class="btn btn-secondary">
+            <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary">
                 Voltar para Lista
             </a>
         </div>
 
         <div class="card">
             <div class="card-body">
-                <form method="POST" action="{{ url_for('funcionarios.adicionar') }}">
+                <form method="POST" action="{{ url_for('colaboradores.adicionar') }}">
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome do Colaborador</label>
                         <input type="text" class="form-control" id="nome" name="nome" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar</button>
-                    <a href="{{ url_for('funcionarios.listar') }}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary">Cancelar</a>
                 </form>
             </div>
         </div>
