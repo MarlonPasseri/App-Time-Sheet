@@ -1,60 +1,67 @@
-import pandas as pd
-import plotly.express as px
-import plotly
-import json
-from src.models.database import BancoDeDados
+import calendar
+import locale
+from src.models.database import db
 
-class DashboardService:
-    def __init__(self):
-        self.banco = BancoDeDados()
+locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
 
-    def gerar_grafico_horas_por_projeto(self, usuario_id):
-        """Gera gráfico de horas trabalhadas por projeto (respeitando o tipo de usuário)."""
-        usuario = self.banco.obter_usuario(usuario_id)
-        if not usuario:
-            return None
 
-        # 🔹 Obter registros com base no tipo de usuário
-        if usuario.is_admin():
-            registros = self.banco.listar_registros_horas()
-        elif usuario.is_funcionario() and usuario.funcionario_id:
-            registros = self.banco.listar_registros_horas(funcionario_id=usuario.funcionario_id)
-        else:
-            return None
+def calcular_horas_por_projeto(usuario_id):
+    """Retorna listas de projetos e horas trabalhadas em cada um."""
 
-        if not registros:
-            return None
+    registros = obter_dados_dashboard(usuario_id)
 
-        # 🔹 Montar DataFrame
-        dados = []
-        for r in registros:
-            projeto = self.banco.obter_projeto(r.projeto_id)
-            dados.append({
-                "projeto": f"{projeto.id} | {projeto.nome}" if projeto else "Desconhecido",
-                "horas": float(r.horas_trabalhadas),
-            })
+    horas_por_projeto = {}
+    for registro in registros:
+        projeto = db.obter_projeto(registro.projeto_id)
+        nome_projeto = projeto.nome if projeto else "Desconhecido"
+        horas_por_projeto[nome_projeto] = horas_por_projeto.get(nome_projeto, 0) + registro.horas_trabalhadas
 
-        df = pd.DataFrame(dados)
-        df_agrupado = df.groupby("projeto", as_index=False)["horas"].sum()
+    projetos = list(horas_por_projeto.keys())
+    horas = list(horas_por_projeto.values())
+    return projetos, horas
 
-        # 🔹 Garantir que os tipos são nativos (sem NumPy)
-        df_agrupado = df_agrupado.astype({"projeto": str, "horas": float})
 
-        # 🔹 Criar gráfico
-        fig = px.bar(
-            df_agrupado,
-            x="projeto",
-            y="horas",
-            text="horas",
-            title="Horas Trabalhadas por Projeto",
-            color="projeto",
-        )
+def calcular_horas_por_mes(usuario_id):
+    """Retorna listas com os últimos 4 meses e suas horas trabalhadas."""
 
-        fig.update_traces(texttemplate="%{text:.2f}", textposition="outside")
-        fig.update_layout(
-            xaxis_title="Projeto",
-            yaxis_title="Horas Trabalhadas",
-            showlegend=False
-        )
+    registros = obter_dados_dashboard(usuario_id)
 
-        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    horas_por_mes = {}
+    for registro in registros:
+        if hasattr(registro, "data") and registro.data:
+            try:
+                # separa mês e ano da string no formato "MM-YYYY"
+                mes_str, ano_str = registro.data.split("-")
+                mes = int(mes_str)
+                ano = int(ano_str)
+                chave = (ano, mes)
+
+                horas_por_mes[chave] = horas_por_mes.get(chave, 0) + registro.horas_trabalhadas
+            except Exception as e:
+                print(f"Erro ao processar data {registro.data}: {e}")
+
+    # Ordenar cronologicamente e pegar os 4 últimos
+    horas_por_mes_ordenado = dict(sorted(horas_por_mes.items()))
+    ultimos_4 = list(horas_por_mes_ordenado.items())[-4:]
+
+    meses = [
+        f"{calendar.month_name[mes][:3].capitalize()}/{ano}"
+        for (ano, mes), _ in ultimos_4
+    ]
+    horas_mensais = [h for _, h in ultimos_4]
+
+    return meses, horas_mensais
+
+
+def obter_dados_dashboard(usuario_id):
+    """Obtém os registros de horas com base no tipo de usuário."""
+
+    usuario = db.obter_usuario(usuario_id)
+
+    # Se for funcionário, mostra só os registros dele
+    if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
+        registros = db.listar_registros_horas(funcionario_id=usuario.funcionario_id)
+    else:
+        registros = db.listar_registros_horas()
+    
+    return registros

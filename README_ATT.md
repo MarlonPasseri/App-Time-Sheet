@@ -1,5 +1,6 @@
 ### ChangeLog 
 
+* 23/10/2025: proj-b-006 - Atualização de dashboards e do front tela inicial
 * 22/10/2025: proj-b-006 - Adição dashboards na tela inicial / Front tela inicial
 * 21/10/2025: proj-b-005 - Front tela login
 * 21/10/2025: proj-b-004 - Remocao tabela agregada mensal / Remocao cap de 24h registro de horas / Filtros funcionais / Formatacoes planilha export

@@ -58,18 +58,18 @@
                         <span class="material-symbols-outlined">dashboard</span>
                         <p class="text-sm font-bold">Dashboard</p>
                     </div>
-                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.listar') }}">
                         <span class="material-symbols-outlined">schedule</span>
                         <p class="text-sm font-medium">Registro de Horas</p>
-                    </div>
-                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
                         <span class="material-symbols-outlined">assessment</span>
                         <p class="text-sm font-medium">Relatórios</p>
-                    </div>
-                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('projetos.listar') }}">
                         <span class="material-symbols-outlined">business_center</span>
-                        <p class="text-sm font-medium">Projetos</p>
-                    </div>
+                        <p class="text-sm font-medium">Contratos</p>
+                    </a>
                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto">
                         <span class="material-symbols-outlined">settings</span>
                         <p class="text-sm font-medium">Configurações</p>
@@ -77,7 +77,7 @@
                     <div class="flex items-center gap-3 p-4 border-t dark:border-gray-700">
                         <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of João Silva" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDJFJf3RMKzPN1I5FTAHSDx95SJayt58O2538iAyH5USx7EkaFoyRlk2md2Tw3K6vnCPxyeQf8K4XKHdKEJG_DqyCKR_K201zO2aDZuv2Y4jtClDsH4Kp91qjU4iYFGoTWxft8hagIbn6rFBYuNZSucY7qXaZUwuXgnub5RPh_YssYnsyCLatacAga0-PnkA9QJ7BdrdZ77TDlcV0F4qjPUVgRD0pnt8RkM7NUVbBHJCRMhxs7jgqdlkPFFOkfIDk3hVXDq3BBmEw0");'></div>
                         <div class="flex flex-col">
-                            <h1 class="text-text-primary dark:text-white text-base font-semibold">João Silva</h1>
+                            <h1 class="text-text-primary dark:text-white text-base font-semibold">{{ usuario }}</h1>
                             <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Desenvolvedor</p>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                 <div class="layout-content-container flex flex-col max-w-full flex-1">
                     <!-- HeadlineText -->
                     <h1 class="text-text-primary dark:text-white tracking-light text-[32px] font-bold leading-tight">Dashboard</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1 mb-6">Bem-vindo de volta, João! Aqui está um resumo da sua semana.</p>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1 mb-6">Bem-vindo de volta, {{ usuario }}! Aqui está um resumo da sua semana.</p>
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Left Column -->
                         <div class="lg:col-span-2 flex flex-col gap-6">
@@ -180,14 +180,14 @@
                             <div class="flex flex-col gap-6">
                                 <!-- Quick Actions -->
                                 <div class="flex flex-col gap-4">
-                                    <button class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors shadow-md">
+                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors shadow-md" href="{{ url_for('registros.listar') }}">
                                         <span class="material-symbols-outlined">add_circle</span>
                                         <span>Registrar Minhas Horas</span>
-                                    </button>
-                                    <button class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-gray-200 dark:bg-gray-700 text-text-primary dark:text-white text-base font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow-md">
+                                    </a>
+                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-gray-200 dark:bg-gray-700 text-text-primary dark:text-white text-base font-bold hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors shadow-md" href="{{ url_for('registros.exportar') }}">
                                         <span class="material-symbols-outlined">picture_as_pdf</span>
                                         <span>Ver Meus Relatórios</span>
-                                    </button>
+                                    </a>
                                 </div>
                                 <!-- Weekly Hours Summary -->
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-between">
