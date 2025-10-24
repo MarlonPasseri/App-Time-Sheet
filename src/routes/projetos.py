@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, jsonif
 from src.models.database import db
 from src.utils.auth_utils import login_required, admin_required
 
-projetos_bp = Blueprint('projetos', __name__)
+projetos_bp = Blueprint('contratos', __name__)
 
 @projetos_bp.route('/')
 @login_required
@@ -18,7 +18,7 @@ def detalhes(id):
     projeto = db.obter_projeto(id)
     if not projeto:
         flash('Projeto não encontrado!', 'danger')
-        return redirect(url_for('projetos.listar'))
+        return redirect(url_for('contratos.listar'))
     
     return render_template('projetos/detalhes.html', projeto=projeto, db=db)
 
@@ -40,16 +40,16 @@ def importar_lista():
     try:
         if 'arquivo_contratos' not in request.files:
             flash('Nenhum arquivo foi selecionado!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         arquivo = request.files['arquivo_contratos']
         if arquivo.filename == '':
             flash('Nenhum arquivo foi selecionado!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         if not arquivo.filename.lower().endswith(('.xlsx', '.xls')):
             flash('Formato de arquivo inválido! Use apenas arquivos Excel (.xlsx ou .xls)', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         # Lê o arquivo Excel
         df = pd.read_excel(arquivo)
@@ -57,7 +57,7 @@ def importar_lista():
         # Verifica se o arquivo tem pelo menos 2 colunas
         if len(df.columns) < 2:
             flash('O arquivo deve ter pelo menos 2 colunas (ID e Nome)!', 'danger')
-            return redirect(url_for('projetos.listar'))
+            return redirect(url_for('contratos.listar'))
         
         # Assume que as duas primeiras colunas são ID e Nome
         df.columns = ['id', 'nome'] + list(df.columns[2:])
@@ -103,5 +103,5 @@ def importar_lista():
     except Exception as e:
         flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
     
-    return redirect(url_for('projetos.listar'))
+    return redirect(url_for('contratos.listar'))
 

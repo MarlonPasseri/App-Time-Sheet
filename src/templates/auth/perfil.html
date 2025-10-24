@@ -22,7 +22,7 @@
                         <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Funcionários</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Projetos</a>
+                        <a class="nav-link" href="{{ url_for('contratos.listar') }}">Projetos</a>
                     </li>
                     {% endif %}
                     <li class="nav-item">
@@ -69,7 +69,7 @@
                         <form method="POST" action="{{ url_for('auth.perfil') }}">
                             <div class="mb-3">
                                 <label for="nome" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}" required>
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}" required {{ 'readonly' if usuario.tipo == 'administrador' else '' }}>
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
