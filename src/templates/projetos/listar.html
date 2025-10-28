@@ -20,10 +20,10 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('funcionarios.listar') }}">Colaboradores</a>
+                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Colaboradores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('projetos.listar') }}">Contratos</a>
+                        <a class="nav-link active" href="{{ url_for('contratos.listar') }}">Contratos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
@@ -86,7 +86,7 @@
                                         <td>{{ projeto.id }}</td>
                                         <td>{{ projeto.nome }}</td>
                                         <td>
-                                            <a href="{{ url_for('projetos.detalhes', id=projeto.id) }}" class="btn btn-sm btn-info">
+                                            <a href="{{ url_for('contratos.detalhes', id=projeto.id) }}" class="btn btn-sm btn-info">
                                                 Detalhes
                                             </a>
                                         </td>
@@ -123,7 +123,7 @@
                     <h5 class="modal-title" id="modalImportarContratosLabel">Importar Lista de Contratos</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ url_for('projetos.importar_lista') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ url_for('contratos.importar_lista') }}" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="arquivo_contratos" class="form-label">Arquivo Excel (.xlsx)</label>

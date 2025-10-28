@@ -20,10 +20,10 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('funcionarios.listar') }}">Colaboradores</a>
+                        <a class="nav-link active" href="{{ url_for('colaboradores.listar') }}">Colaboradores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('projetos.listar') }}">Contratos</a>
+                        <a class="nav-link" href="{{ url_for('contratos.listar') }}">Contratos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
@@ -57,7 +57,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Lista de Colaboradores</h2>
-            <a href="{{ url_for('funcionarios.adicionar') }}" class="btn btn-success">
+            <a href="{{ url_for('colaboradores.adicionar') }}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Adicionar Colaborador
             </a>
         </div>
@@ -80,10 +80,10 @@
                                         <td>{{ funcionario.id }}</td>
                                         <td>{{ funcionario.nome }}</td>
                                         <td>
-                                            <a href="{{ url_for('funcionarios.editar', id=funcionario.id) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ url_for('colaboradores.editar', id=funcionario.id) }}" class="btn btn-sm btn-primary">
                                                 Editar
                                             </a>
-                                            <form action="{{ url_for('funcionarios.remover', id=funcionario.id) }}" method="POST" class="d-inline">
+                                            <form action="{{ url_for('colaboradores.remover', id=funcionario.id) }}" method="POST" class="d-inline">
                                                 <button type="submit" class="btn btn-sm btn-danger btn-delete">
                                                     Excluir
                                                 </button>
@@ -96,7 +96,7 @@
                     </div>
                 {% else %}
                     <div class="alert alert-info">
-                        Nenhum colaborador cadastrado. <a href="{{ url_for('funcionarios.adicionar') }}">Adicionar um colaborador</a>.
+                        Nenhum colaborador cadastrado. <a href="{{ url_for('colaboradores.adicionar') }}">Adicionar um colaborador</a>.
                     </div>
                 {% endif %}
             </div>

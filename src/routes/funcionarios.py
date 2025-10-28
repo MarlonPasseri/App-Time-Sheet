@@ -9,7 +9,7 @@ import logging
 # Configuração de logs (útil para depuração e auditoria)
 logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 
-funcionarios_bp = Blueprint('funcionarios', __name__)
+funcionarios_bp = Blueprint('colaboradores', __name__)
 
 # =====================
 # 👥 LISTAGEM DE FUNCIONÁRIOS
@@ -46,7 +46,7 @@ def adicionar():
             funcionario = db.adicionar_funcionario(nome)
             flash(f'Funcionário "{funcionario.nome}" adicionado com sucesso!', 'success')
             logging.info(f"Funcionário adicionado: {funcionario.nome} (ID: {funcionario.id})")
-            return redirect(url_for('funcionarios.listar'))
+            return redirect(url_for('colaboradores.listar'))
         except Exception as e:
             logging.exception("Erro ao adicionar funcionário:")
             flash('Erro ao adicionar funcionário. Tente novamente.', 'danger')
@@ -64,7 +64,7 @@ def editar(id):
     funcionario = db.obter_funcionario(id)
     if not funcionario:
         flash('Funcionário não encontrado.', 'danger')
-        return redirect(url_for('funcionarios.listar'))
+        return redirect(url_for('colaboradores.listar'))
 
     if request.method == 'POST':
         nome = request.form.get('nome', '').strip()
@@ -78,7 +78,7 @@ def editar(id):
             if sucesso:
                 flash('Funcionário atualizado com sucesso!', 'success')
                 logging.info(f"Funcionário atualizado (ID=%s): novo nome = %s", id, nome)
-                return redirect(url_for('funcionarios.listar'))
+                return redirect(url_for('colaboradores.listar'))
             else:
                 flash('Erro ao atualizar funcionário.', 'danger')
         except Exception as e:
@@ -106,7 +106,7 @@ def remover(id):
         logging.exception("Erro ao remover funcionário:")
         flash('Erro inesperado ao remover funcionário.', 'danger')
 
-    return redirect(url_for('funcionarios.listar'))
+    return redirect(url_for('colaboradores.listar'))
 
 
 # =====================
@@ -119,7 +119,7 @@ def api_listar():
     try:
         funcionarios = db.listar_funcionarios()
         data = [f.to_dict() for f in funcionarios]
-        logging.info(f"API /funcionarios/api/listar retornou {len(data)} registros.")
+        logging.info(f"API /colaboradores/api/listar retornou {len(data)} registros.")
         return jsonify(data)
     except Exception as e:
         logging.exception("Erro ao obter lista de funcionários via API:")
