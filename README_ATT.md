@@ -1,5 +1,6 @@
 ### ChangeLog 
 
+* 29/10/2025: proj-b-009 - Seleção até o mês atual no registro de horas / Quantidade de horas limitada a data atual do mês no registro de horas
 * 27/10/2025: proj-b-008 - Botão de colaboradores na home / Adição da logo / Total de horas na home / Remoção da opção se selecionar colaborador no filtro e adição de registro de hora se funcionário
 * 24/10/2025: proj-b-007 - Alteração da rota 'funcionarios' para rota 'colaboradores'
 * 24/10/2025: proj-b-007 - Alteração da rota 'projetos' para rota 'contratos' / ADM tem nome readonly na alteração do perfil

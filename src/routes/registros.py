@@ -17,7 +17,7 @@ def listar():
     # Obtém o usuário atual
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
-    admin_check = usuario.is_admin()
+    admin_check = usuario and usuario.tipo == 'administrador'
     
     # Parâmetros de filtro opcionais
     projeto_id = request.args.get('projeto_id', type=int)
@@ -88,9 +88,10 @@ def adicionar():
 
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
-    admin_check = usuario.is_admin()
+    admin_check = usuario and usuario.tipo == 'administrador'
 
     if request.method == 'POST':
+
         # Se funcionário, força o próprio ID
         if admin_check:
             funcionario_id = request.form.get('funcionario_id', type=int)
@@ -103,7 +104,23 @@ def adicionar():
 
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             try:
-                data = datetime.strptime(data_str, '%Y-%m').strftime('%m-%Y')
+                data_obj = datetime.strptime(data_str, '%Y-%m')
+                hoje = datetime.now()
+
+                # Bloqueia se o mês for futuro
+                if data_obj > hoje.replace(day=1):
+                    flash('Não é possível adicionar registros para meses futuros.', 'warning')
+                    return redirect(url_for('registros.adicionar'))
+
+                # Se for o mês atual, limita pelas horas do dia atual
+                if data_obj.month == hoje.month and data_obj.year == hoje.year:
+                    limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
+                    if horas_trabalhadas > limite_horas:
+                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
+                        return redirect(url_for('registros.adicionar'))
+
+                # Tudo certo, salva no formato MM-YYYY
+                data = data_obj.strftime('%m-%Y')
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
                     projeto_id=projeto_id,
@@ -121,12 +138,15 @@ def adicionar():
         else:
             flash('Todos os campos são obrigatórios!', 'danger')
 
+    mes_atual = datetime.now().strftime('%Y-%m')
+
     return render_template(
         'registros/adicionar.html',
         funcionarios=funcionarios,
         projetos=projetos,
         admin_check=admin_check,
-        funcionario_logado=usuario.funcionario_id if not admin_check else None
+        funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
+        mes_atual=mes_atual
     )
 
 @registros_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
@@ -142,7 +162,7 @@ def editar(id):
 
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
-    admin_check = usuario.is_admin()
+    admin_check = usuario and usuario.tipo == 'administrador'
 
     if request.method == 'POST':
         # Se funcionário, força o próprio ID
@@ -158,7 +178,23 @@ def editar(id):
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
             try:
-                data = datetime.strptime(data_str, '%Y-%m').strftime('%m-%Y')
+                data_obj = datetime.strptime(data_str, '%Y-%m')
+                hoje = datetime.now()
+
+                # Bloqueia se o mês for futuro
+                if data_obj > hoje.replace(day=1):
+                    flash('Não é possível adicionar registros para meses futuros.', 'warning')
+                    return redirect(url_for('registros.adicionar'))
+
+                # Se for o mês atual, limita pelas horas do dia atual
+                if data_obj.month == hoje.month and data_obj.year == hoje.year:
+                    limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
+                    if horas_trabalhadas > limite_horas:
+                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
+                        return redirect(url_for('registros.adicionar'))
+
+                # Tudo certo, salva no formato MM-YYYY
+                data = data_obj.strftime('%m-%Y')
                 if db.atualizar_registro_horas(
                     id=id,
                     funcionario_id=funcionario_id,
@@ -182,6 +218,8 @@ def editar(id):
             data_input_value = datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m")
         except ValueError:
             pass
+
+    mes_atual = datetime.now().strftime('%Y-%m')
     
     return render_template(
         'registros/editar.html',
@@ -190,7 +228,8 @@ def editar(id):
         projetos=projetos,
         admin_check=admin_check,
         funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
-        data_input_value=data_input_value
+        data_input_value=data_input_value,
+        mes_atual=mes_atual
     )
 
 @registros_bp.route('/remover/<int:id>', methods=['POST'])

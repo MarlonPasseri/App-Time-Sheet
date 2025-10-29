@@ -62,7 +62,7 @@
                         <select class="form-select" id="funcionario_id" name="funcionario_id" required>
                             <option value="">Selecione um colaborador</option>
                             {% for funcionario in funcionarios %}
-                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
+                                <option value="{{ funcionario.id }}" {% if funcionario.id == registro.funcionario_id %}selected{% endif %}>{{ funcionario.nome }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="data" class="form-label">Data</label>
-                        <input type="month" class="form-control" id="data" name="data" value="{{ data_input_value }}" required>
+                        <input type="month" class="form-control" id="data" name="data" value="{{ data_input_value }}" max="{{ mes_atual }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="horas_trabalhadas" class="form-label">Horas Trabalhadas</label>
