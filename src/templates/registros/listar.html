@@ -62,6 +62,8 @@
             </div>
             <div class="card-body">
                 <form method="GET" action="{{ url_for('registros.listar') }}" class="row g-3">
+                    {% if admin_check %}
+                    <!-- Campo visível apenas para administradores -->
                     <div class="col-md-4">
                         <label for="funcionario_id" class="form-label">Colaborador</label>
                         <select class="form-select" id="funcionario_id" name="funcionario_id">
@@ -73,6 +75,12 @@
                             {% endfor %}
                         </select>
                     </div>
+                    {% else %}
+                    <div class="col-md-4">
+                    <!-- Apenas passa o ID do funcionário logado -->
+                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                    </div>
+                    {% endif %}
                     <div class="col-md-4">
                         <label for="projeto_id" class="form-label">Contrato</label>
                         <select class="form-select" id="projeto_id" name="projeto_id">

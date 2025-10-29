@@ -13,20 +13,23 @@ registros_bp = Blueprint('registros', __name__)
 @login_required
 def listar():
     """Exibe a lista de registros de horas com base nas permissões do usuário."""
-    # Parâmetros de filtro opcionais
-    funcionario_id = request.args.get('funcionario_id', type=int)
-    projeto_id = request.args.get('projeto_id', type=int)
-    mes_ano = request.args.get('mes_ano')
-    ordenar = request.args.get('ordenar', 'data')
-    
+
     # Obtém o usuário atual
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
+    admin_check = usuario.is_admin()
     
-    # Se for funcionário, força o filtro pelo seu próprio ID
-    if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
+    # Parâmetros de filtro opcionais
+    projeto_id = request.args.get('projeto_id', type=int)
+    mes_ano = request.args.get('mes_ano')
+    ordenar = request.args.get('ordenar', 'data')
+
+    # Se funcionário, força o próprio ID
+    if admin_check:
+        funcionario_id = request.args.get('funcionario_id', type=int)
+    else:
         funcionario_id = usuario.funcionario_id
-    
+
     # Obtém os registros filtrados
     registros = db.listar_registros_horas(
         funcionario_id=funcionario_id,
@@ -73,6 +76,8 @@ def listar():
         filtro_projeto_id=projeto_id,
         filtro_mes_ano=mes_ano,
         total_horas=total_horas,
+        admin_check=admin_check,
+        funcionario_logado=funcionario_id
     )
 
 @registros_bp.route('/adicionar', methods=['GET', 'POST'])
@@ -80,15 +85,23 @@ def adicionar():
     """Adiciona um novo registro de horas."""
     funcionarios = db.listar_funcionarios()
     projetos = db.listar_projetos()
-    
+
+    usuario_id = session.get('usuario_id')
+    usuario = db.obter_usuario(usuario_id)
+    admin_check = usuario.is_admin()
+
     if request.method == 'POST':
-        funcionario_id = request.form.get('funcionario_id', type=int)
+        # Se funcionário, força o próprio ID
+        if admin_check:
+            funcionario_id = request.form.get('funcionario_id', type=int)
+        else:
+            funcionario_id = usuario.funcionario_id
+
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
-        
+
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
-            # Converte a data para o formato correto
             try:
                 data = datetime.strptime(data_str, '%Y-%m').strftime('%m-%Y')
                 registro = db.adicionar_registro_horas(
@@ -97,7 +110,7 @@ def adicionar():
                     data=data,
                     horas_trabalhadas=horas_trabalhadas
                 )
-                
+
                 if registro:
                     flash('Registro de horas adicionado com sucesso!', 'success')
                     return redirect(url_for('registros.adicionar'))
@@ -107,8 +120,14 @@ def adicionar():
                 flash('Formato de data inválido!', 'danger')
         else:
             flash('Todos os campos são obrigatórios!', 'danger')
-    
-    return render_template('registros/adicionar.html', funcionarios=funcionarios, projetos=projetos)
+
+    return render_template(
+        'registros/adicionar.html',
+        funcionarios=funcionarios,
+        projetos=projetos,
+        admin_check=admin_check,
+        funcionario_logado=usuario.funcionario_id if not admin_check else None
+    )
 
 @registros_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
@@ -120,9 +139,18 @@ def editar(id):
     
     funcionarios = db.listar_funcionarios()
     projetos = db.listar_projetos()
-    
+
+    usuario_id = session.get('usuario_id')
+    usuario = db.obter_usuario(usuario_id)
+    admin_check = usuario.is_admin()
+
     if request.method == 'POST':
-        funcionario_id = request.form.get('funcionario_id', type=int)
+        # Se funcionário, força o próprio ID
+        if admin_check:
+            funcionario_id = request.form.get('funcionario_id', type=int)
+        else:
+            funcionario_id = usuario.funcionario_id
+
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
@@ -146,12 +174,23 @@ def editar(id):
                 flash('Formato de data inválido!', 'danger')
         else:
             flash('Todos os campos são obrigatórios!', 'danger')
+
+    # conversão para exibir corretamente no input
+    data_input_value = ""
+    if registro.data:
+        try:
+            data_input_value = datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m")
+        except ValueError:
+            pass
     
     return render_template(
         'registros/editar.html',
         registro=registro,
         funcionarios=funcionarios,
-        projetos=projetos
+        projetos=projetos,
+        admin_check=admin_check,
+        funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
+        data_input_value=data_input_value
     )
 
 @registros_bp.route('/remover/<int:id>', methods=['POST'])

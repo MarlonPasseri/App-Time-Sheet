@@ -55,17 +55,23 @@
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ url_for('registros.editar', id=registro.id) }}">
+                    {% if admin_check %}
+                    <!-- Campo visível apenas para administradores -->
                     <div class="mb-3">
-                        <label for="funcionario_id" class="form-label">Funcionário</label>
+                        <label for="funcionario_id" class="form-label" >Colaborador</label>
                         <select class="form-select" id="funcionario_id" name="funcionario_id" required>
-                            <option value="">Selecione um funcionário</option>
+                            <option value="">Selecione um colaborador</option>
                             {% for funcionario in funcionarios %}
-                                <option value="{{ funcionario.id }}" {% if funcionario.id == registro.funcionario_id %}selected{% endif %}>
-                                    {{ funcionario.nome }}
-                                </option>
+                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    {% else %}
+                    <!-- Apenas passa o ID do funcionário logado -->
+                    <div class="mb-3">
+                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                    </div>
+                    {% endif %}
                     <div class="mb-3">
                         <label for="projeto_id" class="form-label">Projeto</label>
                         <select class="form-select" id="projeto_id" name="projeto_id" required>
@@ -79,12 +85,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="data" class="form-label">Data</label>
-                        <input type="date" class="form-control" id="data" name="data" value="{{ registro.data }}" required>
+                        <input type="month" class="form-control" id="data" name="data" value="{{ data_input_value }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="horas_trabalhadas" class="form-label">Horas Trabalhadas</label>
-                        <input type="number" class="form-control" id="horas_trabalhadas" name="horas_trabalhadas" 
-                               step="0.5" min="0.5" max="24" value="{{ registro.horas_trabalhadas }}" required>
+                        <input type="number" class="form-control" id="horas_trabalhadas" name="horas_trabalhadas" step="0.5" min="0.5" value="{{ registro.horas_trabalhadas }}" required>
                         <div class="form-text">Informe o número de horas trabalhadas (ex: 8.5 para 8 horas e 30 minutos)</div>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar Alterações</button>

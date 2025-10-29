@@ -509,15 +509,15 @@ class BancoDeDados:
             registro.projeto_id = projeto_id
         
         if data is not None:
-            # registro.data = data
+            registro.data = data
             # Atualizar o mês/ano de referência
-            if isinstance(data, str):
-                data_obj = datetime.strptime(data, "%Y-%m")
-                # registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
-                registro.data = data_obj.strftime("%m-%Y")
-            elif isinstance(data, datetime):
-                # registro.mes_ano_referencia = data.strftime("%Y-%m")
-                registro.data = data.strftime("%m-%Y")
+            # if isinstance(data, str):
+            #     data_obj = datetime.strptime(data, "%Y-%m")
+            #     # registro.mes_ano_referencia = data_obj.strftime("%Y-%m")
+            #     registro.data = data_obj.strftime("%m-%Y")
+            # elif isinstance(data, datetime):
+            #     # registro.mes_ano_referencia = data.strftime("%Y-%m")
+            #     registro.data = data.strftime("%m-%Y")
         
         if horas_trabalhadas is not None:
             registro.horas_trabalhadas = horas_trabalhadas

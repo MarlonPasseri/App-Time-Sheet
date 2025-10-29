@@ -8,7 +8,7 @@ from src.routes.projetos import projetos_bp
 from src.routes.registros import registros_bp
 from src.routes.auth import auth_bp
 from src.utils.auth_utils import login_required
-from src.utils.dashboards import calcular_horas_por_projeto, calcular_horas_por_mes
+from src.utils.dashboards import *
 import secrets
 
 app = Flask(__name__)
@@ -29,11 +29,21 @@ def index():
 
     projetos, horas = calcular_horas_por_projeto(usuario_id)
     meses, horas_mensais = calcular_horas_por_mes(usuario_id)
+    total_horas_mes, nome_mes_atual = calcular_total_horas_mes(usuario_id)
 
     usuario = session.get('usuario_nome')
+    admin_check = session.get('usuario_tipo') == 'administrador'
 
     # Passar os dados para o template
-    return render_template('index.html', projetos=projetos, horas=horas, meses=meses, horas_mensais=horas_mensais, usuario=usuario)
+    return render_template(
+        'index.html',
+        projetos=projetos, 
+        horas=horas, meses=meses, 
+        horas_mensais=horas_mensais, 
+        total_horas_mes=total_horas_mes, 
+        nome_mes_atual=nome_mes_atual, 
+        usuario=usuario, 
+        admin_check=admin_check)
 
 @app.route('/home')
 def home():
