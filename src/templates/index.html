@@ -51,24 +51,30 @@
             <!-- SideNavBar -->
             <div class="flex flex-col w-64 bg-white dark:bg-gray-800 shadow-md" style="position: fixed; height: 100%;">
                 <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
-                    <img alt="Logo Geoprojetos" class="h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKpsuwAUuHFhhLtMS-THsimquUkUnrgTYs0NnpN1YnGbFng79Oox8kdq7iQY1Vc9OA-4zuMJ0W6yh_kcjLcvgdP-qrj5v6cE6tx9ARAFG6V414tI_iSMl0BaJwRQmnc0oG3NryxYaRd1DEi5rO1lLbsIT2EtnUiOIC2d-UWwYKrViqoy_lkubnG0eTGNor6OJlApfo49oCd4-VqZ2GfK66PJ8j2f3gAtPcdsrBLB_6vryDaXkiCHZHB4-Q4Kv3KMKPDCd-uLcd_uo"/>
+                    <img alt="Logo Geoprojetos" class="h-10" src="https://geoprojetos.com.br/wp-content/uploads/2025/05/Geoprojetos40anos.png"/>
                 </div>
                 <div class="flex flex-col flex-1 p-4 gap-2">
                     <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
                         <span class="material-symbols-outlined">dashboard</span>
                         <p class="text-sm font-bold">Dashboard</p>
                     </div>
+                    {% if admin_check %}
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('colaboradores.listar') }}">
+                        <span class="material-symbols-outlined">person</span>
+                        <p class="text-sm font-medium">Colaboradores</p>
+                    </a>
+                    {% endif %}
                     <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.listar') }}">
                         <span class="material-symbols-outlined">schedule</span>
                         <p class="text-sm font-medium">Registro de Horas</p>
                     </a>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
-                        <span class="material-symbols-outlined">assessment</span>
-                        <p class="text-sm font-medium">Relatórios</p>
-                    </a>
                     <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('contratos.listar') }}">
                         <span class="material-symbols-outlined">business_center</span>
                         <p class="text-sm font-medium">Contratos</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
+                        <span class="material-symbols-outlined">assessment</span>
+                        <p class="text-sm font-medium">Relatórios</p>
                     </a>
                     <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto" href="{{ url_for('auth.perfil') }}">
                         <span class="material-symbols-outlined">settings</span>
@@ -151,15 +157,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
                                     <h3 class="font-bold text-lg p-6 pb-1">Horas por Contrato</h3>
-                                    <div id="grafico-horas">
-                                        <!-- <img class="w-full h-auto" data-alt="A donut chart showing time distribution: 40% Development, 25% Meetings, 20% Support, 15% Planning." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCpbJ-DBA6k6Dy2cWYVVNb7xdi77F5PQr_PbhmUkCmR1KWIEj8pkFtFyyk0XBOdSjZJTzxpoeV5DgNfgZhsI07i9iYwthFOHopF0tL_nv9MDaizoGwBY75qiKgVd5MEfCyMVs1bCCEjB7xUa6sP_fJduSV5E4OW39myA_bv_ddpaaxQsMvQ2qPUz_3h43-lCzJJaWfynAZur1RH54gCNw4GFpn3A4thCTaag8_9_uZ9muhn4MEKC4Z06HGDJ9NSP1SRm5jc7YR-D0"/> -->
-                                    </div>
+                                    <div id="grafico-horas"></div>
                                 </div>
                                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
                                     <h3 class="font-bold text-lg p-6 pb-1">Evolução das Horas no Mês</h3>
-                                    <div id="grafico-hora-mes">
-                                        <!-- <img class="w-full h-auto" data-alt="A line chart showing hours worked throughout the month, with a general upward trend." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtBoMEpeJVwGABWH6rnmjj0n2M1_C_z-23WGLz8aFCcC6tDJZmYAMn9qAn78TmE-xDAdmSI8l9zw-qjM5hexAeUj501dWpDzDs6S574gAYL9APO3K09kjASb5J-2RcQysr7qBl4nDKsrMiq2xPgrhrUkRm5VW6UQaNR2SoIV2iXgNGrC4JXI8cuGuFrOPAjVvdAg3jCldMORLojRCvvzC1FxpcWjGhps7wI8MNk09Cu_BooVwGQXCHiePpgVtr0BR6g2bbRr4rOlU"/> -->
-                                    </div>
+                                    <div id="grafico-hora-mes"></div>
                                 </div>
                             </div>
                         </div>
@@ -168,7 +170,7 @@
                             <div class="flex flex-col gap-6">
                                 <!-- Quick Actions -->
                                 <div class="flex flex-col gap-4">
-                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors shadow-md" href="{{ url_for('registros.listar') }}">
+                                    <a class="flex w-full items-center justify-center gap-2 rounded-lg h-12 px-6 bg-primary text-white text-base font-bold hover:bg-primary/90 transition-colors shadow-md" href="{{ url_for('registros.adicionar') }}">
                                         <span class="material-symbols-outlined">add_circle</span>
                                         <span>Registrar Minhas Horas</span>
                                     </a>
@@ -180,8 +182,8 @@
                                 <!-- Weekly Hours Summary -->
                                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-between">
                                     <div>
-                                        <h3 class="font-semibold text-lg text-gray-500 dark:text-gray-400">Horas da Semana</h3>
-                                        <p class="text-4xl font-bold text-primary mt-1">32/40h</p>
+                                        <h3 class="font-semibold text-lg text-gray-500 dark:text-gray-400">Total de Horas <strong>{{nome_mes_atual}}</strong></h3>
+                                        <p class="text-4xl font-bold text-primary mt-1">{{ total_horas_mes }} h</p>
                                     </div>
                                     <div class="w-20 h-20 flex items-center justify-center rounded-full bg-accent-success/10 text-accent-success">
                                         <span class="material-symbols-outlined" style="font-size: 48px;">check_circle</span>
@@ -230,77 +232,78 @@
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script>
-    (function() {
-        // == Gráfico de Pizza: Horas por Projeto ==
-        let projetosGrafico = {{ projetos|tojson|safe }};
-        let horasProjetoGrafico = {{ horas|tojson|safe }};
+        var noDataMock = "<p class='p-6'>Nenhum dado disponível.</p>";
+        (function() {
+            // == Gráfico de Pizza: Horas por Projeto ==
+            let projetosGrafico = {{ projetos|tojson|safe }};
+            let horasProjetoGrafico = {{ horas|tojson|safe }};
 
-        if (!projetosGrafico || projetosGrafico.length === 0) {
-            document.getElementById('grafico-horas').innerHTML = "<p>Nenhum dado disponível.</p>";
-            return;
-        }
-
-        const dataProjetos = {
-            labels: projetosGrafico,   // cada fatia representa um projeto
-            values: horasProjetoGrafico,      // valores correspondentes às horas
-            type: 'pie',
-            text: horasProjetoGrafico.map(h => h + ' h'),
-            textinfo: 'label+text',
-            hoverinfo: 'label+text+percent',
-            textposition: 'inside', // 'inside', 'outside' ou 'auto'
-            // hovertemplate: "%{label}: %{text}<extra></extra>",
-            marker: {
-                colors: ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880'],
-                line: {
-                    color: '#FFFFFF',
-                    width: 1
-                }
-            }
-        };
-
-        const layoutProjetos = {
-            margin: { t: 15, b: 5, l: 5, r: 5},
-            // paper_bgcolor: '#f5f5f5',  // fundo total do gráfico (incluindo bordas)
-            // plot_bgcolor: '#000000', // fundo da plotagem
-            showlegend: false,
-            hovermode: 'closest', // ou 'x' / 'y'
-            // hoverdistance: 5, // distância em pixels para ativar o hover
-        };
-
-        Plotly.newPlot('grafico-horas', [dataProjetos], layoutProjetos, {responsive: true});
-    })();
-    (function() {
-            // == Gráfico de Linhas: Evolução das Horas no Mês ==
-            let MesesGrafico = {{ meses|tojson|safe }};
-            let horasMesesGrafico = {{ horas_mensais|tojson|safe }};
-
-            if (!horasMesesGrafico || horasMesesGrafico.length === 0) {
-                document.getElementById('grafico-hora-mes').innerHTML = "<p>Nenhum dado disponível.</p>";
+            if (!projetosGrafico || projetosGrafico.length === 0) {
+                document.getElementById('grafico-horas').innerHTML = noDataMock;
                 return;
             }
 
-        let dataMeses = {
-            x: MesesGrafico,
-            y: horasMesesGrafico,
-            type: 'bar',
-            text: horasMesesGrafico.map(h => h.toFixed(2) + 'h'),
-            textposition: 'outside',
-            marker: { 
-            color: '#005a9c',
-            line: { color: '#005593', width: 1 }
-        },
-        };
+            const dataProjetos = {
+                labels: projetosGrafico,   // cada fatia representa um projeto
+                values: horasProjetoGrafico,      // valores correspondentes às horas
+                type: 'pie',
+                text: horasProjetoGrafico.map(h => h + ' h'),
+                textinfo: 'label+text',
+                hoverinfo: 'label+text+percent',
+                textposition: 'inside', // 'inside', 'outside' ou 'auto'
+                // hovertemplate: "%{label}: %{text}<extra></extra>",
+                marker: {
+                    colors: ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880'],
+                    line: {
+                        color: '#FFFFFF',
+                        width: 1
+                    }
+                }
+            };
 
-        const layoutMeses = {
-            // title: 'Horas Trabalhadas por Projeto',
-            // xaxis: { title: 'Meses' },
-            // yaxis: { title: 'Horas Trabalhadas' },
-            margin: { t: 50, b: 100 }
-        };
+            const layoutProjetos = {
+                margin: { t: 15, b: 5, l: 5, r: 5},
+                // paper_bgcolor: '#f5f5f5',  // fundo total do gráfico (incluindo bordas)
+                // plot_bgcolor: '#000000', // fundo da plotagem
+                showlegend: false,
+                hovermode: 'closest', // ou 'x' / 'y'
+                // hoverdistance: 5, // distância em pixels para ativar o hover
+            };
 
-        Plotly.newPlot('grafico-hora-mes', [dataMeses], layoutMeses, {responsive: true});
+            Plotly.newPlot('grafico-horas', [dataProjetos], layoutProjetos, {responsive: true});
+        })();
+        (function() {
+                // == Gráfico de Linhas: Evolução das Horas no Mês ==
+                let MesesGrafico = {{ meses|tojson|safe }};
+                let horasMesesGrafico = {{ horas_mensais|tojson|safe }};
 
-    })();
+                if (!horasMesesGrafico || horasMesesGrafico.length === 0) {
+                    document.getElementById('grafico-hora-mes').innerHTML = noDataMock;
+                    return;
+                }
+
+            let dataMeses = {
+                x: MesesGrafico,
+                y: horasMesesGrafico,
+                type: 'bar',
+                text: horasMesesGrafico.map(h => h.toFixed(2) + 'h'),
+                textposition: 'outside',
+                marker: { 
+                color: '#005a9c',
+                line: { color: '#005593', width: 1 }
+            },
+            };
+
+            const layoutMeses = {
+                // title: 'Horas Trabalhadas por Projeto',
+                // xaxis: { title: 'Meses' },
+                // yaxis: { title: 'Horas Trabalhadas' },
+                margin: { t: 50, b: 100 }
+            };
+
+            Plotly.newPlot('grafico-hora-mes', [dataMeses], layoutMeses, {responsive: true});
+
+        })();
     </script>
 
 </body>

@@ -23,6 +23,10 @@
     {
       "id": 7,
       "nome": "Marlon Passeri"
+    },
+    {
+      "id": 8,
+      "nome": "TesteB"
     }
   ],
   "projetos": [
@@ -601,6 +605,20 @@
       "projeto_id": 2950,
       "data": "10-2025",
       "horas_trabalhadas": 100.0
+    },
+    {
+      "id": 22,
+      "funcionario_id": 8,
+      "projeto_id": 9010,
+      "data": "12-2025",
+      "horas_trabalhadas": 3.0
+    },
+    {
+      "id": 23,
+      "funcionario_id": 8,
+      "projeto_id": 1001,
+      "data": "12-2025",
+      "horas_trabalhadas": 7.0
     }
   ],
   "usuarios": [
@@ -627,6 +645,14 @@
       "senha_hash": "289160db0d9f39f9ae1754c4ec9c16f90b50e32e09c5fb5481ae642b3d3d1a36",
       "tipo": "funcionario",
       "funcionario_id": 6
+    },
+    {
+      "id": 4,
+      "nome": "TesteB",
+      "email": "testeb@geoprojetos.com.br",
+      "senha_hash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      "tipo": "funcionario",
+      "funcionario_id": 8
     }
   ]
 }

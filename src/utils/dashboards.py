@@ -1,5 +1,6 @@
 import calendar
 import locale
+from datetime import datetime
 from src.models.database import db
 
 locale.setlocale(locale.LC_TIME, 'pt_BR.utf8')
@@ -51,6 +52,25 @@ def calcular_horas_por_mes(usuario_id):
     horas_mensais = [h for _, h in ultimos_4]
 
     return meses, horas_mensais
+
+def calcular_total_horas_mes(usuario_id):
+    """Retorna o total de horas do mês atual.
+    - Se admin → soma de todos os funcionários.
+    - Se funcionário → soma apenas das próprias horas.
+    """
+    registros = obter_dados_dashboard(usuario_id)
+    agora = datetime.now()
+    mes_atual = f"{agora.month:02d}-{agora.year}"
+
+    total_horas_mes = sum(
+        registro.horas_trabalhadas
+        for registro in registros
+        if getattr(registro, "data", "") == mes_atual
+    )
+
+    nome_mes_atual = calendar.month_name[agora.month].capitalize()
+
+    return total_horas_mes, nome_mes_atual
 
 
 def obter_dados_dashboard(usuario_id):

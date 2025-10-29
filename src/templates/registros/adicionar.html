@@ -57,15 +57,23 @@
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ url_for('registros.adicionar') }}">
+                    {% if admin_check %}
+                    <!-- Campo visível apenas para administradores -->
                     <div class="mb-3">
-                        <label for="funcionario_id" class="form-label">Funcionário</label>
+                        <label for="funcionario_id" class="form-label" >Colaborador</label>
                         <select class="form-select" id="funcionario_id" name="funcionario_id" required>
-                            <option value="">Selecione um funcionário</option>
+                            <option value="">Selecione um colaborador</option>
                             {% for funcionario in funcionarios %}
                                 <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    {% else %}
+                    <!-- Apenas passa o ID do funcionário logado -->
+                    <div class="mb-3">
+                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                    </div>
+                    {% endif %}
                     <div class="mb-3">
                         <label for="projeto_id" class="form-label">Projeto</label>
                         <select class="form-select" id="projeto_id" name="projeto_id" required>
