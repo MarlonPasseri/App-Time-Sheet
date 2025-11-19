@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Time Sheet - Perfil</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
+                    </li>
+                    {% if session.get('usuario_tipo') == 'administrador' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Funcionários</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('contratos.listar') }}">Projetos</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
+                    </li>
+                    {% if session.get('usuario_tipo') == 'administrador' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ session.get('usuario_nome', 'Usuário') }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('auth.perfil') }}">Meu Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Meu Perfil</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="{{ url_for('auth.perfil') }}">
+                            <div class="mb-3">
+                                <label for="nome" class="form-label">Nome</label>
+                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}" required {{ 'readonly' if usuario.tipo == 'administrador' else '' }}>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" value="{{ usuario.email }}" readonly>
+                                <div class="form-text">O email não pode ser alterado.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipo" class="form-label">Tipo de Usuário</label>
+                                <input type="text" class="form-control" id="tipo" value="{{ 'Administrador' if usuario.tipo == 'administrador' else 'Funcionário' }}" readonly>
+                            </div>
+                            
+                            <hr>
+                            <h5>Alterar Senha</h5>
+                            
+                            <div class="mb-3">
+                                <label for="senha_atual" class="form-label">Senha Atual</label>
+                                <input type="password" class="form-control" id="senha_atual" name="senha_atual">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nova_senha" class="form-label">Nova Senha</label>
+                                <input type="password" class="form-control" id="nova_senha" name="nova_senha">
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                                <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha">
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-3 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 Sistema de Controle de Horas</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

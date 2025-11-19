@@ -1,118 +1,209 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+
+<html class="light" lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Time Sheet - Perfil</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Perfil do Funcionário - Geoprojetos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0D47A1",
+                        "background-light": "#F5F5F5",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    {% if session.get('usuario_tipo') == 'administrador' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Funcionários</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contratos.listar') }}">Projetos</a>
-                    </li>
-                    {% endif %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    {% if session.get('usuario_tipo') == 'administrador' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ session.get('usuario_nome', 'Usuário') }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{{ url_for('auth.perfil') }}">Meu Perfil</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <div class="row">
-            <div class="col-md-8 mx-auto">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">Meu Perfil</h5>
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <div class="flex flex-1">
+            <aside class="flex flex-col w-64 bg-white dark:bg-background-dark border-r border-gray-200 dark:border-gray-700 p-4">
+                <a href="{{ url_for('index') }}">
+                    <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                        <img alt="Logo Geoprojetos" class="h-10" src="https://geoprojetos.com.br/wp-content/uploads/2025/05/Geoprojetos40anos.png"/>
                     </div>
-                    <div class="card-body">
+                </a>
+                <div class="flex flex-col flex-1 gap-2">
+                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <p class="text-sm font-bold">Dashboard</p>
+                    </div>
+                    {% if admin_check %}
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('colaboradores.listar') }}">
+                        <span class="material-symbols-outlined">person</span>
+                        <p class="text-sm font-medium">Colaboradores</p>
+                    </a>
+                    {% endif %}
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.listar') }}">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <p class="text-sm font-medium">Registro de Horas</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('contratos.listar') }}">
+                        <span class="material-symbols-outlined">business_center</span>
+                        <p class="text-sm font-medium">Contratos</p>
+                    </a>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
+                        <span class="material-symbols-outlined">assessment</span>
+                        <p class="text-sm font-medium">Relatórios</p>
+                    </a>
+                </div>
+                <div class="flex flex-col gap-2 pt-3 border-t dark:border-gray-700">
+                    <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('index') }}">
+                        <span class="truncate">Voltar</span>
+                    </a>
+                    <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('auth.logout') }}">
+                        <span class="truncate">Sair</span>
+                    </a>
+                </div>
+            </aside>
+            <main class="flex-1 p-8">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex flex-col gap-8">
+                        <!-- Personal Information Section -->
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Informações Pessoais</p>
+                            <div class="flex p-4 @container">
+                                <div class="flex w-full flex-col gap-6 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+                                    <div class="flex items-center gap-6">
+                                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24" data-alt="Foto de perfil" style='background-image: url("https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");'></div>
+                                        <div class="flex flex-col justify-center">
+                                            <p class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">{{ usuario.nome }}</p>
+                                            <p class="text-[#617c89] dark:text-gray-400 text-base font-normal leading-normal">{{ usuario.email }}</p>
+                                        </div>
+                                    </div>
+                                    <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[480px]:w-auto">
+                                        <span class="truncate">Alterar Foto</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <label class="flex flex-col">
+                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nome Completo</p>
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="João da Silva Pereira" readonly/>
+                                </label>
+                                <label class="flex flex-col">
+                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">E-mail</p>
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-500 dark:text-gray-400 focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-gray-50 dark:bg-gray-700 h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal" disabled="" value="joao.silva@geoprojetos.com.br"/>
+                                </label>
+                                <label class="flex flex-col">
+                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Telefone</p>
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="(11) 98765-4321"/>
+                                </label>
+                            </div>
+                            <div class="flex justify-end mt-6 gap-3">
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-600 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                    <span class="truncate">Cancelar</span>
+                                </button>
+                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                    <span class="truncate">Salvar Alterações</span>
+                                </button>
+                            </div> -->
+                        </div>
+                        <!-- Change Password Section -->
                         <form method="POST" action="{{ url_for('auth.perfil') }}">
-                            <div class="mb-3">
-                                <label for="nome" class="form-label">Nome</label>
-                                <input type="text" class="form-control" id="nome" name="nome" value="{{ usuario.nome }}" required {{ 'readonly' if usuario.tipo == 'administrador' else '' }}>
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="email" value="{{ usuario.email }}" readonly>
-                                <div class="form-text">O email não pode ser alterado.</div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="tipo" class="form-label">Tipo de Usuário</label>
-                                <input type="text" class="form-control" id="tipo" value="{{ 'Administrador' if usuario.tipo == 'administrador' else 'Funcionário' }}" readonly>
-                            </div>
-                            
-                            <hr>
-                            <h5>Alterar Senha</h5>
-                            
-                            <div class="mb-3">
-                                <label for="senha_atual" class="form-label">Senha Atual</label>
-                                <input type="password" class="form-control" id="senha_atual" name="senha_atual">
-                            </div>
-                            <div class="mb-3">
-                                <label for="nova_senha" class="form-label">Nova Senha</label>
-                                <input type="password" class="form-control" id="nova_senha" name="nova_senha">
-                            </div>
-                            <div class="mb-3">
-                                <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
-                                <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha">
-                            </div>
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                                <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Alterar Senha</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <label class="flex flex-col">
+                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Senha Atual</p>
+                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="senha_atual" name="senha_atual"/>
+                                    </label>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                    <label class="flex flex-col">
+                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nova Senha</p>
+                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="nova_senha" name="nova_senha"/>
+                                    </label>
+                                    <label class="flex flex-col">
+                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Confirmar Nova Senha</p>
+                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="confirmar_senha" name="confirmar_senha"/>
+                                    </label>
+                                </div>
+                                <div class="flex justify-end mt-6">
+                                    <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]" type="submit">
+                                        <span class="truncate">Alterar Senha</span>
+                                    </button>
+                                </div>
                             </div>
                         </form>
+                        <!-- Notifications Section -->
+                        <!-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                            <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Notificações</p>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                                    <div>
+                                        <p class="text-[#111618] dark:text-white font-medium">Lembrete de ponto</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Receba um lembrete para registrar seu ponto de entrada e saída.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input checked="" class="sr-only peer" type="checkbox" value=""/>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                                    <div>
+                                        <p class="text-[#111618] dark:text-white font-medium">Aprovação de horas extras</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Seja notificado quando suas horas extras forem aprovadas ou rejeitadas.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input checked="" class="sr-only peer" type="checkbox" value=""/>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                                    <div>
+                                        <p class="text-[#111618] dark:text-white font-medium">Comunicados da empresa</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Receba avisos e comunicados importantes da Geoprojetos.</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input class="sr-only peer" type="checkbox" value=""/>
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div> -->
                     </div>
                 </div>
+            </main>
             </div>
         </div>
     </div>
-
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </html>
