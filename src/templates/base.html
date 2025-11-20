@@ -3,51 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block title %}
-    {% endblock %}
+    <title>TimeSheet Geoprojetos</title>
+    <link rel="icon" href="https://geoprojetos.com.br/wp-content/uploads/2020/11/Pin-andamento.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#005A9C",
+                        "secondary": "#F4F7FA",
+                        "text-primary": "#333333",
+                        "accent-success": "#4CAF50",
+                        "accent-warning": "#FFC107",
+                        "background-light": "#F4F7FA",
+                        "background-dark": "#101c22",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
     {% block style %}
     {% endblock %}
 </head>
-<body>
+<body class="bg-background-light dark:bg-background-dark font-display">
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">App Time Sheet</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="#hero">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="#features">Funcionalidades</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">Como Funciona</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ url_for('registros.exportar') }}">Relatórios</a></li>
-            </ul>
-            <ul class="navbar-nav ms-auto">
-                {% if session.user_id %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a></li>
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
+    <div class="flex h-full grow">
+        <!-- SideNavBar -->
+        <div class="flex flex-col w-64 bg-white dark:bg-gray-800 shadow-md" style="position: fixed; height: 100%;">
+            <a href="{{ url_for('index') }}">
+                <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
+                    <img alt="Logo Geoprojetos" class="h-10" src="https://geoprojetos.com.br/wp-content/uploads/2025/05/Geoprojetos40anos.png"/>
+                </div>
+            </a>
+            <div class="flex flex-col flex-1 p-4 gap-2">
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 dark:bg-primary/20 cursor-pointer {% if request.endpoint == 'index' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('index') }}">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    <p class="text-sm font-bold">Dashboard</p>
+                </a>
+                {% if admin_check %}
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'colaboradores.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('colaboradores.listar') }}">
+                    <span class="material-symbols-outlined">person</span>
+                    <p class="text-sm font-medium">Colaboradores</p>
+                </a>
                 {% endif %}
-            </ul>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'registros.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('registros.listar') }}">
+                    <span class="material-symbols-outlined">schedule</span>
+                    <p class="text-sm font-medium">Registro de Horas</p>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'contratos.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('contratos.listar') }}">
+                    <span class="material-symbols-outlined">business_center</span>
+                    <p class="text-sm font-medium">Contratos</p>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'registros.exportar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('registros.exportar') }}">
+                    <span class="material-symbols-outlined">assessment</span>
+                    <p class="text-sm font-medium">Relatórios</p>
+                </a>
+                {% block sidebar_extra %}
+                <!-- <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto" href="{{ url_for('auth.perfil') }}">
+                    <span class="material-symbols-outlined">settings</span>
+                    <p class="text-sm font-medium">Configurações</p>
+                </a> -->
+                <a href="{{ url_for('auth.perfil') }}" style="text-decoration: none; color: inherit;" class="flex gap-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto">
+                    <div class="flex items-center gap-3 p-4 border-t dark:border-gray-700 mt-auto">
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of João Silva" style='background-image: url("https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");'></div>
+                        <div class="flex flex-col" >
+                            <h1 class="text-text-primary dark:text-white text-base font-semibold">{{ session.get('usuario_nome') }}</h1>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Desenvolvedor</p>
+                        </div>
+                    </div>
+                </a>
+                {% endblock %}
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="flex-1 p-8 overflow-y-auto" style="margin-left: 16rem;">
+            <div class="layout-content-container flex flex-col max-w-full flex-1">
+                {% block main %}
+                {% endblock %}
+            </div>
         </div>
     </div>
-</nav>
-
-{% block main %}
-{% endblock %}
+</div>
 
 <!-- Footer -->
-<footer>
+<!-- <footer>
     <p>&copy; 2025 Sistema de Controle de Horas</p>
-</footer>
+</footer> -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
 {% block script %}
 {% endblock %}
+</body>
+</html>
