@@ -20,6 +20,7 @@
                     colors: {
                         "primary": "#005A9C",
                         "secondary": "#F4F7FA",
+                        "terciary": "#ff5869",
                         "text-primary": "#333333",
                         "accent-success": "#4CAF50",
                         "accent-warning": "#FFC107",
@@ -90,14 +91,18 @@
                     <span class="material-symbols-outlined">settings</span>
                     <p class="text-sm font-medium">Configurações</p>
                 </a> -->
-                <a href="{{ url_for('auth.perfil') }}" style="text-decoration: none; color: inherit;" class="flex gap-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto">
-                    <div class="flex items-center gap-3 p-4 border-t dark:border-gray-700 mt-auto">
+                <a href="{{ url_for('auth.perfil') }}" class="flex gap-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer mt-auto">
+                    <div class="flex items-center gap-3 px-3 py-3 border-b dark:border-gray-700 mt-auto">
                         <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="Profile picture of João Silva" style='background-image: url("https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");'></div>
                         <div class="flex flex-col" >
                             <h1 class="text-text-primary dark:text-white text-base font-semibold">{{ session.get('usuario_nome') }}</h1>
                             <p class="text-gray-500 dark:text-gray-400 text-sm font-normal">Desenvolvedor</p>
                         </div>
                     </div>
+                </a>
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-terciary dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('auth.logout') }}">
+                    <span class="material-symbols-outlined">logout</span>
+                    <p class="text-sm font-medium">Sair</p>
                 </a>
                 {% endblock %}
             </div>
