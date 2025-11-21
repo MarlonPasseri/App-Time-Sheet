@@ -598,11 +598,11 @@
       "horas_trabalhadas": 3.0
     },
     {
-      "id": 23,
+      "id": 24,
       "funcionario_id": 8,
-      "projeto_id": 1001,
-      "data": "10-2025",
-      "horas_trabalhadas": 7.0
+      "projeto_id": 9010,
+      "data": "11-2025",
+      "horas_trabalhadas": 17.0
     }
   ],
   "usuarios": [

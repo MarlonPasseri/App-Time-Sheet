@@ -9,7 +9,7 @@ import tempfile
 
 registros_bp = Blueprint('registros', __name__)
 
-@registros_bp.route('/')
+@registros_bp.route('/', methods=['GET'])
 @login_required
 def listar():
     """Exibe a lista de registros de horas com base nas permissões do usuário."""
@@ -23,6 +23,7 @@ def listar():
     projeto_id = request.args.get('projeto_id', type=int)
     mes_ano = request.args.get('mes_ano')
     ordenar = request.args.get('ordenar', 'data')
+    direcao = request.args.get('direcao', 'asc')
 
     # Se funcionário, força o próprio ID
     if admin_check:
@@ -60,16 +61,43 @@ def listar():
         total_horas += registro.horas_trabalhadas
     
     # Ordenação
-    if ordenar == 'colaborador':
-        registros_view.sort(key=lambda x: x['funcionario'])
-    elif ordenar == 'contrato':
-        registros_view.sort(key=lambda x: x['projeto'])
-    elif ordenar == 'data':
-        registros_view.sort(key=lambda x: x['data'], reverse=True)  # Mais recente primeiro
-    
+    if ordenar:
+        reverse = direcao == 'desc'
+        if ordenar == 'colaborador':
+            registros_view.sort(key=lambda x: x['funcionario'], reverse=reverse)
+        elif ordenar == 'contrato':
+            registros_view.sort(key=lambda x: x['projeto'], reverse=reverse)
+        elif ordenar == 'data':
+            registros_view.sort(key=lambda x: x['data'], reverse=not reverse)  # Mais recente primeiro
+
+    # Pega os parâmetros atuais do link e remove o 'ordenar' e 'direcao' para montar uma nova ordem
+    from urllib.parse import urlencode
+
+    args_no_order = request.args.to_dict()
+    args_no_order.pop('ordenar', None)
+    args_no_order.pop('direcao', None)
+    query_string = urlencode(args_no_order)
+
+    # --- Paginação ---
+    pagina = request.args.get('pagina', 1, type=int)
+    # Pega quantos registros mostrar, padrão 5
+    registros_por_pagina = request.args.get('registros_por_pagina', 5, type=int)
+    total_registros = len(registros_view)
+    inicio = (pagina - 1) * registros_por_pagina
+    fim = inicio + registros_por_pagina
+    registros_pag = registros_view[inicio:fim]
+    total_paginas = (total_registros + registros_por_pagina - 1) // registros_por_pagina
+
+    # query string atual sem página
+    query_params = request.args.to_dict()
+    if 'pagina' in query_params:
+        del query_params['pagina']
+
+    query_string_pages = '&'.join([f"{k}={v}" for k, v in query_params.items()])
+
     return render_template(
         'registros/listar.html',
-        registros=registros_view,
+        registros=registros_pag,
         funcionarios=funcionarios,
         projetos=projetos,
         filtro_funcionario_id=funcionario_id,
@@ -77,14 +105,22 @@ def listar():
         filtro_mes_ano=mes_ano,
         total_horas=total_horas,
         admin_check=admin_check,
-        funcionario_logado=funcionario_id
+        funcionario_logado=funcionario_id,
+        mes_atual = datetime.now().strftime('%Y-%m'),
+        query_string=query_string,
+        ordenar=ordenar,
+        direcao=direcao,
+        query_string_pages=query_string_pages,
+        total_paginas=total_paginas,
+        pagina=pagina,
+        registros_por_pagina=registros_por_pagina,
     )
 
 @registros_bp.route('/adicionar', methods=['GET', 'POST'])
 def adicionar():
     """Adiciona um novo registro de horas."""
-    funcionarios = db.listar_funcionarios()
-    projetos = db.listar_projetos()
+    # funcionarios = db.listar_funcionarios()
+    # projetos = db.listar_projetos()
 
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
@@ -110,14 +146,14 @@ def adicionar():
                 # Bloqueia se o mês for futuro
                 if data_obj > hoje.replace(day=1):
                     flash('Não é possível adicionar registros para meses futuros.', 'warning')
-                    return redirect(url_for('registros.adicionar'))
+                    return redirect(url_for('registros.listar'))
 
                 # Se for o mês atual, limita pelas horas do dia atual
                 if data_obj.month == hoje.month and data_obj.year == hoje.year:
                     limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
                     if horas_trabalhadas > limite_horas:
                         flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
-                        return redirect(url_for('registros.adicionar'))
+                        return redirect(url_for('registros.listar'))
 
                 # Tudo certo, salva no formato MM-YYYY
                 data = data_obj.strftime('%m-%Y')
@@ -130,7 +166,7 @@ def adicionar():
 
                 if registro:
                     flash('Registro de horas adicionado com sucesso!', 'success')
-                    return redirect(url_for('registros.adicionar'))
+                    return redirect(url_for('registros.listar'))
                 else:
                     flash('Erro ao adicionar registro de horas!', 'danger')
             except ValueError:
@@ -138,16 +174,16 @@ def adicionar():
         else:
             flash('Todos os campos são obrigatórios!', 'danger')
 
-    mes_atual = datetime.now().strftime('%Y-%m')
+    # mes_atual = datetime.now().strftime('%Y-%m')
 
-    return render_template(
-        'registros/adicionar.html',
-        funcionarios=funcionarios,
-        projetos=projetos,
-        admin_check=admin_check,
-        funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
-        mes_atual=mes_atual
-    )
+    # return render_template(
+    #     'registros/listar.html',
+    #     funcionarios=funcionarios,
+    #     projetos=projetos,
+    #     admin_check=admin_check,
+    #     funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
+    #     mes_atual=mes_atual
+    # )
 
 @registros_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
