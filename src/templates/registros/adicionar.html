@@ -1,123 +1,93 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Time Sheet - Adicionar Registro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- CSS do Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Funcionários</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('contratos.listar') }}">Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Adicionar Registro de Horas</h2>
-            <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">
-                Voltar para Lista
-            </a>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <form method="POST" action="{{ url_for('registros.adicionar') }}">
-                    {% if admin_check %}
-                    <!-- Campo visível apenas para administradores -->
-                    <div class="mb-3">
-                        <label for="funcionario_id" class="form-label" >Colaborador</label>
-                        <select class="form-select" id="funcionario_id" name="funcionario_id" required>
-                            <option value="">Selecione um colaborador</option>
-                            {% for funcionario in funcionarios %}
-                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
-                            {% endfor %}
-                        </select>
+    {% block main %}
+            <main class="flex-1 px-4 sm:px-10 py-8">
+                <div class="layout-content-container flex flex-col max-w-5xl mx-auto flex-1">
+                    <div class="flex flex-wrap justify-between gap-3 p-4">
+                        <p class="text-text-primary dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Registro de Horas</p>
                     </div>
-                    {% else %}
-                    <!-- Apenas passa o ID do funcionário logado -->
-                    <div class="mb-3">
-                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                    <div class="bg-white dark:bg-background-dark/50 p-6 md:p-8 rounded-xl shadow-sm mt-6 border border-gray-light dark:border-gray-700">
+                        <form class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            <div class="md:col-span-2">
+                                <label class="flex flex-col">
+                                    <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Projeto</p>
+                                    <select class="form-select flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal appearance-none bg-no-repeat bg-right" style="background-image: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 fill=%27none%27 viewBox=%270 0 20 20%27%3e%3cpath stroke=%27%236b7280%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 stroke-width=%271.5%27 d=%27m6 8 4 4 4-4%27/%3e%3c/svg%3e'); background-position: right 0.5rem center; background-size: 1.5em 1.5em;">
+                                        <option value="one">Selecione o projeto</option>
+                                        <option value="two">Projeto Alpha</option>
+                                        <option value="three">Projeto Beta</option>
+                                        <option value="four">Projeto Gamma</option>
+                                    </select>
+                                </label>
+                            </div>
+                        <div>
+                            <label class="flex flex-col">
+                                <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Data</p>
+                                <div class="relative flex w-full flex-1 items-stretch rounded-lg">
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Selecione a data" type="date" value=""/>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 items-end">
+                            <label class="flex flex-col">
+                                <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Horas</p>
+                                <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="HH:MM" type="time" value=""/>
+                            </label>
+                            <button class="flex lex w-full min-w-0 flex-1 resize-none cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors justify-end">
+                                <span class="truncate">Registrar Horas</span>
+                            </button>
+                        </div>
+                        <div class="md:col-span-2 flex justify-end">
+                        </div>
+                        </form>
                     </div>
-                    {% endif %}
-                    <div class="mb-3">
-                        <label for="projeto_id" class="form-label">Projeto</label>
-                        <select class="form-select" id="projeto_id" name="projeto_id" required>
-                            <option value="">Selecione um projeto</option>
-                            {% for projeto in projetos %}
-                                <option value="{{ projeto.id }}">{{ projeto.id }} | {{ projeto.nome }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="mt-12">
+                        <h3 class="text-2xl font-bold text-text-primary dark:text-white mb-4">Registros Recentes</h3>
+                        <div class="overflow-x-auto bg-white dark:bg-background-dark/50 rounded-xl shadow-sm border border-gray-light dark:border-gray-700">
+                            <table class="w-full text-left text-sm text-text-primary dark:text-gray-300">
+                                <thead class="bg-gray-light dark:bg-background-dark/70 text-xs uppercase">
+                                    <tr>
+                                        <th class="px-6 py-3" scope="col">Data</th>
+                                        <th class="px-6 py-3" scope="col">Projeto</th>
+                                        <th class="px-6 py-3" scope="col">Horas Trabalhadas</th>
+                                        <th class="px-6 py-3" scope="col">Descrição</th>
+                                        <th class="px-6 py-3 text-center" scope="col">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gray-light dark:border-gray-700">
+                                        <td class="px-6 py-4">2024-05-20</td>
+                                        <td class="px-6 py-4 font-medium">Projeto Alpha</td>
+                                        <td class="px-6 py-4">8h 00m</td>
+                                        <td class="px-6 py-4 max-w-xs truncate">Desenvolvimento da funcionalidade de login e autenticação de usuários.</td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button class="p-2 text-primary hover:text-primary/80"><span class="material-symbols-outlined text-xl">edit</span></button>
+                                            <button class="p-2 text-error hover:text-error/80"><span class="material-symbols-outlined text-xl">delete</span></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-light dark:border-gray-700">
+                                        <td class="px-6 py-4">2024-05-19</td>
+                                        <td class="px-6 py-4 font-medium">Projeto Beta</td>
+                                        <td class="px-6 py-4">4h 30m</td>
+                                        <td class="px-6 py-4 max-w-xs truncate">Reunião de alinhamento com a equipe de design e planejamento de sprint.</td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button class="p-2 text-primary hover:text-primary/80"><span class="material-symbols-outlined text-xl">edit</span></button>
+                                            <button class="p-2 text-error hover:text-error/80"><span class="material-symbols-outlined text-xl">delete</span></button>
+                                        </td>
+                                    </tr>
+                                    <tr class="border-b border-gray-light dark:border-gray-700">
+                                        <td class="px-6 py-4">2024-05-18</td>
+                                        <td class="px-6 py-4 font-medium">Projeto Alpha</td>
+                                        <td class="px-6 py-4">7h 15m</td>
+                                        <td class="px-6 py-4 max-w-xs truncate">Correção de bugs reportados pelo time de QA.</td>
+                                        <td class="px-6 py-4 text-center">
+                                            <button class="p-2 text-primary hover:text-primary/80"><span class="material-symbols-outlined text-xl">edit</span></button>
+                                            <button class="p-2 text-error hover:text-error/80"><span class="material-symbols-outlined text-xl">delete</span></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="data" class="form-label">Data</label>
-                        <input type="month" class="form-control" id="data" name="data" max="{{ mes_atual }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="horas_trabalhadas" class="form-label">Horas Trabalhadas</label>
-                        <input type="number" class="form-control" id="horas_trabalhadas" name="horas_trabalhadas" step="0.5" min="0.5" required>
-                        <div class="form-text">Informe o número de horas trabalhadas (ex: 8.5 para 8 horas e 30 minutos)</div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                    <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">Cancelar</a>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-    <!-- jQuery e JS do Select2 -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#projeto_id').select2({
-                placeholder: "Selecione ou pesquise um projeto",
-                allowClear: true
-            });
-        });
-    </script>
-</body>
-</html>
+                </div>
+            </main>
+    {% endblock %}

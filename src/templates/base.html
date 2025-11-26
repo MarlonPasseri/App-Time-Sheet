@@ -26,6 +26,11 @@
                         "accent-warning": "#FFC107",
                         "background-light": "#F4F7FA",
                         "background-dark": "#101c22",
+                        "gray-light": "#f4f4f4",
+                        "gray-medium": "#cccccc",
+                        "text-dark": "#333333",
+                        "success": "#28a745",
+                        "error": "#dc3545"
                     },
                     fontFamily: {
                         "display": ["Manrope", "sans-serif"]
@@ -49,7 +54,7 @@
                 'opsz' 24
         }
     </style>
-    {% block style %}
+    {% block head %}
     {% endblock %}
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display">
@@ -57,13 +62,13 @@
 <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root">
     <div class="flex h-full grow">
         <!-- SideNavBar -->
-        <div class="flex flex-col w-64 bg-white dark:bg-gray-800 shadow-md" style="position: fixed; height: 100%;">
+        <div class="flex flex-col w-60 bg-white dark:bg-gray-800 shadow-md" style="position: fixed; height: 100%;">
             <a href="{{ url_for('index') }}">
                 <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
                     <img alt="Logo Geoprojetos" class="h-10" src="https://geoprojetos.com.br/wp-content/uploads/2025/05/Geoprojetos40anos.png"/>
                 </div>
             </a>
-            <div class="flex flex-col flex-1 p-4 gap-2">
+            <div class="flex flex-col flex-1 p-3 gap-2">
                 <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/10 dark:bg-primary/20 cursor-pointer {% if request.endpoint == 'index' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('index') }}">
                     <span class="material-symbols-outlined">dashboard</span>
                     <p class="text-sm font-bold">Dashboard</p>
@@ -108,8 +113,16 @@
             </div>
         </div>
         <!-- Main Content -->
-        <div class="flex-1 p-8 overflow-y-auto" style="margin-left: 16rem;">
+        <div class="flex-1 p-8 overflow-y-auto" style="margin-left: 15rem;">
             <div class="layout-content-container flex flex-col max-w-full flex-1">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} flash-message">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
                 {% block main %}
                 {% endblock %}
             </div>
@@ -123,6 +136,21 @@
 </footer> -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const flashMessages = document.querySelectorAll(".flash-message");
+
+        flashMessages.forEach(msg => {
+            setTimeout(() => {
+                msg.style.transition = "opacity 0.5s ease";
+                msg.style.opacity = "0";
+
+                // Remove completamente da DOM depois que sumir
+                setTimeout(() => msg.remove(), 500);
+            }, 5000); // 5 segundos
+        });
+    });
+</script>
 {% block script %}
 {% endblock %}
 </body>
