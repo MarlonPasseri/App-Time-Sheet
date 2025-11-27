@@ -21,7 +21,16 @@ def listar():
     try:
         funcionarios = db.listar_funcionarios()
         logging.info(f"{len(funcionarios)} funcionários carregados com sucesso.")
-        return render_template('funcionarios/listar.html', funcionarios=funcionarios)
+        
+        # Obtém o usuário atual
+        usuario_id = session.get('usuario_id')
+        usuario = db.obter_usuario(usuario_id)
+        admin_check = usuario and usuario.tipo == 'administrador'
+        return render_template(
+            'funcionarios/listar.html',
+            funcionarios=funcionarios,
+            admin_check=admin_check
+            )
     except Exception as e:
         logging.exception("Erro ao listar funcionários:")
         flash('Erro ao carregar a lista de funcionários.', 'danger')
