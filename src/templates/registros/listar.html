@@ -144,13 +144,8 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    {% else %}
-                                    <div class="col-md-4">
-                                    <!-- Apenas passa o ID do funcionário logado -->
-                                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
-                                    </div>
                                     {% endif %}
-                                    <div class="col-md-4">
+                                    <div class="{% if admin_check %}col-md-4{% else %}col-md-6{% endif %}">
                                         <label for="projeto_id_filter" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Contrato</label>
                                         <select id="projeto_id_filter" name="projeto_id_filter" multiple>
                                             <option></option>
@@ -161,7 +156,7 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="{% if admin_check %}col-md-4{% else %}col-md-6{% endif %}">
                                         <label for="mes_ano_filter" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Data</label>
                                         <div class="relative flex w-full flex-1 items-stretch rounded-lg">
                                             <input type="month" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer" id="mes_ano_filter" name="mes_ano_filter" value="{{ filtro_mes_ano }}">
@@ -215,14 +210,28 @@
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
                                             <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas }}</td>
                                             <td class="px-6 py-4 text-center">
-                                                <a class="btn-editar p-2 text-primary hover:text-primary/80 cursor-pointer" r-id="{{ registro.id }}" r-func="{{ registro.funcionario }}" r-proj="{{ registro.projeto.nome }}" r-proj-id="{{ registro.projeto.id }}" r-data="{{ registro.data }}" r-horas="{{ registro.horas_trabalhadas }}" data-bs-toggle="modal" data-bs-target="#modalEditar">
+                                                <button class="btn-editar p-2 text-primary hover:text-primary/80 cursor-pointer"
+                                                type="button" data-bs-toggle="modal"
+                                                data-bs-target="#modalEditar"
+                                                data-id="{{ registro.id }}"
+                                                data-func="{{ registro.funcionario_id }}"
+                                                data-funcnome="{{ registro.funcionario }}"
+                                                data-proj="{{ registro.projeto_id }}"
+                                                data-data="{{ registro.data_input }}"
+                                                data-horas="{{ registro.horas_trabalhadas }}">
                                                     <span class="material-symbols-outlined text-xl">edit</span>
-                                                </a>
-                                                <form action="{{ url_for('registros.remover', id=registro.id) }}" method="POST" class="d-inline">
-                                                    <button type="submit" class="p-2 text-error hover:text-error/80">
-                                                        <span class="material-symbols-outlined text-xl">delete</span>
-                                                    </button>
-                                                </form>
+                                                </button>
+                                                <button type="button" class="btn-excluir p-2 text-error hover:text-error/80"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalExcluir"
+                                                data-id="{{ registro.id }}"
+                                                data-func="{{ registro.funcionario }}"
+                                                data-proj="{{ registro.projeto }}"
+                                                data-data="{{ registro.data_input }}"
+                                                data-horas="{{ registro.horas_trabalhadas }}"
+                                                >
+                                                    <span class="material-symbols-outlined text-xl">delete</span>
+                                                </button>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -282,61 +291,124 @@
 
             <!-- Modal editar -->
             <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered max-w-xl">
-                <div class="modal-content dark:bg-gray-800">
+                <div class="modal-dialog modal-dialog-centered max-w-xl">
+                    <div class="modal-content dark:bg-gray-800">
 
-                <div class="modal-header border-b dark:border-gray-700">
-                    <h5 class="modal-title text-xl font-semibold">Editar Registro</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <form id="formEditar" method="POST">
-                    <div class="modal-body">
-
-                    <!-- <input type="hidden" id="edit_id" name="id"> -->
-
-                    <div class="mb-3">
-                        <label class="block font-medium mb-1">Colaborador</label>
-                        <!-- <input type="text" id="edit_funcionario" name="funcionario" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600"> -->
-                        <select id="funcionario_id_edit" name="funcionario_id_edit" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" multiple required>
-                            <option></option>
-                            {% for funcionario in funcionarios %}
-                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="modal-header border-b dark:border-gray-700">
+                        <h5 class="modal-title text-xl font-semibold">Editar Registro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="block font-medium mb-1">Contrato</label>
-                        <input type="text" id="projeto_edit" name="projeto" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                    <form id="formEditar" method="POST" action="">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Colaborador</label>
+                                {% if admin_check %}
+                                <select id="funcionario_id_edit" name="funcionario_id_edit" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" multiple required>
+                                    <option></option>
+                                    {% for funcionario in funcionarios %}
+                                        <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                <input type="text" id="funcionario_id_lock" name="funcionario_id_lock" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Contrato</label>
+                                <select id="projeto_id_edit" name="projeto_id_edit" multiple required>
+                                    <option></option>
+                                    {% for projeto in projetos %}
+                                        <option value="{{ projeto.id }}">
+                                            {{ projeto.id }} | {{ projeto.nome }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Data</label>
+                                <div class="relative flex w-full flex-1 items-stretch rounded-lg">
+                                    <input type="month" id="data_edit" name="data_edit" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer" max="{{ mes_atual }}" required>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-medium cursor-pointer">calendar_month</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Horas Trabalhadas</label>
+                                <input type="number" id="horas_edit" name="horas_edit" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" step="0.5" min="0.5" type="number" placeholder="ex.: 8.5 para 8h 30min" required>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer border-t dark:border-gray-700">
+                        <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
+                            Salvar
+                        </button>
+                        </div>
+                    </form>
+
                     </div>
-
-                    <div class="mb-3">
-                        <label class="block font-medium mb-1">Data</label>
-                        <input type="date" id="edit_data" name="data" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="block font-medium mb-1">Horas Trabalhadas</label>
-                        <input type="number" id="edit_horas" name="horas" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
-                    </div>
-
-                    </div>
-
-                    <div class="modal-footer border-t dark:border-gray-700">
-                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
-                            data-bs-dismiss="modal">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
-                        Salvar
-                    </button>
-                    </div>
-                </form>
-
                 </div>
             </div>
+
+            <!-- Modal excluir -->
+            <div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered max-w-xl">
+                    <div class="modal-content dark:bg-gray-800">
+
+                    <div class="modal-header border-b dark:border-gray-700">
+                        <h5 class="modal-title text-xl font-semibold">Confirmar Remoção do Registro</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form id="formExcluir" method="POST" action="">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Colaborador</label>
+                                <input type="text" id="funcionario_del" name="funcionario_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Contrato</label>
+                                <input type="text" id="projeto_del" name="projeto_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Data</label>
+                                <div class="relative flex w-full flex-1 items-stretch rounded-lg">
+                                    <input type="month" id="data_del" name="data_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-medium cursor-pointer">calendar_month</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="block font-medium mb-1">Horas Trabalhadas</label>
+                                <input type="text" id="horas_del" name="horas_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer border-t dark:border-gray-700">
+                        <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit" class="px-4 py-2 bg-error text-white rounded-lg hover:bg-error/80">
+                            Excluir
+                        </button>
+                        </div>
+                    </form>
+
+                    </div>
+                </div>
             </div>
 
     {% endblock %}
@@ -380,27 +452,34 @@
         <script>
             $(document).ready(function() {
                 $('#funcionario_id').select2(regrasSelect2Colaborador);
-            });
-
-            $(document).ready(function() {
                 $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
-            });
+                // $('#funcionario_id_edit').select2(regrasSelect2Colaborador);
 
-            $(document).ready(function() {
-                $('#funcionario_id_edit').select2(regrasSelect2Colaborador);
-            });
-
-            $(document).ready(function() {
                 $('#projeto_id').select2(regrasSelect2Contrato);
-
                 $('#projeto_id_filter').select2(regrasSelect2Contrato);
+                // $('#projeto_id_edit').select2(regrasSelect2Contrato);
             });
+
+            // $(document).ready(function() {
+            //     $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
+            // });
+
+            // $(document).ready(function() {
+            //     $('#funcionario_id_edit').select2(regrasSelect2Colaborador);
+            // });
+
+            // $(document).ready(function() {
+            //     $('#projeto_id').select2(regrasSelect2Contrato);
+
+            //     $('#projeto_id_filter').select2(regrasSelect2Contrato);
+            // });
         </script>
 
         <!-- Seletor do input de data mês, tira o calendário e mostra no clique em qualquer área do input -->
         <script>
             const dataInput = document.getElementById("data");
             const dataInputFilter = document.getElementById("mes_ano_filter");
+            const dataEdit = document.getElementById("data_edit");
 
             dataInput.addEventListener("click", () => {
                 dataInput.showPicker(); // força abrir o seletor
@@ -408,6 +487,10 @@
 
             dataInputFilter.addEventListener("click", () => {
                 dataInputFilter.showPicker(); // força abrir o seletor
+            });
+
+            dataEdit.addEventListener("click", () => {
+                dataEdit.showPicker(); // força abrir o seletor
             });
         </script>
 
@@ -504,26 +587,81 @@
         </script>
 
         <!-- Modal editar -->
-        <!-- <script>
-            document.querySelectorAll('.btn-editar').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    // print(this.dataset.id);
-                    e.preventDefault();
-                    // document.getElementById('edit_id').value = this.dataset.id;
-                    document.getElementById('funcionario_id_edit').value = this.dataset.funcionario;
-                    document.getElementById('edit_projeto').value = this.dataset.projeto;
-                    document.getElementById('edit_data').value = this.dataset.data;
-                    document.getElementById('edit_horas').value = this.dataset.horas;
+        <script>
+            const modalEditar = document.getElementById('modalEditar');
+            
+            // Delegation: escuta em document
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.btn-editar');
+                if (!button) return;
 
-                    document.getElementById('formEditar').action = `/registros/editar/${this.dataset.id}`;
 
-                    const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
-                    modal.show();
+                const id = button.dataset.id;
+                const colaborador = button.dataset.func;
+                const colaborador_nome = button.dataset.funcnome;
+                const contrato = button.dataset.proj;
+                const data = button.dataset.data;
+                const horas = button.dataset.horas;
+
+                // inicializa Select2
+                $('#funcionario_id_edit').select2({
+                    ...regrasSelect2Colaborador,
+                    dropdownParent: $('#modalEditar')
                 });
-            });
-        </script> -->
+                $('#projeto_id_edit').select2({
+                    ...regrasSelect2Contrato,
+                    dropdownParent: $('#modalEditar')
+                });
 
-        
+                $('#funcionario_id_edit').val(colaborador).trigger('change');
+                $('#projeto_id_edit').val(contrato).trigger('change');
+
+                document.getElementById('data_edit').value = data;
+                document.getElementById('horas_edit').value = horas;
+
+                if(document.getElementById('funcionario_id_lock')){
+                    document.getElementById('funcionario_id_lock').value = colaborador_nome;
+                }
+
+                // Atualiza o action do form
+                document.getElementById('formEditar').action = "{{ url_for('registros.editar', id=0) }}".replace('0', id);
+            });
+
+            modalEditar.addEventListener('hidden.bs.modal', function () {
+                // destrói os selects para evitar sobreposição
+                if ($('#funcionario_id_edit').hasClass("select2-hidden-accessible")) {
+                    $('#funcionario_id_edit').select2('destroy');
+                }
+                if ($('#projeto_id_edit').hasClass("select2-hidden-accessible")) {
+                    $('#projeto_id_edit').select2('destroy');
+                }
+            });
+
+        </script>
+
+        <!-- Modal excluir -->
+        <script>            
+            // Delegation: escuta em document
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.btn-excluir');
+                if (!button) return;
+
+                const id = button.dataset.id;
+                const colaborador = button.dataset.func;
+                const contrato = button.dataset.proj;
+                const data = button.dataset.data;
+                const horas = button.dataset.horas;
+
+                document.getElementById('funcionario_del').value = colaborador;
+                document.getElementById('projeto_del').value = contrato;
+                document.getElementById('data_del').value = data;
+                document.getElementById('horas_del').value = horas;
+
+                // Atualiza o action do form
+                document.getElementById('formExcluir').action = "{{ url_for('registros.remover', id=0) }}".replace('0', id);
+            });
+
+        </script>
 
 
     {% endblock %}

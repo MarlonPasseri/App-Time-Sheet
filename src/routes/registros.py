@@ -55,6 +55,10 @@ def listar():
             'projeto': f"{projeto.id} | {projeto.nome}" if projeto else 'Desconhecido',
             'data': registro.data,
             'horas_trabalhadas': registro.horas_trabalhadas,
+            # Passagens para o modal de edição
+            'funcionario_id': registro.funcionario_id,
+            'projeto_id': registro.projeto_id,
+            'data_input': datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m")
             # 'mes_ano_referencia': registro.mes_ano_referencia
         }
         registros_view.append(registro_view)
@@ -195,8 +199,8 @@ def editar(id):
         flash('Registro não encontrado!', 'danger')
         return redirect(url_for('registros.listar'))
     
-    funcionarios = db.listar_funcionarios()
-    projetos = db.listar_projetos()
+    # funcionarios = db.listar_funcionarios()
+    # projetos = db.listar_projetos()
 
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
@@ -205,13 +209,13 @@ def editar(id):
     if request.method == 'POST':
         # Se funcionário, força o próprio ID
         if admin_check:
-            funcionario_id = request.form.get('funcionario_id', type=int)
+            funcionario_id = int(request.form.getlist('funcionario_id_edit')[0])  # Corrigido para obter o valor corretamente
         else:
             funcionario_id = usuario.funcionario_id
 
-        projeto_id = request.form.get('projeto_id', type=int)
-        data_str = request.form.get('data')
-        horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
+        projeto_id = int(request.form.getlist('projeto_id_edit')[0])  # Corrigido para obter o valor corretamente
+        data_str = request.form.get('data_edit')
+        horas_trabalhadas = request.form.get('horas_edit', type=float)
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
@@ -222,14 +226,14 @@ def editar(id):
                 # Bloqueia se o mês for futuro
                 if data_obj > hoje.replace(day=1):
                     flash('Não é possível adicionar registros para meses futuros.', 'warning')
-                    return redirect(url_for('registros.adicionar'))
+                    return redirect(url_for('registros.listar'))
 
                 # Se for o mês atual, limita pelas horas do dia atual
                 if data_obj.month == hoje.month and data_obj.year == hoje.year:
                     limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
                     if horas_trabalhadas > limite_horas:
                         flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
-                        return redirect(url_for('registros.adicionar'))
+                        return redirect(url_for('registros.listar'))
 
                 # Tudo certo, salva no formato MM-YYYY
                 data = data_obj.strftime('%m-%Y')
@@ -249,26 +253,18 @@ def editar(id):
         else:
             flash('Todos os campos são obrigatórios!', 'danger')
 
-    # conversão para exibir corretamente no input
-    data_input_value = ""
-    if registro.data:
-        try:
-            data_input_value = datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m")
-        except ValueError:
-            pass
-
     # mes_atual = datetime.now().strftime('%Y-%m')
     
-    return render_template(
-        'registros/listar.html',
-        registro_selected=registro,
-        # funcionarios=funcionarios,
-        # projetos=projetos,
-        # admin_check=admin_check,
-        # funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
-        data_input_value=data_input_value,
-        # mes_atual=mes_atual
-    )
+    # return render_template(
+    #     'registros/listar.html',
+    #     registro_selected=registro,
+    #     # funcionarios=funcionarios,
+    #     # projetos=projetos,
+    #     # admin_check=admin_check,
+    #     # funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
+    #     data_input_value=data_input_value,
+    #     # mes_atual=mes_atual
+    # )
 
 @registros_bp.route('/remover/<int:id>', methods=['POST'])
 def remover(id):
