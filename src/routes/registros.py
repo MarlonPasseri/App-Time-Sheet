@@ -101,6 +101,11 @@ def listar():
 
     query_string_pages = '&'.join([f"{k}={v}" for k, v in query_params.items()])
 
+    mostrando_inicio = (pagina - 1) * registros_por_pagina + 1
+    mostrando_fim = min(pagina * registros_por_pagina, total_registros)
+    total_resultados = total_registros
+
+
     return render_template(
         'registros/listar.html',
         registros=registros_pag,
@@ -120,6 +125,9 @@ def listar():
         total_paginas=total_paginas,
         pagina=pagina,
         registros_por_pagina=registros_por_pagina,
+        mostrando_inicio=mostrando_inicio,
+        mostrando_fim=mostrando_fim,
+        total_resultados=total_resultados
     )
 
 @registros_bp.route('/adicionar', methods=['GET', 'POST'])

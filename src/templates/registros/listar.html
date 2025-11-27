@@ -170,7 +170,6 @@
                                 </form>
                             </div>
 
-
                             <table class="w-full text-left text-sm text-text-primary dark:text-gray-300">
                                 <thead class="bg-gray-light dark:bg-background-dark/70 text-xs uppercase">
                                     <tr>
@@ -245,28 +244,38 @@
                                 </tfoot>
                             </table>
                             <div class="flex justify-between items-center p-4">
-                                <ul class="flex gap-2 justify-center">
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                                     {% if pagina > 1 %}
-                                    <li>
-                                        <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="btn btn-secondary ajax-link">Anterior</a>
-                                    </li>
+                                        <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                            <span class="material-symbols-outlined text-base">chevron_left</span>
+                                        </a>
                                     {% endif %}
 
                                     {% for p in range(1, total_paginas + 1) %}
-                                    <li>
                                         <a href="?{{ query_string_pages }}&pagina={{ p }}"
-                                        class="btn {% if p == pagina %}btn-primary{% else %}btn-outline{% endif %} ajax-link">
+                                        class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
                                         {{ p }}
                                         </a>
-                                    </li>
                                     {% endfor %}
 
                                     {% if pagina < total_paginas %}
-                                    <li>
-                                        <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="btn btn-secondary ajax-link">Próxima</a>
-                                    </li>
+                                        <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                            <span class="material-symbols-outlined text-base">chevron_right</span>
+                                        </a>
                                     {% endif %}
-                                </ul>
+                                </nav>
+                                <div id="contador-resultados">
+                                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                                        Mostrando
+                                        <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
+                                        a
+                                        <span class="font-medium" id="mostrando-ate">{{ mostrando_fim }}</span>
+                                        de
+                                        <span class="font-medium" id="total-resultados">{{ total_resultados }}</span>
+                                        resultados
+                                    </p>
+                                </div>
+
                                 <form method="GET" id="form_pages" class="flex items-center gap-4">
                                     <!-- Mantém os filtros atuais -->
                                     {% for k, v in request.args.items() %}
