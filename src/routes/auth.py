@@ -155,5 +155,9 @@ def perfil():
 
         usuario = db.obter_usuario(usuario_id)
 
-    return render_template('auth/perfil.html', usuario=usuario)
+    return render_template(
+        'auth/perfil.html',
+        usuario=usuario,
+        admin_check = usuario and usuario.tipo == 'administrador'
+    )
 
