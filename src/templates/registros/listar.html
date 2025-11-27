@@ -4,50 +4,69 @@
         <!-- CSS do Select2 -->
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <style>
-            /* Altura igual aos inputs h-14 (56px) */
-            .select2-container .select2-selection--single {
+            /* Container principal do select 2 */
+            .select2-container .select2-selection--multiple {
                 height: 3.5rem !important;
-                display: flex !important;
-                align-items: center !important;
+                padding: 0 !important;
+                padding-left: 16px !important;
                 border-radius: 0.5rem; /* rounded-lg */
                 border: 1px solid #dbe2e6; /* sua classe border-gray-medium */
                 background-color: white;
+
+                position: relative;
+                padding-right: 2rem !important; /* espaço para a seta */
+
+                *{
+                    margin: 0 !important;
+                }
+                :hover{
+                    background-color: transparent !important;
+                }
             }
 
-            .dark .select2-container .select2-selection--single {
+            /* seta estilizada com CSS */
+            .select2-container--default .select2-selection--multiple::after {
+                content: "▾"; /* seta para baixo */
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 1.3rem;
+                color: #6b7280; /* cinza */
+                pointer-events: none; /* não bloquear clique */
+            }
+
+            .dark .select2-container .select2-selection--multiple {
                 background-color: #1f2937 !important; /* dark:bg-gray-700 */
                 border-color: #374151 !important;     /* dark:border-gray-600 */
                 color: white !important;
             }
 
-            .select2-container .select2-selection__rendered {
-                font-size: 1rem !important;
-                color: inherit !important;
-            }
-
-            /* Ícone da seta alinhado */
-            .select2-container .select2-selection__arrow {
+            /* Container de pesquisa */
+            .select2-search--inline .select2-search__field {
                 height: 3.5rem !important;
-                right: 10px !important;
+                line-height: 3.5rem !important;
+                font-family: inherit !important;
             }
 
-            .select2-container .select2-selection__clear{
+            /* Container de seleção de opção */
+            .select2-selection__choice{
+                line-height: 3.5rem !important;
+                background-color: transparent !important;
+                border: none !important;
+            }
+
+            /* Container de remoção de opção */
+            .select2-selection__choice__remove{
                 color: #ff0000 !important;
-                margin: 0 !important;
                 font-weight: 900 !important;
                 font-size: 20px !important;
-                padding-left: 1rem !important;
-                padding-right: 8px !important;
+                border: none !important;
             }
 
-            .select2-container .select2-selection__placeholder {
-                padding-left: 8px !important;
-            }
-
+            /* Remoção do ícone de calendário padrão */
             input[type="month"]::-webkit-calendar-picker-indicator {
                 opacity: 0;
-                /* padding-left: 2rem; */
-                /* cursor: pointer; */
             }
         </style>
 
@@ -63,9 +82,9 @@
                         <form method="POST" action="{{ url_for('registros.adicionar') }}" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                             <div class="{% if not admin_check %} md:col-span-2 {% endif %}">
                                 <label class="flex flex-col">
-                                    <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Projeto</p>
-                                    <select class="form-select" id="projeto_id" name="projeto_id" required>
-                                        <option value="">Selecione um projeto</option>
+                                    <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Contrato</p>
+                                    <select id="projeto_id" name="projeto_id" multiple required>
+                                        <option></option>
                                         {% for projeto in projetos %}
                                             <option value="{{ projeto.id }}">{{ projeto.id }} | {{ projeto.nome }}</option>
                                         {% endfor %}
@@ -75,9 +94,9 @@
                             {% if admin_check %}
                             <!-- Campo visível apenas para administradores -->
                             <div>
-                                <label for="funcionario_id" class="form-label" >Colaborador</label>
-                                <select class="form-select flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal appearance-none bg-no-repeat bg-right" id="funcionario_id" name="funcionario_id" required>
-                                    <option value="">Selecione um colaborador</option>
+                                <label for="funcionario_id" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2" >Colaborador</label>
+                                <select id="funcionario_id" name="funcionario_id" multiple required>
+                                    <option></option>
                                     {% for funcionario in funcionarios %}
                                         <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
                                     {% endfor %}
@@ -109,29 +128,71 @@
                     </div>
                     <div class="mt-12">
                         <h3 class="text-2xl font-bold text-text-primary dark:text-white mb-4">Registros Recentes</h3>
-                        <div class="overflow-x-auto bg-white dark:bg-background-dark/50 rounded-xl shadow-sm border border-gray-light dark:border-gray-700">
-
-
-                            <!-- Adicionar os filtros de busca, mudar os IDs para não conflitar com o form de adicionar registro e testar o link-->
+                        <div class="overflow-x-auto bg-white dark:bg-background-dark/50 rounded-xl shadow-sm border border-gray-light dark:border-gray-700" id="registros-fragment">
+                            <div class="bg-white dark:bg-background-dark/50 px-6 pb-4 shadow-sm mt-6">
+                                <form method="GET" action="{{ url_for('registros.listar') }}" class="row g-3" id="form_filter">
+                                    {% if admin_check %}
+                                    <!-- Campo visível apenas para administradores -->
+                                    <div class="col-md-4">
+                                        <label for="funcionario_id_filter" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Colaborador</label>
+                                        <select id="funcionario_id_filter" name="funcionario_id_filter" multiple>
+                                            <option></option>
+                                            {% for funcionario in funcionarios %}
+                                                <option value="{{ funcionario.id }}" {% if filtro_funcionario_id == funcionario.id %}selected{% endif %}>
+                                                    {{ funcionario.nome }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-4">
+                                    <!-- Apenas passa o ID do funcionário logado -->
+                                        <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                                    </div>
+                                    {% endif %}
+                                    <div class="col-md-4">
+                                        <label for="projeto_id_filter" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Contrato</label>
+                                        <select id="projeto_id_filter" name="projeto_id_filter" multiple>
+                                            <option></option>
+                                            {% for projeto in projetos %}
+                                                <option value="{{ projeto.id }}" {% if filtro_projeto_id == projeto.id %}selected{% endif %}>
+                                                    {{ projeto.id }} | {{ projeto.nome }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="mes_ano_filter" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Data</label>
+                                        <div class="relative flex w-full flex-1 items-stretch rounded-lg">
+                                            <input type="month" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer" id="mes_ano_filter" name="mes_ano_filter" value="{{ filtro_mes_ano }}">
+                                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-medium cursor-pointer">calendar_month</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 text-end">
+                                        <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                                        <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">Limpar Filtros</a>
+                                    </div>
+                                </form>
+                            </div>
 
 
                             <table class="w-full text-left text-sm text-text-primary dark:text-gray-300">
                                 <thead class="bg-gray-light dark:bg-background-dark/70 text-xs uppercase">
                                     <tr>
                                         <th class="px-6 py-3" scope="col">
-                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=colaborador&direcao={% if ordenar == 'colaborador' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none">
+                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=colaborador&direcao={% if ordenar == 'colaborador' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
                                                 Colaborador <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
                                             </a>
                                         </th>
 
                                         <th class="px-6 py-3" scope="col">
-                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=contrato&direcao={% if ordenar == 'contrato' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none">
+                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=contrato&direcao={% if ordenar == 'contrato' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
                                                 Contrato <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
                                             </a>
                                         </th>
 
                                         <th class="px-6 py-3" scope="col">
-                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=data&direcao={% if ordenar == 'data' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none">
+                                            <a href="{{ url_for('registros.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=data&direcao={% if ordenar == 'data' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
                                                 Data <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
                                             </a>
                                         </th>
@@ -139,7 +200,14 @@
                                         <th class="px-6 py-3 text-center" scope="col">Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="lista-registros">
+                                    {% if registros|length == 0 %}
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 text-center text-gray-medium dark:text-gray-500">
+                                                Nenhum registro encontrado.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
                                     {% for registro in registros %}
                                         <tr class="border-b border-gray-light dark:border-gray-700">
                                             <td class="px-6 py-4">{{ registro.funcionario }}</td>
@@ -147,7 +215,7 @@
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
                                             <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas }}</td>
                                             <td class="px-6 py-4 text-center">
-                                                <a href="{{ url_for('registros.editar', id=registro.id) }}" class="p-2 text-primary hover:text-primary/80">
+                                                <a class="btn-editar p-2 text-primary hover:text-primary/80 cursor-pointer" r-id="{{ registro.id }}" r-func="{{ registro.funcionario }}" r-proj="{{ registro.projeto.nome }}" r-proj-id="{{ registro.projeto.id }}" r-data="{{ registro.data }}" r-horas="{{ registro.horas_trabalhadas }}" data-bs-toggle="modal" data-bs-target="#modalEditar">
                                                     <span class="material-symbols-outlined text-xl">edit</span>
                                                 </a>
                                                 <form action="{{ url_for('registros.remover', id=registro.id) }}" method="POST" class="d-inline">
@@ -171,14 +239,14 @@
                                 <ul class="flex gap-2 justify-center">
                                     {% if pagina > 1 %}
                                     <li>
-                                        <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="btn btn-secondary">Anterior</a>
+                                        <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="btn btn-secondary ajax-link">Anterior</a>
                                     </li>
                                     {% endif %}
 
                                     {% for p in range(1, total_paginas + 1) %}
                                     <li>
                                         <a href="?{{ query_string_pages }}&pagina={{ p }}"
-                                        class="btn {% if p == pagina %}btn-primary{% else %}btn-outline{% endif %}">
+                                        class="btn {% if p == pagina %}btn-primary{% else %}btn-outline{% endif %} ajax-link">
                                         {{ p }}
                                         </a>
                                     </li>
@@ -186,7 +254,7 @@
 
                                     {% if pagina < total_paginas %}
                                     <li>
-                                        <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="btn btn-secondary">Próxima</a>
+                                        <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="btn btn-secondary ajax-link">Próxima</a>
                                     </li>
                                     {% endif %}
                                 </ul>
@@ -198,7 +266,7 @@
                                         {% endif %}
                                     {% endfor %}
 
-                                    <label for="registros_por_pagina" class=" w-full text-sm font-medium">Registros por página:</label>
+                                    <label for="registros_por_pagina" class="w-full text-sm font-medium">Registros por página:</label>
                                     <select name="registros_por_pagina" id="registros_por_pagina" onchange="this.form.submit()" class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer">
                                         <option value="5" {% if registros_por_pagina == 5 %}selected{% endif %}>5</option>
                                         <option value="10" {% if registros_por_pagina == 10 %}selected{% endif %}>10</option>
@@ -211,36 +279,251 @@
                     </div>
                 </div>
             </main>
+
+            <!-- Modal editar -->
+            <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered max-w-xl">
+                <div class="modal-content dark:bg-gray-800">
+
+                <div class="modal-header border-b dark:border-gray-700">
+                    <h5 class="modal-title text-xl font-semibold">Editar Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="formEditar" method="POST">
+                    <div class="modal-body">
+
+                    <!-- <input type="hidden" id="edit_id" name="id"> -->
+
+                    <div class="mb-3">
+                        <label class="block font-medium mb-1">Colaborador</label>
+                        <!-- <input type="text" id="edit_funcionario" name="funcionario" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600"> -->
+                        <select id="funcionario_id_edit" name="funcionario_id_edit" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" multiple required>
+                            <option></option>
+                            {% for funcionario in funcionarios %}
+                                <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block font-medium mb-1">Contrato</label>
+                        <input type="text" id="projeto_edit" name="projeto" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block font-medium mb-1">Data</label>
+                        <input type="date" id="edit_data" name="data" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="block font-medium mb-1">Horas Trabalhadas</label>
+                        <input type="number" id="edit_horas" name="horas" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                    </div>
+
+                    </div>
+
+                    <div class="modal-footer border-t dark:border-gray-700">
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
+                        Salvar
+                    </button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+            </div>
+
     {% endblock %}
     {% block script %}
         <!-- jQuery e JS do Select2 -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-        <script>
-            $(document).ready(function() {
-                $('#funcionario_id').select2({
-                    placeholder: "Selecione ou pesquise um colaborador",
-                    allowClear: true,
-                    width: '100%'
-                });
-            });
-        </script>
         
+        <!-- Configuração padrão dos Selects 2 -->
+        <script>
+            regrasSelect2Colaborador = {
+                placeholder: "Selecione um colaborador",
+                width: '100%',
+                maximumSelectionLength: 1,   // limita a 1 item
+                language: {
+                    maximumSelected: function () {
+                        return "Você só pode selecionar um item.";
+                    },
+                    noResults: function () {
+                        return "Nenhum colaborador encontrado";
+                    }
+                }
+            };
+
+            regrasSelect2Contrato = {
+                placeholder: "Selecione um contrato",
+                width: '100%',
+                maximumSelectionLength: 1,   // limita a 1 item
+                language: {
+                    maximumSelected: function () {
+                        return "Você só pode selecionar um item.";
+                    },
+                    noResults: function () {
+                        return "Nenhum contrato encontrado";
+                    }
+                }
+            };
+        </script>
+
+        <!-- Selects 2 -->
         <script>
             $(document).ready(function() {
-                $('#projeto_id').select2({
-                    placeholder: "Selecione ou pesquise um projeto",
-                    allowClear: true,
-                    width: '100%'
-                });
+                $('#funcionario_id').select2(regrasSelect2Colaborador);
+            });
+
+            $(document).ready(function() {
+                $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
+            });
+
+            $(document).ready(function() {
+                $('#funcionario_id_edit').select2(regrasSelect2Colaborador);
+            });
+
+            $(document).ready(function() {
+                $('#projeto_id').select2(regrasSelect2Contrato);
+
+                $('#projeto_id_filter').select2(regrasSelect2Contrato);
             });
         </script>
 
+        <!-- Seletor do input de data mês, tira o calendário e mostra no clique em qualquer área do input -->
         <script>
             const dataInput = document.getElementById("data");
+            const dataInputFilter = document.getElementById("mes_ano_filter");
 
             dataInput.addEventListener("click", () => {
                 dataInput.showPicker(); // força abrir o seletor
             });
+
+            dataInputFilter.addEventListener("click", () => {
+                dataInputFilter.showPicker(); // força abrir o seletor
+            });
         </script>
+
+        <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação ou ordenação -->
+        <script>
+            (function () {
+            // Seletor do bloco que será atualizado
+            const targetSelector = '#registros-fragment';
+
+            // Função principal que busca a URL e injeta o tbody novo
+            async function carregarFragmento(url, pushUrl = true) {
+                try {
+                const resp = await fetch(url, { credentials: 'same-origin' });
+                if (!resp.ok) throw new Error('Erro na requisição: ' + resp.status);
+
+                const html = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // pega o fragmento do servidor
+                const novoFragmento = doc.querySelector(targetSelector);
+                if (!novoFragmento) {
+                    console.warn('Fragmento não encontrado na resposta. Verifique se o servidor retorna #lista-registros no HTML.');
+                    return;
+                }
+
+                // substitui o conteúdo
+                const alvo = document.querySelector(targetSelector);
+                if (!alvo) {
+                    console.warn('Elemento alvo não encontrado no DOM:', targetSelector);
+                    return;
+                }
+                alvo.innerHTML = novoFragmento.innerHTML;
+
+                // atualiza a url no navegador sem recarregar (mantém histórico)
+                if (pushUrl) {
+                    history.pushState({}, '', url);
+                }
+
+                // opcional: você pode re-executar código que precisa rodar após atualização
+                // ex: re-inicializar tooltips, select2, etc.
+                function initAfterAjax() {
+                // inicializar select2 novamente
+                $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
+
+                $('#projeto_id_filter').select2(regrasSelect2Contrato);
+
+                } initAfterAjax();
+
+                } catch (err) {
+                console.error('Erro ao carregar fragmento via AJAX:', err);
+                }
+            }
+
+            // Delegation: intercepta todos os cliques em links com .ajax-link
+            document.addEventListener('click', function (ev) {
+                const a = ev.target.closest('a.ajax-link');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href) return;
+                // ignora links externos
+                const sameOrigin = new URL(href, location.href).origin === location.origin;
+                if (!sameOrigin) return;
+
+                ev.preventDefault();
+                carregarFragmento(href, true);
+            });
+
+            // Tratamento de navegação do browser (back/forward)
+            window.addEventListener('popstate', function () {
+                // quando o usuário clica em voltar/avançar, carrega a URL atual
+                carregarFragmento(location.href, false);
+            });
+
+            // Se você tem um form de filtros que usa GET, intercepta submit e usa fetch:
+            const filtroForm = document.getElementById('form_filter'); // ajuste id se diferente
+            if (filtroForm) {
+                filtroForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const params = new URLSearchParams(new FormData(filtroForm)).toString();
+                const url = location.pathname + (params ? '?' + params : '');
+                carregarFragmento(url, true);
+                });
+
+                // opcional: interceptar onchange para submits automáticos
+                filtroForm.addEventListener('change', function () {
+                // se quiser enviar on change, descomente:
+                // e.preventDefault();
+                // const params = new URLSearchParams(new FormData(filtroForm)).toString();
+                // carregarFragmento(location.pathname + (params ? '?' + params : ''), true);
+                });
+            }
+            })();
+        </script>
+
+        <!-- Modal editar -->
+        <!-- <script>
+            document.querySelectorAll('.btn-editar').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    // print(this.dataset.id);
+                    e.preventDefault();
+                    // document.getElementById('edit_id').value = this.dataset.id;
+                    document.getElementById('funcionario_id_edit').value = this.dataset.funcionario;
+                    document.getElementById('edit_projeto').value = this.dataset.projeto;
+                    document.getElementById('edit_data').value = this.dataset.data;
+                    document.getElementById('edit_horas').value = this.dataset.horas;
+
+                    document.getElementById('formEditar').action = `/registros/editar/${this.dataset.id}`;
+
+                    const modal = new bootstrap.Modal(document.getElementById('modalEditar'));
+                    modal.show();
+                });
+            });
+        </script> -->
+
+        
+
+
     {% endblock %}

@@ -20,14 +20,14 @@ def listar():
     admin_check = usuario and usuario.tipo == 'administrador'
     
     # Parâmetros de filtro opcionais
-    projeto_id = request.args.get('projeto_id', type=int)
-    mes_ano = request.args.get('mes_ano')
-    ordenar = request.args.get('ordenar', 'data')
+    projeto_id = request.args.get('projeto_id_filter', type=int)
+    mes_ano = request.args.get('mes_ano_filter')
+    ordenar = request.args.get('ordenar', 'id')
     direcao = request.args.get('direcao', 'asc')
 
     # Se funcionário, força o próprio ID
     if admin_check:
-        funcionario_id = request.args.get('funcionario_id', type=int)
+        funcionario_id = request.args.get('funcionario_id_filter', type=int)
     else:
         funcionario_id = usuario.funcionario_id
 
@@ -59,6 +59,8 @@ def listar():
         }
         registros_view.append(registro_view)
         total_horas += registro.horas_trabalhadas
+        
+    registros_view.sort(key=lambda x: x['id'], reverse=True)  # Ordena por ID decrescente inicialmente
     
     # Ordenação
     if ordenar:
@@ -255,17 +257,17 @@ def editar(id):
         except ValueError:
             pass
 
-    mes_atual = datetime.now().strftime('%Y-%m')
+    # mes_atual = datetime.now().strftime('%Y-%m')
     
     return render_template(
-        'registros/editar.html',
-        registro=registro,
-        funcionarios=funcionarios,
-        projetos=projetos,
-        admin_check=admin_check,
-        funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
+        'registros/listar.html',
+        registro_selected=registro,
+        # funcionarios=funcionarios,
+        # projetos=projetos,
+        # admin_check=admin_check,
+        # funcionario_logado=usuario.funcionario_id if usuario and usuario.funcionario_id else None,
         data_input_value=data_input_value,
-        mes_atual=mes_atual
+        # mes_atual=mes_atual
     )
 
 @registros_bp.route('/remover/<int:id>', methods=['POST'])
