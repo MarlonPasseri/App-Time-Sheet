@@ -67,7 +67,15 @@
                 <form method="POST" action="{{ url_for('colaboradores.adicionar') }}">
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome do Colaborador</label>
-                        <input type="text" class="form-control" id="nome" name="nome" required>
+                        <input type="text" class="form-control" id="nome" name="nome" value="{{ nome or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Email do Colaborador</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ email or '' }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Código do Colaborador</label>
+                        <input type="text" class="form-control" id="cod_funcionario" name="cod_funcionario" value="{{ cod_funcionario or '' }}" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar</button>
                     <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary">Cancelar</a>

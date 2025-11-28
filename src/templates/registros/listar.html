@@ -207,7 +207,7 @@
                                             <td class="px-6 py-4">{{ registro.funcionario }}</td>
                                             <td class="px-6 py-4">{{ registro.projeto }}</td>
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
-                                            <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas }}</td>
+                                            <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas | formatar_horas }}</td>
                                             <td class="px-6 py-4 text-center">
                                                 <button class="btn-editar p-2 text-primary hover:text-primary/80 cursor-pointer"
                                                 type="button" data-bs-toggle="modal"

@@ -118,7 +118,7 @@
                             </div>
                             <div class="relative flex w-full items-stretch">
                                 <input class="form-input w-full flex-1 resize-none rounded-lg border border-gray-400/50 bg-white/20 dark:border-gray-600 dark:bg-gray-800/50 h-12 px-4 pr-10 text-sm font-normal leading-normal text-white placeholder:text-gray-300 dark:placeholder:text-gray-400 focus:border-primary focus:ring-primary/50" id="senha" name="senha" placeholder="Sua senha" type="password" required>
-                                <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-white" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('senha'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.innerHTML = '<span class=&quot;material-symbols-outlined h-5 w-5&quot;>visibility_off</span>'; } else { pwdField.type = 'password'; this.innerHTML = '<span class=&quot;material-symbols-outlined h-5 w-5&quot;>visibility</span>'; }">
+                                <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-white" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('senha'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off';} else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
                                     <span class="material-symbols-outlined h-5 w-5">visibility</span>
                                 </button>
                             </div>

@@ -138,17 +138,32 @@
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <label class="flex flex-col">
                                         <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Senha Atual</p>
-                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="senha_atual" name="senha_atual"/>
+                                        <div class="relative flex w-full items-stretch">
+                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="senha_atual" name="senha_atual"/>
+                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('senha_atual'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                            </button>
+                                        </div>
                                     </label>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                                     <label class="flex flex-col">
                                         <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nova Senha</p>
-                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="nova_senha" name="nova_senha"/>
+                                        <div class="relative flex w-full items-stretch">
+                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="nova_senha" name="nova_senha"/>
+                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdNField = document.getElementById('nova_senha'); if (pwdNField.type === 'password') { pwdNField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdNField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                            </button>
+                                        </div>
                                     </label>
                                     <label class="flex flex-col">
                                         <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Confirmar Nova Senha</p>
-                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="confirmar_senha" name="confirmar_senha"/>
+                                        <div class="relative flex w-full items-stretch">
+                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="confirmar_senha" name="confirmar_senha"/>
+                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdCField = document.getElementById('confirmar_senha'); if (pwdCField.type === 'password') { pwdCField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdCField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                            </button>
+                                        </div>
                                     </label>
                                 </div>
                                 <div class="flex justify-end mt-6">

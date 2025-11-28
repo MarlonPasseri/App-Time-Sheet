@@ -223,7 +223,9 @@ def adaptar_exportacao_relatorio_mensal(db, funcionario_id=None, projeto_id=None
         )
         
         # Obter listas de funcionários e projetos
-        funcionarios = db.listar_funcionarios()
+        funcionarios = db.listar_usuarios()
+        # Remover admin da lista
+        funcionarios = [f for f in funcionarios if f.tipo != 'administrador']
         projetos = db.listar_projetos()
         
         # Verificar se há registros

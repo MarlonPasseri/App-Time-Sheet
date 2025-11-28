@@ -81,13 +81,13 @@ def registro():
             return render_template('auth/registro.html')
 
         # --- Criação do usuário ---
-        funcionario = db.adicionar_funcionario(nome)
+        # funcionario = db.adicionar_funcionario(nome)
         usuario, mensagem = db.adicionar_usuario(
             nome=nome,
             email=email,
             senha=senha,
             tipo="funcionario",
-            funcionario_id=funcionario.id
+            # funcionario_id=funcionario.id
         )
 
         if usuario:
