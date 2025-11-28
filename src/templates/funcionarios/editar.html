@@ -6,6 +6,8 @@
     <title>App Time Sheet - Editar Colaborador</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -68,6 +70,32 @@
                     <div class="mb-3">
                         <label for="nome" class="form-label">Nome do Colaborador</label>
                         <input type="text" class="form-control" id="nome" name="nome" value="{{ funcionario.nome }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Email do Colaborador</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ funcionario.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Código do Colaborador</label>
+                        <input type="text" class="form-control" id="cod_funcionario" name="cod_funcionario" value="{{ funcionario.cod_funcionario }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="novaSenha" class="form-label">Nova Senha</label>
+                        <div class="relative flex w-full items-stretch">
+                            <input type="password" class="form-control" id="novaSenha" name="novaSenha">
+                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('novaSenha'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmarNovaSenha" class="form-label">Confirmar Nova Senha</label>
+                        <div class="relative flex w-full items-stretch">
+                            <input type="password" class="form-control" id="confirmarNovaSenha" name="confirmarNovaSenha">
+                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-white" type="button" tabindex="-1" onclick="const pwdCField = document.getElementById('confirmarNovaSenha'); if (pwdCField.type === 'password') { pwdCField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdCField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                     <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary">Cancelar</a>

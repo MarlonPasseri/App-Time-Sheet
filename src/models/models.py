@@ -5,13 +5,13 @@ import re
 from datetime import datetime
 
 class Usuario:
-    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", funcionario_id=None):
+    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", cod_funcionario=None):
         self.id = id
         self.nome = nome
         self.email = email
         self.senha_hash = senha_hash
         self.tipo = tipo  # "funcionario" ou "administrador"
-        self.funcionario_id = funcionario_id  # ID do funcionário associado (para usuários tipo funcionário)
+        self.cod_funcionario = cod_funcionario  # ID do funcionário
     
     def to_dict(self):
         return {
@@ -20,7 +20,7 @@ class Usuario:
             'email': self.email,
             'senha_hash': self.senha_hash,
             'tipo': self.tipo,
-            'funcionario_id': self.funcionario_id
+            'cod_funcionario': self.cod_funcionario,
         }
     
     @classmethod
@@ -31,7 +31,7 @@ class Usuario:
             email=data.get('email'),
             senha_hash=data.get('senha_hash'),
             tipo=data.get('tipo', 'funcionario'),
-            funcionario_id=data.get('funcionario_id')
+            cod_funcionario=data.get('cod_funcionario'),
         )
     
     @staticmethod
@@ -55,7 +55,7 @@ class Usuario:
 class BancoDeDados:
     def __init__(self, arquivo_json=None):
         self.arquivo_json = arquivo_json or os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'dados.json')
-        self.funcionarios = []
+        # self.funcionarios = []
         self.projetos = []
         self.registros_horas = []
         self.usuarios = []
@@ -99,20 +99,20 @@ class BancoDeDados:
                 with open(self.arquivo_json, 'r', encoding='utf-8') as f:
                     dados = json.load(f)
                 
-                self.funcionarios = [Funcionario.from_dict(f) for f in dados.get('funcionarios', [])]
+                # self.funcionarios = [Funcionario.from_dict(f) for f in dados.get('funcionarios', [])]
                 self.projetos = [Projeto.from_dict(p) for p in dados.get('projetos', [])]
                 self.registros_horas = [RegistroHoras.from_dict(r) for r in dados.get('registros_horas', [])]
                 self.usuarios = [Usuario.from_dict(u) for u in dados.get('usuarios', [])]
             except Exception as e:
                 print(f"Erro ao carregar dados: {e}")
                 # Inicializa com listas vazias em caso de erro
-                self.funcionarios = []
+                # self.funcionarios = []
                 self.projetos = []
                 self.registros_horas = []
                 self.usuarios = []
         else:
             # Inicializa com listas vazias se o arquivo não existir
-            self.funcionarios = []
+            # self.funcionarios = []
             self.projetos = []
             self.registros_horas = []
             self.usuarios = []
@@ -123,7 +123,7 @@ class BancoDeDados:
     def salvar_dados(self):
         """Salva os dados no arquivo JSON."""
         dados = {
-            'funcionarios': [f.to_dict() for f in self.funcionarios],
+            # 'funcionarios': [f.to_dict() for f in self.funcionarios],
             'projetos': [p.to_dict() for p in self.projetos],
             'registros_horas': [r.to_dict() for r in self.registros_horas],
             'usuarios': [u.to_dict() for u in self.usuarios]
@@ -138,22 +138,51 @@ class BancoDeDados:
             return False
     
     # Métodos para Usuários
-    def adicionar_usuario(self, nome, email, senha, tipo="funcionario", funcionario_id=None):
+    def adicionar_usuario(self, nome, email, senha="12345", tipo="funcionario", cod_funcionario="-"):
         """Adiciona um novo usuário."""
-        # Validar email empresarial
+        # --- Validar nome ---
+        nome = nome.strip()
+
+        # Regex: precisa de pelo menos duas palavras, só letras (com acentos) e hifens
+        padraoNome = r"^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*\s+[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*)*$"
+
+        if not re.match(padraoNome, nome):
+            return None, "O nome deve conter no mínimo nome e sobrenome, sem números ou símbolos."
+
+        # --- Validar email empresarial ---
+        email = email.strip()
+
         if not re.match(r"[^@]+@geoprojetos\.com\.br$", email):
             return None, "Email deve ser do domínio @geoprojetos.com.br"
         
         # Verificar se o email já está em uso
         if any(u.email == email for u in self.usuarios):
-            return None, "Email já está em uso"
+            return None, f"O email <strong>{email}</strong> já está em uso"
+        
+        # --- Validar código do funcionário ---
+        if cod_funcionario != "-":
+            cod_funcionario = cod_funcionario.strip()
+
+            # Verificar se o código já está em uso por outro usuário
+            if any(u.cod_funcionario == cod_funcionario for u in self.usuarios):
+                return None, f"O código <strong>{cod_funcionario}</strong> já está em uso"
         
         # Gera um novo ID (maior ID existente + 1)
         novo_id = 1
         if self.usuarios:
             novo_id = max(u.id for u in self.usuarios if u.id is not None) + 1
         
-        # Criar hash da senha
+        # --- Validar senha ---
+        if senha != "12345":
+            senha = senha.strip()
+
+            # Mínimo 8 caracteres, 1 maiúscula e 1 símbolo
+            padraoSenha = r"^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$"
+
+            if not re.match(padraoSenha, senha):
+                return None, f"A senha deve conter no mínimo 8 caracteres, pelo menos uma letra maiúscula e pelo menos um símbolo."
+        
+        # --- Criar hash da senha ---
         senha_hash = Usuario.hash_senha(senha)
         
         usuario = Usuario(
@@ -162,7 +191,7 @@ class BancoDeDados:
             email=email,
             senha_hash=senha_hash,
             tipo=tipo,
-            funcionario_id=funcionario_id
+            cod_funcionario=cod_funcionario
         )
         
         self.usuarios.append(usuario)
@@ -194,16 +223,27 @@ class BancoDeDados:
         """Lista todos os usuários."""
         return self.usuarios
     
-    def atualizar_usuario(self, id, nome=None, email=None, senha=None, tipo=None, funcionario_id=None):
+    def atualizar_usuario(self, id, nome=None, email=None, senha=None, tipo=None, cod_funcionario="-"):
         """Atualiza um usuário existente."""
         usuario = self.obter_usuario(id)
         if not usuario:
             return False, "Usuário não encontrado"
         
         if nome:
+            # Validar nome
+            nome = nome.strip()
+
+            # Regex: precisa de pelo menos duas palavras, só letras (com acentos) e hifens
+            padrao = r"^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*\s+[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-'][A-Za-zÀ-ÖØ-öø-ÿ]+)*)*$"
+
+            if not re.match(padrao, nome):
+                return False, "O nome deve conter no mínimo nome e sobrenome, sem números ou símbolos."
+            
             usuario.nome = nome
         
         if email:
+            email = email.strip()
+
             # Validar email empresarial
             if not re.match(r"[^@]+@geoprojetos\.com\.br$", email):
                 return False, "Email deve ser do domínio @geoprojetos.com.br"
@@ -211,18 +251,32 @@ class BancoDeDados:
             # Verificar se o email já está em uso por outro usuário
             for u in self.usuarios:
                 if u.id != id and u.email == email:
-                    return False, "Email já está em uso"
+                    return False, f"O email <strong>{email}</strong> já está em uso"
             
             usuario.email = email
         
         if senha:
+            # --- Validar senha ---
+            senha = senha.strip()
+
+            # Mínimo 8 caracteres, 1 maiúscula e 1 símbolo
+            padraoSenha = r"^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$"
+
+            if not re.match(padraoSenha, senha):
+                return False, f"A senha deve conter no mínimo 8 caracteres, pelo menos uma letra maiúscula e pelo menos um símbolo."
             usuario.senha_hash = Usuario.hash_senha(senha)
         
         if tipo:
             usuario.tipo = tipo
         
-        if funcionario_id is not None:
-            usuario.funcionario_id = funcionario_id
+        if cod_funcionario != "-":
+            cod_funcionario = cod_funcionario.strip()
+
+            # Verificar se o código já está em uso por outro usuário
+            for u in self.usuarios:
+                if u.id != id and u.cod_funcionario == cod_funcionario:
+                    return False, f"O código <strong>{cod_funcionario}</strong> já está em uso"
+            usuario.cod_funcionario = cod_funcionario
         
         self.salvar_dados()
         return True, "Usuário atualizado com sucesso"
@@ -444,7 +498,7 @@ class BancoDeDados:
     def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas):
         """Adiciona um novo registro de horas."""
         # Verifica se o funcionário e o projeto existem
-        funcionario = self.obter_funcionario(funcionario_id)
+        funcionario = self.obter_usuario(funcionario_id)
         projeto = self.obter_projeto(projeto_id)
         if not funcionario or not projeto:
             return None
@@ -494,7 +548,7 @@ class BancoDeDados:
             return False
         
         if funcionario_id is not None:
-            funcionario = self.obter_funcionario(funcionario_id)
+            funcionario = self.obter_usuario(funcionario_id)
             if not funcionario:
                 return False
             registro.funcionario_id = funcionario_id
@@ -532,20 +586,20 @@ class BancoDeDados:
         return False
 
 # Manter as classes existentes
-class Funcionario:
-    def __init__(self, id=None, nome=None):
-        self.id = id
-        self.nome = nome
+# class Funcionario:
+#     def __init__(self, id=None, nome=None):
+#         self.id = id
+#         self.nome = nome
     
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'nome': self.nome
-        }
+#     def to_dict(self):
+#         return {
+#             'id': self.id,
+#             'nome': self.nome
+#         }
     
-    @classmethod
-    def from_dict(cls, data):
-        return cls(id=data.get('id'), nome=data.get('nome'))
+#     @classmethod
+#     def from_dict(cls, data):
+#         return cls(id=data.get('id'), nome=data.get('nome'))
 
 class Projeto:
     def __init__(self, id=None, nome=None):

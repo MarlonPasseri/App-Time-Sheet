@@ -39,14 +39,15 @@ def listar():
     )
     
     # Obtém listas de funcionários e projetos para os filtros
-    funcionarios = db.listar_funcionarios()
+    funcionarios = db.listar_usuarios()
+    funcionarios = [f for f in funcionarios if f.tipo != 'administrador']  # Exclui administradores
     projetos = db.listar_projetos()
     
     # Prepara dados para exibição
     registros_view = []
     total_horas = 0
     for registro in registros:
-        funcionario = db.obter_funcionario(registro.funcionario_id)
+        funcionario = db.obter_usuario(registro.funcionario_id)
         projeto = db.obter_projeto(registro.projeto_id)
         
         registro_view = {
@@ -287,7 +288,10 @@ def remover(id):
 @registros_bp.route('/exportar', methods=['GET'])
 def exportar():
     """Exibe a página de exportação de relatórios."""
-    funcionarios = db.listar_funcionarios()
+    funcionarios = db.listar_usuarios()
+    # Remover admin da lista
+    funcionarios = [f for f in funcionarios if f.tipo != 'administrador']
+    
     projetos = db.listar_projetos()
     
     # Obtém a lista de meses/anos disponíveis
@@ -323,7 +327,7 @@ def exportar_excel():
     # Prepara dados para o DataFrame
     dados = []
     for registro in registros:
-        funcionario = db.obter_funcionario(registro.funcionario_id)
+        funcionario = db.obter_usuario(registro.funcionario_id)
         projeto = db.obter_projeto(registro.projeto_id)
         
         dados.append({

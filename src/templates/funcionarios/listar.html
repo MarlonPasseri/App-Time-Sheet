@@ -10,26 +10,39 @@
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
                     <p class="text-[#333333] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Colaboradores</p>
-                    <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
+                    <a href="{{ url_for('colaboradores.adicionar') }}" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
                         <span class="material-symbols-outlined">add</span>
-                        <a href="{{ url_for('colaboradores.adicionar') }}" class="truncate">Novo Colaborador</a>
-                    </button>
+                        <span class="truncate">Novo Colaborador</span>
+                    </a>
                 </div>
                 <!-- <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6"> -->
                 <div class="mb-6">
-                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-                        <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                            <div class="flex-1">
-                                <label class="flex flex-col min-w-40 h-12 w-full">
-                                    <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm" id="registros-fragment">
+                        <div>
+                            <form method="GET" action="{{ url_for('colaboradores.listar') }}" id="formBusca" class="row g-3">
+                                <div class="min-w-40 h-12 col-md-8">
+                                    <div class="flex flex-1 items-stretch rounded-lg h-full">
                                         <div class="text-gray-400 dark:text-gray-500 flex border-none bg-background-light dark:bg-gray-700 items-center justify-center pl-4 rounded-l-lg border-r-0">
                                             <span class="material-symbols-outlined">search</span>
                                         </div>
-                                        <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none bg-background-light dark:bg-gray-700 focus:border-none h-full placeholder:text-gray-400 dark:placeholder-gray-500 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Buscar por nome ou código..." value=""/>
+                                        <input 
+                                            type="text"
+                                            name="search"
+                                            placeholder="Buscar por nome ou código..."
+                                            value="{{ search }}"
+                                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg
+                                            text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none
+                                            bg-background-light dark:bg-gray-700 placeholder:text-gray-400 dark:placeholder-gray-500
+                                            px-4 rounded-l-none border-l-0 pl-2 text-base font-normal h-full"
+                                        />
                                     </div>
-                                </label>
-                            </div>
-                            <div class="flex gap-3 overflow-x-auto">
+                                </div>
+                                <div class="gap-2 col-md-4 h-12 flex">
+                                    <button type="submit" class="btn btn-primary min-w-24">Buscar</button>
+                                    <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary flex items-center justify-center min-w-24">Limpar</a>
+                                </div>
+                            </form>
+                            <!-- <div class="flex gap-3 overflow-x-auto">
                                 <button class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-gray-700 px-4">
                                     <p class="text-[#333333] dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por status</p>
                                     <span class="material-symbols-outlined text-[#333333] dark:text-gray-300">expand_more</span>
@@ -38,14 +51,23 @@
                                     <p class="text-[#333333] dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por funcionário</p>
                                     <span class="material-symbols-outlined text-[#333333] dark:text-gray-300">expand_more</span>
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead class="border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">ID</th>
-                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Nome</th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                                            <a href="{{ url_for('colaboradores.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=cod&direcao={% if ordenar == 'cod' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
+                                                Código <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
+                                            </a>
+                                        </th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                                            <a href="{{ url_for('colaboradores.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=nome&direcao={% if ordenar == 'nome' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
+                                                Nome <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
+                                            </a>
+                                        </th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Email</th>
                                         <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400 text-end">
                                             <span class="pr-6 ">Ações</span>
                                         </th>
@@ -65,8 +87,9 @@
                                     {% endif %}
                                     {% for funcionario in funcionarios %}
                                         <tr>
-                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.id }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.cod_funcionario }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.nome }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.email }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">
                                                 <div class="flex gap-2 justify-end pr-6">
                                                     <a href="{{ url_for('colaboradores.editar', id=funcionario.id) }}" class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400" title="Editar Colaborador">
@@ -84,39 +107,55 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6 mt-4">
-                            <div class="flex-1 flex justify-between sm:hidden">
-                                <a class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" href="#"> Previous </a>
-                                <a class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700" href="#"> Next </a>
+                        <div class="flex justify-between items-center p-4">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                {% if pagina > 1 %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                        <span class="material-symbols-outlined text-base">chevron_left</span>
+                                    </a>
+                                {% endif %}
+
+                                {% for p in range(1, total_paginas + 1) %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ p }}"
+                                    class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
+                                    {{ p }}
+                                    </a>
+                                {% endfor %}
+
+                                {% if pagina < total_paginas %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                        <span class="material-symbols-outlined text-base">chevron_right</span>
+                                    </a>
+                                {% endif %}
+                            </nav>
+                            <div id="contador-resultados">
+                                <p class="text-sm text-gray-700 dark:text-gray-300">
+                                    Mostrando
+                                    <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
+                                    a
+                                    <span class="font-medium" id="mostrando-ate">{{ mostrando_fim }}</span>
+                                    de
+                                    <span class="font-medium" id="total-resultados">{{ total_resultados }}</span>
+                                    resultados
+                                </p>
                             </div>
-                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                                <div>
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">
-                                        Mostrando
-                                        <span class="font-medium">1</span>
-                                        a
-                                        <span class="font-medium">4</span>
-                                        de
-                                        <span class="font-medium">12</span>
-                                        resultados
-                                    </p>
-                                </div>
-                                <div>
-                                    <nav aria-label="Pagination" class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                        <a class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700" href="#">
-                                            <span class="sr-only">Previous</span>
-                                            <span class="material-symbols-outlined text-base">chevron_left</span>
-                                        </a>
-                                        <a aria-current="page" class="z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 1 </a>
-                                        <a class="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 2 </a>
-                                        <a class="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium" href="#"> 3 </a>
-                                        <a class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700" href="#">
-                                            <span class="sr-only">Next</span>
-                                            <span class="material-symbols-outlined text-base">chevron_right</span>
-                                        </a>
-                                    </nav>
-                                </div>
-                            </div>
+
+                            <form method="GET" id="form_pages" class="flex items-center gap-4">
+                                <!-- Mantém os filtros atuais -->
+                                {% for k, v in request.args.items() %}
+                                    {% if k != 'funcionarios_por_pagina' and k != 'pagina' %}
+                                        <input type="hidden" name="{{ k }}" value="{{ v }}">
+                                    {% endif %}
+                                {% endfor %}
+
+                                <label for="funcionarios_por_pagina" class="w-full text-sm font-medium">Registros por página:</label>
+                                <select name="funcionarios_por_pagina" id="funcionarios_por_pagina" onchange="this.form.submit()" class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer">
+                                    <option value="5" {% if funcionarios_por_pagina == 5 %}selected{% endif %}>5</option>
+                                    <option value="10" {% if funcionarios_por_pagina == 10 %}selected{% endif %}>10</option>
+                                    <option value="20" {% if funcionarios_por_pagina == 20 %}selected{% endif %}>20</option>
+                                    <option value="50" {% if funcionarios_por_pagina == 50 %}selected{% endif %}>50</option>
+                                </select>
+                            </form>
                         </div>
                     </div>
                     <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
@@ -160,4 +199,107 @@
                 </div>
             </div>
         </main>
+    {% endblock %}
+
+    {% block scripts %}
+        <script>
+            document.getElementById("formBusca").addEventListener("submit", function(e) {
+                e.preventDefault(); // impede o recarregamento da página
+            });
+            document.querySelector("input[name='search']").addEventListener("change", () => {
+                document.getElementById("formBusca").submit();
+            });
+        </script>
+        <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação ou ordenação -->
+        <script>
+            (function () {
+            // Seletor do bloco que será atualizado
+            const targetSelector = '#registros-fragment';
+
+            // Função principal que busca a URL e injeta o tbody novo
+            async function carregarFragmento(url, pushUrl = true) {
+                try {
+                const resp = await fetch(url, { credentials: 'same-origin' });
+                if (!resp.ok) throw new Error('Erro na requisição: ' + resp.status);
+
+                const html = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // pega o fragmento do servidor
+                const novoFragmento = doc.querySelector(targetSelector);
+                if (!novoFragmento) {
+                    console.warn('Fragmento não encontrado na resposta. Verifique se o servidor retorna #lista-registros no HTML.');
+                    return;
+                }
+
+                // substitui o conteúdo
+                const alvo = document.querySelector(targetSelector);
+                if (!alvo) {
+                    console.warn('Elemento alvo não encontrado no DOM:', targetSelector);
+                    return;
+                }
+                alvo.innerHTML = novoFragmento.innerHTML;
+
+                // atualiza a url no navegador sem recarregar (mantém histórico)
+                if (pushUrl) {
+                    history.pushState({}, '', url);
+                }
+
+                // opcional: você pode re-executar código que precisa rodar após atualização
+                // ex: re-inicializar tooltips, select2, etc.
+                // function initAfterAjax() {
+                // // inicializar select2 novamente
+                // $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
+
+                // $('#projeto_id_filter').select2(regrasSelect2Contrato);
+
+                // } initAfterAjax();
+
+                } catch (err) {
+                console.error('Erro ao carregar fragmento via AJAX:', err);
+                }
+            }
+
+            // Delegation: intercepta todos os cliques em links com .ajax-link
+            document.addEventListener('click', function (ev) {
+                const a = ev.target.closest('a.ajax-link');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href) return;
+                // ignora links externos
+                const sameOrigin = new URL(href, location.href).origin === location.origin;
+                if (!sameOrigin) return;
+
+                ev.preventDefault();
+                carregarFragmento(href, true);
+            });
+
+            // Tratamento de navegação do browser (back/forward)
+            window.addEventListener('popstate', function () {
+                // quando o usuário clica em voltar/avançar, carrega a URL atual
+                carregarFragmento(location.href, false);
+            });
+
+            // Se você tem um form de filtros que usa GET, intercepta submit e usa fetch:
+            // const filtroForm = document.getElementById('form_filter'); // ajuste id se diferente
+            // if (filtroForm) {
+            //     filtroForm.addEventListener('submit', function (e) {
+            //     e.preventDefault();
+            //     const params = new URLSearchParams(new FormData(filtroForm)).toString();
+            //     const url = location.pathname + (params ? '?' + params : '');
+            //     carregarFragmento(url, true);
+            //     });
+
+            //     // opcional: interceptar onchange para submits automáticos
+            //     filtroForm.addEventListener('change', function () {
+            //     // se quiser enviar on change, descomente:
+            //     // e.preventDefault();
+            //     // const params = new URLSearchParams(new FormData(filtroForm)).toString();
+            //     // carregarFragmento(location.pathname + (params ? '?' + params : ''), true);
+            //     });
+            // }
+            })();
+        </script>
+
     {% endblock %}

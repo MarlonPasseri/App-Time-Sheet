@@ -1,30 +1,4 @@
 {
-  "funcionarios": [
-    {
-      "id": 2,
-      "nome": "Leonardo"
-    },
-    {
-      "id": 3,
-      "nome": "Fel"
-    },
-    {
-      "id": 4,
-      "nome": "Marlon Soares Passeri"
-    },
-    {
-      "id": 5,
-      "nome": "Guilherme Fernandes"
-    },
-    {
-      "id": 7,
-      "nome": "Marlon Passeri"
-    },
-    {
-      "id": 8,
-      "nome": "TesteB"
-    }
-  ],
   "projetos": [
     {
       "id": 9010,
@@ -466,7 +440,7 @@
   "registros_horas": [
     {
       "id": 1,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 656,
       "data": "06-2025",
       "horas_trabalhadas": 10.0
@@ -536,42 +510,42 @@
     },
     {
       "id": 14,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 2857,
       "data": "10-2025",
       "horas_trabalhadas": 12.0
     },
     {
       "id": 15,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 9010,
       "data": "10-2025",
       "horas_trabalhadas": 2.0
     },
     {
       "id": 16,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 9021,
       "data": "11-2025",
       "horas_trabalhadas": 5.0
     },
     {
       "id": 17,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 9014,
       "data": "12-2025",
       "horas_trabalhadas": 20.0
     },
     {
       "id": 18,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 9010,
       "data": "10-2025",
       "horas_trabalhadas": 7.5
     },
     {
       "id": 19,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 656,
       "data": "10-2025",
       "horas_trabalhadas": 80.0
@@ -585,7 +559,7 @@
     },
     {
       "id": 21,
-      "funcionario_id": 1,
+      "funcionario_id": 0,
       "projeto_id": 2950,
       "data": "10-2025",
       "horas_trabalhadas": 100.0
@@ -612,7 +586,7 @@
       "email": "admin@geoprojetos.com.br",
       "senha_hash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
       "tipo": "administrador",
-      "funcionario_id": null
+      "cod_funcionario": null
     },
     {
       "id": 2,
@@ -620,7 +594,7 @@
       "email": "marlon.soares@geoprojetos.com.br",
       "senha_hash": "8d84c33305d5cb0ff0db30b72b9a7ce1f18876e66112ed9e4dfaa2efded5d223",
       "tipo": "funcionario",
-      "funcionario_id": 4
+      "cod_funcionario": "4"
     },
     {
       "id": 3,
@@ -628,15 +602,39 @@
       "email": "teste3@geoprojetos.com.br",
       "senha_hash": "289160db0d9f39f9ae1754c4ec9c16f90b50e32e09c5fb5481ae642b3d3d1a36",
       "tipo": "funcionario",
-      "funcionario_id": 6
+      "cod_funcionario": "6"
     },
     {
       "id": 4,
-      "nome": "TesteB",
+      "nome": "TesteB B",
       "email": "testeb@geoprojetos.com.br",
       "senha_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
       "tipo": "funcionario",
-      "funcionario_id": 8
+      "cod_funcionario": "8"
+    },
+    {
+      "id": 5,
+      "nome": "TesteC",
+      "email": "testec@geoprojetos.com.br",
+      "senha_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "tipo": "funcionario",
+      "cod_funcionario": "9"
+    },
+    {
+      "id": 6,
+      "nome": "TesteD",
+      "email": "tested@geoprojetos.com.br",
+      "senha_hash": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
+      "tipo": "funcionario",
+      "cod_funcionario": "-"
+    },
+    {
+      "id": 7,
+      "nome": "TesteE",
+      "email": "testee@geoprojetos.com.br",
+      "senha_hash": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
+      "tipo": "funcionario",
+      "cod_funcionario": "-"
     }
   ]
 }
