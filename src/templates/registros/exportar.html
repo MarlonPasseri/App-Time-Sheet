@@ -118,7 +118,10 @@
                             <select class="form-select" id="mes_ano" name="mes_ano">
                                 <option value="">Todos</option>
                                 {% for mes_ano in meses_anos %}
-                                    <option value="{{ mes_ano }}">{{ mes_ano }}</option>
+                                    {% set partes = mes_ano.split('-') %}
+                                        <option value="{{ partes[1] }}-{{ partes[0] }}">
+                                            {{ mes_ano }}
+                                        </option>
                                 {% endfor %}
                             </select>
                         </div>

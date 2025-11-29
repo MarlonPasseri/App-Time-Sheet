@@ -589,7 +589,7 @@ def _gerar_relatorio_mensal(df, arquivo):
         # Ajusta a largura das colunas
         worksheet.set_column(0, 0, 20)  # Coluna de funcionários
         for col in range(1, len(pivot_final.columns) + 1):
-            worksheet.set_column(col, col, 12)
+            worksheet.set_column(col, col, 20)
     
     # Salva o arquivo
     writer.close()

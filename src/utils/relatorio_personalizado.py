@@ -55,9 +55,9 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
     
     # Definir cabeçalhos na linha 3
     headers = [
-        'ID', 'Id Colaborador', 'Nome Colaborador', 'Mês', 'Horas Mês',
+        'COD Colaborador', 'Nome Colaborador', 'Mês', 'Horas Mês',
         'GP', 'Horas Trabalhadas', 'Proporção de Hora', 'Valor por GP',
-        'GP 9014', 'Observação GP 9010', 'Observação GP 9021'
+        'Observação GP 9014', 'Observação GP 9010', 'Observação GP 9021'
     ]
     
     # Adicionar cabeçalhos começando na coluna C
@@ -138,42 +138,53 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
             
             # Calcular proporção de horas
             proporcao = horas_projeto / horas_totais if horas_totais > 0 else 0
+
+            # Coluna inicial para dados
+            column_start = 3  # Coluna C
+
+            # Preparar o campo Mês/Ano
+            mes_ano_list = []
+            for d in registros_proj:
+                if d.data not in mes_ano_list:
+                    mes_ano_list.append(d.data)
+            mes_ano = ",".join(mes_ano_list) if len(mes_ano_list) > 1 else mes_ano_list[0]
             
             # Adicionar dados à planilha
-            ws.cell(row=row_index, column=3, value=id_counter)  # ID
-            ws.cell(row=row_index, column=4, value=funcionario_id)  # Id Colaborador
-            ws.cell(row=row_index, column=5, value=funcionario.nome)  # Nome Colaborador
-            ws.cell(row=row_index, column=6, value=mes_ano)  # Mês
-            ws.cell(row=row_index, column=7, value=horas_totais)  # Horas Mês
-            ws.cell(row=row_index, column=8, value=projeto_id)  # GP (código do projeto)
-            ws.cell(row=row_index, column=9, value=horas_projeto)  # Horas Trabalhadas
-            ws.cell(row=row_index, column=10, value=proporcao)  # Proporção de Hora
+            ws.cell(row=row_index, column=column_start, value=funcionario.cod_funcionario)  # COD Colaborador
+            ws.cell(row=row_index, column=column_start+1, value=funcionario.nome)  # Nome Colaborador
+            ws.cell(row=row_index, column=column_start+2, value=mes_ano)  # Mês
+            ws.cell(row=row_index, column=column_start+3, value=horas_totais)  # Horas Mês
+            ws.cell(row=row_index, column=column_start+4, value=projeto_id)  # GP (código do projeto)
+            ws.cell(row=row_index, column=column_start+5, value=horas_projeto)  # Horas Trabalhadas
+            ws.cell(row=row_index, column=column_start+6, value=proporcao)  # Proporção de Hora
+
+            # Valor por GP column_start+7
             
             # Formatação de números
-            ws.cell(row=row_index, column=7).number_format = FORMAT_NUMBER_00
-            ws.cell(row=row_index, column=9).number_format = FORMAT_NUMBER_00
-            ws.cell(row=row_index, column=10).number_format = '0.00%'
+            # ws.cell(row=row_index, column=column_start+3).number_format = FORMAT_NUMBER_00  # Horas Mês
+            # ws.cell(row=row_index, column=column_start+5).number_format = FORMAT_NUMBER_00 # Horas Trabalhadas
+            ws.cell(row=row_index, column=column_start+6).number_format = '0.00%' # Proporção de Hora
             
             # Observações para projetos especiais
             if projeto_id == 9014:  # GP 9014 (Propostas)
                 # Buscar observações nos registros deste projeto
                 observacoes = [r.observacao for r in registros_proj if hasattr(r, 'observacao') and r.observacao]
-                ws.cell(row=row_index, column=11, value=", ".join(observacoes) if observacoes else "")
+                ws.cell(row=row_index, column=column_start+8, value=", ".join(observacoes) if observacoes else "")
             
             if projeto_id == 9010:  # GP 9010 (Atividades Internas)
                 observacoes = [r.observacao for r in registros_proj if hasattr(r, 'observacao') and r.observacao]
-                ws.cell(row=row_index, column=12, value=", ".join(observacoes) if observacoes else "")
+                ws.cell(row=row_index, column=column_start+9, value=", ".join(observacoes) if observacoes else "")
             
             if projeto_id == 9021:  # GP 9021 (Férias e Recessos)
                 observacoes = [r.observacao for r in registros_proj if hasattr(r, 'observacao') and r.observacao]
-                ws.cell(row=row_index, column=13, value=", ".join(observacoes) if observacoes else "")
+                ws.cell(row=row_index, column=column_start+10, value=", ".join(observacoes) if observacoes else "")
             
             # Aplicar bordas às células de dados
-            for col in range(3, 15):  # Colunas C a N
+            for col in range(3, 14):  # Colunas C a M
                 cell = ws.cell(row=row_index, column=col)
                 if col == 3:  # Primeira coluna (C)
                     cell.border = Border(left=Side(style='thin'), bottom=Side(style='thin'))
-                elif col == 14:  # Última coluna (N)
+                elif col == 14:  # Última coluna (M)
                     cell.border = Border(right=Side(style='thin'), bottom=Side(style='thin'))
                 else:
                     cell.border = Border(bottom=Side(style='thin'))
@@ -182,12 +193,12 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
             id_counter += 1
     
     # Ajustar largura das colunas
-    for col in range(3, 15):  # Colunas C a N
+    for col in range(3, 14):  # Colunas C a N
         column_letter = get_column_letter(col)
-        ws.column_dimensions[column_letter].width = 15
+        ws.column_dimensions[column_letter].width = 17
     
     # Coluna de nome do colaborador mais larga
-    ws.column_dimensions['E'].width = 25
+    ws.column_dimensions['D'].width = 25
     
     # Salvar o arquivo
     try:
@@ -242,7 +253,7 @@ def adaptar_exportacao_relatorio_mensal(db, funcionario_id=None, projeto_id=None
             registros=registros,
             funcionarios=funcionarios,
             projetos=projetos,
-            mes_ano=mes_ano_str,
+            mes_ano=mes_ano,
             caminho_saida=caminho_saida
         )
     except Exception as e:
