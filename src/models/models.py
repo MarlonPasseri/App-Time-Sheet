@@ -536,7 +536,10 @@ class BancoDeDados:
         if projeto_id is not None:
             registros_filtrados = [r for r in registros_filtrados if r.projeto_id == projeto_id]
         
-        if mes_ano:
+        if not mes_ano:  # trata "", None, " "
+            mes_ano = None
+
+        if mes_ano is not None:
             registros_filtrados = [r for r in registros_filtrados if r.data == datetime.strptime(mes_ano, "%Y-%m").strftime("%m-%Y")]
         
         return registros_filtrados

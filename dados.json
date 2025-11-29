@@ -440,7 +440,7 @@
   "registros_horas": [
     {
       "id": 1,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 656,
       "data": "06-2025",
       "horas_trabalhadas": 10.0
@@ -510,42 +510,42 @@
     },
     {
       "id": 14,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 2857,
       "data": "10-2025",
       "horas_trabalhadas": 12.0
     },
     {
       "id": 15,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 9010,
       "data": "10-2025",
       "horas_trabalhadas": 2.0
     },
     {
       "id": 16,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 9021,
       "data": "11-2025",
       "horas_trabalhadas": 5.0
     },
     {
       "id": 17,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 9014,
       "data": "12-2025",
       "horas_trabalhadas": 20.0
     },
     {
       "id": 18,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 9010,
       "data": "10-2025",
       "horas_trabalhadas": 7.5
     },
     {
       "id": 19,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 656,
       "data": "10-2025",
       "horas_trabalhadas": 80.0
@@ -559,21 +559,21 @@
     },
     {
       "id": 21,
-      "funcionario_id": 0,
+      "funcionario_id": 2,
       "projeto_id": 2950,
       "data": "10-2025",
       "horas_trabalhadas": 100.0
     },
     {
       "id": 22,
-      "funcionario_id": 8,
+      "funcionario_id": 7,
       "projeto_id": 9010,
       "data": "12-2025",
       "horas_trabalhadas": 3.0
     },
     {
       "id": 24,
-      "funcionario_id": 8,
+      "funcionario_id": 7,
       "projeto_id": 9010,
       "data": "11-2025",
       "horas_trabalhadas": 17.0
