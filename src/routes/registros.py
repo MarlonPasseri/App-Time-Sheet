@@ -59,7 +59,8 @@ def listar():
             # Passagens para o modal de edição
             'funcionario_id': registro.funcionario_id,
             'projeto_id': registro.projeto_id,
-            'data_input': datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m")
+            'data_input': datetime.strptime(registro.data, "%m-%Y").strftime("%Y-%m"),
+            'observacoes': registro.observacoes,
             # 'mes_ano_referencia': registro.mes_ano_referencia
         }
         registros_view.append(registro_view)
@@ -152,6 +153,7 @@ def adicionar():
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
+        observacoes = request.form.get('observacoes', None)
 
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             try:
@@ -172,11 +174,13 @@ def adicionar():
 
                 # Tudo certo, salva no formato MM-YYYY
                 data = data_obj.strftime('%m-%Y')
+
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
                     projeto_id=projeto_id,
                     data=data,
-                    horas_trabalhadas=horas_trabalhadas
+                    horas_trabalhadas=horas_trabalhadas,
+                    observacoes=observacoes
                 )
 
                 if registro:
@@ -225,6 +229,7 @@ def editar(id):
         projeto_id = int(request.form.getlist('projeto_id_edit')[0])  # Corrigido para obter o valor corretamente
         data_str = request.form.get('data_edit')
         horas_trabalhadas = request.form.get('horas_edit', type=float)
+        observacoes = request.form.get('observacoes_edit', None)
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
@@ -251,7 +256,8 @@ def editar(id):
                     funcionario_id=funcionario_id,
                     projeto_id=projeto_id,
                     data=data,
-                    horas_trabalhadas=horas_trabalhadas
+                    horas_trabalhadas=horas_trabalhadas,
+                    observacoes=observacoes
                 ):
                     flash('Registro de horas atualizado com sucesso!', 'success')
                     return redirect(url_for('registros.listar'))
