@@ -411,46 +411,46 @@ class BancoDeDados:
         return False, "Usuário sem permissão ou não associado a um funcionário"
     
     # Métodos para Funcionários
-    def adicionar_funcionario(self, nome):
-        """Adiciona um novo funcionário."""
-        # Gera um novo ID (maior ID existente + 1)
-        novo_id = 1
-        if self.funcionarios:
-            novo_id = max(f.id for f in self.funcionarios if f.id is not None) + 1
+    # def adicionar_funcionario(self, nome):
+    #     """Adiciona um novo funcionário."""
+    #     # Gera um novo ID (maior ID existente + 1)
+    #     novo_id = 1
+    #     if self.funcionarios:
+    #         novo_id = max(f.id for f in self.funcionarios if f.id is not None) + 1
         
-        funcionario = Funcionario(id=novo_id, nome=nome)
-        self.funcionarios.append(funcionario)
-        self.salvar_dados()
-        return funcionario
+    #     funcionario = Funcionario(id=novo_id, nome=nome)
+    #     self.funcionarios.append(funcionario)
+    #     self.salvar_dados()
+    #     return funcionario
     
-    def obter_funcionario(self, id):
-        """Obtém um funcionário pelo ID."""
-        for funcionario in self.funcionarios:
-            if funcionario.id == id:
-                return funcionario
-        return None
+    # def obter_funcionario(self, id):
+    #     """Obtém um funcionário pelo ID."""
+    #     for funcionario in self.funcionarios:
+    #         if funcionario.id == id:
+    #             return funcionario
+    #     return None
     
-    def listar_funcionarios(self):
-        """Lista todos os funcionários."""
-        return self.funcionarios
+    # def listar_funcionarios(self):
+    #     """Lista todos os funcionários."""
+    #     return self.funcionarios
     
-    def atualizar_funcionario(self, id, nome):
-        """Atualiza um funcionário existente."""
-        funcionario = self.obter_funcionario(id)
-        if funcionario:
-            funcionario.nome = nome
-            self.salvar_dados()
-            return True
-        return False
+    # def atualizar_funcionario(self, id, nome):
+    #     """Atualiza um funcionário existente."""
+    #     funcionario = self.obter_funcionario(id)
+    #     if funcionario:
+    #         funcionario.nome = nome
+    #         self.salvar_dados()
+    #         return True
+    #     return False
     
-    def remover_funcionario(self, id):
-        """Remove um funcionário pelo ID."""
-        funcionario = self.obter_funcionario(id)
-        if funcionario:
-            self.funcionarios.remove(funcionario)
-            self.salvar_dados()
-            return True
-        return False
+    # def remover_funcionario(self, id):
+    #     """Remove um funcionário pelo ID."""
+    #     funcionario = self.obter_funcionario(id)
+    #     if funcionario:
+    #         self.funcionarios.remove(funcionario)
+    #         self.salvar_dados()
+    #         return True
+    #     return False
     
     # Métodos para Projetos
     def adicionar_projeto(self, nome):
@@ -495,7 +495,7 @@ class BancoDeDados:
         return False
     
     # Métodos para Registros de Horas
-    def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas):
+    def adicionar_registro_horas(self, funcionario_id, projeto_id, data, horas_trabalhadas, observacoes):
         """Adiciona um novo registro de horas."""
         # Verifica se o funcionário e o projeto existem
         funcionario = self.obter_usuario(funcionario_id)
@@ -513,7 +513,8 @@ class BancoDeDados:
             funcionario_id=funcionario_id,
             projeto_id=projeto_id,
             data=data,
-            horas_trabalhadas=horas_trabalhadas
+            horas_trabalhadas=horas_trabalhadas,
+            observacoes=observacoes
         )
         self.registros_horas.append(registro)
         self.salvar_dados()
@@ -544,7 +545,7 @@ class BancoDeDados:
         
         return registros_filtrados
     
-    def atualizar_registro_horas(self, id, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None):
+    def atualizar_registro_horas(self, id, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None, observacoes=None):
         """Atualiza um registro de horas existente."""
         registro = self.obter_registro_horas(id)
         if not registro:
@@ -576,6 +577,9 @@ class BancoDeDados:
         if horas_trabalhadas is not None:
             registro.horas_trabalhadas = horas_trabalhadas
         
+        if observacoes is not None:
+            registro.observacoes = observacoes
+
         self.salvar_dados()
         return True
     
@@ -620,12 +624,13 @@ class Projeto:
         return cls(id=data.get('id'), nome=data.get('nome'))
 
 class RegistroHoras:
-    def __init__(self, id=None, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None):
+    def __init__(self, id=None, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None, observacoes=None):
         self.id = id
         self.funcionario_id = funcionario_id
         self.projeto_id = projeto_id
         self.data = data
         self.horas_trabalhadas = horas_trabalhadas
+        self.observacoes = observacoes
         
         # Calcular o mês/ano de referência automaticamente
         # if isinstance(data, str):
@@ -643,6 +648,7 @@ class RegistroHoras:
             'projeto_id': self.projeto_id,
             'data': self.data,
             'horas_trabalhadas': self.horas_trabalhadas,
+            'observacoes': self.observacoes,
             # 'mes_ano_referencia': self.mes_ano_referencia
         }
     
@@ -653,7 +659,8 @@ class RegistroHoras:
             funcionario_id=data.get('funcionario_id'),
             projeto_id=data.get('projeto_id'),
             data=data.get('data'),
-            horas_trabalhadas=data.get('horas_trabalhadas')
+            horas_trabalhadas=data.get('horas_trabalhadas'),
+            observacoes=data.get('observacoes')
         )
         # if 'mes_ano_referencia' in data:
         #     registro.mes_ano_referencia = data.get('mes_ano_referencia')

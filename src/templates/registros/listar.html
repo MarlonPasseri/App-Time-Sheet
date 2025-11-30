@@ -79,8 +79,8 @@
                         <p class="text-text-primary dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Registro de Horas</p>
                     </div>
                     <div class="bg-white dark:bg-background-dark/50 p-6 md:p-8 rounded-xl shadow-sm mt-6 border border-gray-light dark:border-gray-700">
-                        <form method="POST" action="{{ url_for('registros.adicionar') }}" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                            <div class="{% if not admin_check %} md:col-span-2 {% endif %}">
+                        <form method="POST" action="{{ url_for('registros.adicionar') }}" class="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-6">
+                            <div class="{% if not admin_check %} md:col-span-4 {% else %} md:col-span-2 {% endif %}">
                                 <label class="flex flex-col">
                                     <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Contrato</p>
                                     <select id="projeto_id" name="projeto_id" multiple required>
@@ -93,7 +93,7 @@
                             </div>
                             {% if admin_check %}
                             <!-- Campo visível apenas para administradores -->
-                            <div>
+                            <div class="md:col-span-2">
                                 <label for="funcionario_id" class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2" >Colaborador</label>
                                 <select id="funcionario_id" name="funcionario_id" multiple required>
                                     <option></option>
@@ -106,7 +106,7 @@
                             <!-- Apenas passa o ID do funcionário logado -->
                             <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
                             {% endif %}
-                            <div>
+                            <div class="md:col-span-2">
                                 <label class="flex flex-col">
                                     <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Data</p>
                                     <div class="relative flex w-full flex-1 items-stretch rounded-lg">
@@ -115,11 +115,19 @@
                                     </div>
                                 </label>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 items-end">
+                            <div class="md:col-span-1" id="horasDiv">
                                 <label class="flex flex-col">
                                     <p class="text-text-primary dark:text-gray-300 text-base font-medium leading-normal pb-2">Horas</p>
                                     <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" id="horas_trabalhadas" name="horas_trabalhadas" step="0.5" min="0.5" type="number" placeholder="ex.: 8.5 para 8h 30min" required/>
                                 </label>
+                            </div>
+                            <div class="md:col-span-4 hidden" id="observacoesDiv">
+                                <label class="flex flex-col">
+                                    <p class="text-text-dark dark:text-gray-300 text-base font-medium leading-normal pb-2">Descrição da Atividade</p>
+                                    <textarea id="observacoes" name="observacoes" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." required></textarea>
+                                </label>
+                            </div>
+                            <div class=" flex md:col-span-1 items-end" id="btnRegistroDiv">
                                 <button type="submit" class="flex lex w-full min-w-0 flex-1 resize-none cursor-pointer items-center justify-center overflow-hidden rounded-lg h-14 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-primary/90 transition-colors justify-end">
                                     <span class="truncate">Registrar Horas</span>
                                 </button>
@@ -205,7 +213,12 @@
                                     {% for registro in registros %}
                                         <tr class="border-b border-gray-light dark:border-gray-700">
                                             <td class="px-6 py-4">{{ registro.funcionario }}</td>
-                                            <td class="px-6 py-4">{{ registro.projeto }}</td>
+                                            <td class="px-6 py-4">
+                                                {{ registro.projeto }}
+                                                {% if registro.observacoes %}
+                                                <span class="material-symbols-outlined text-sm align-middle">attach_file</span>
+                                                {% endif %}
+                                            </td>
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
                                             <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas | formatar_horas }}</td>
                                             <td class="px-6 py-4 text-center">
@@ -217,7 +230,9 @@
                                                 data-funcnome="{{ registro.funcionario }}"
                                                 data-proj="{{ registro.projeto_id }}"
                                                 data-data="{{ registro.data_input }}"
-                                                data-horas="{{ registro.horas_trabalhadas }}">
+                                                data-horas="{{ registro.horas_trabalhadas }}"
+                                                data-observacao="{{ registro.observacoes }}"
+                                                >
                                                     <span class="material-symbols-outlined text-xl">edit</span>
                                                 </button>
                                                 <button type="button" class="btn-excluir p-2 text-error hover:text-error/80"
@@ -225,9 +240,11 @@
                                                 data-bs-target="#modalExcluir"
                                                 data-id="{{ registro.id }}"
                                                 data-func="{{ registro.funcionario }}"
-                                                data-proj="{{ registro.projeto }}"
+                                                data-projid="{{ registro.projeto_id }}"
+                                                data-projnome="{{ registro.projeto }}"
                                                 data-data="{{ registro.data_input }}"
                                                 data-horas="{{ registro.horas_trabalhadas }}"
+                                                data-observacao="{{ registro.observacoes }}"
                                                 >
                                                     <span class="material-symbols-outlined text-xl">delete</span>
                                                 </button>
@@ -349,6 +366,13 @@
                                 <input type="number" id="horas_edit" name="horas_edit" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" step="0.5" min="0.5" type="number" placeholder="ex.: 8.5 para 8h 30min" required>
                             </div>
 
+                            <div class="mb-3 hidden" id="observacoesDivEditar">
+                                <label class="flex flex-col">
+                                    <label class="block font-medium mb-1">Descrição da Atividade</label>
+                                    <textarea id="observacoes_edit" name="observacoes_edit" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." required></textarea>
+                                </label>
+                            </div>
+
                         </div>
 
                         <div class="modal-footer border-t dark:border-gray-700">
@@ -402,6 +426,13 @@
                                 <input type="text" id="horas_del" name="horas_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
                             </div>
 
+                            <div class="mb-3 hidden" id="observacoesDivExcluir">
+                                <label class="flex flex-col">
+                                    <label class="block font-medium mb-1">Descrição da Atividade</label>
+                                    <textarea id="observacoes_del" name="observacoes_del" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." readonly></textarea>
+                                </label>
+                            </div>
+
                         </div>
 
                         <div class="modal-footer border-t dark:border-gray-700">
@@ -426,7 +457,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         
-        <!-- Configuração padrão dos Selects 2 -->
+        <!-- Configurações padrões -->
         <script>
             regrasSelect2Colaborador = {
                 placeholder: "Selecione um colaborador",
@@ -455,6 +486,9 @@
                     }
                 }
             };
+
+            // IDs dos projetos que mostram o campo de observações
+            const projetosEspeciais = [9010, 9014, 9021]; 
         </script>
 
         <!-- Selects 2 -->
@@ -468,20 +502,6 @@
                 $('#projeto_id_filter').select2(regrasSelect2Contrato);
                 // $('#projeto_id_edit').select2(regrasSelect2Contrato);
             });
-
-            // $(document).ready(function() {
-            //     $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
-            // });
-
-            // $(document).ready(function() {
-            //     $('#funcionario_id_edit').select2(regrasSelect2Colaborador);
-            // });
-
-            // $(document).ready(function() {
-            //     $('#projeto_id').select2(regrasSelect2Contrato);
-
-            //     $('#projeto_id_filter').select2(regrasSelect2Contrato);
-            // });
         </script>
 
         <!-- Seletor do input de data mês, tira o calendário e mostra no clique em qualquer área do input -->
@@ -502,6 +522,49 @@
                 dataEdit.showPicker(); // força abrir o seletor
             });
         </script>
+
+        <!-- Input de observações -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const observacoesDiv = document.getElementById('observacoesDiv');
+                const horasDiv = document.getElementById('horasDiv');
+                const btnRegistroDiv = document.getElementById('btnRegistroDiv');
+
+                // Usando jQuery/Select2
+                $('#projeto_id').on('change', function () {
+                    const valor = $(this).val(); // sempre string ou array de strings
+
+                    // Select2 com multiple = true sempre retorna array
+                    // Mesmo que só 1 seja escolhido
+                    const id = Number(valor?.[0]);
+
+                    if (projetosEspeciais.includes(id)) {
+                        // Div de observações aparece
+                        observacoesDiv.classList.remove('hidden');
+
+                        // ajusta o grid da div de horas para ocupar 2 colunas
+                        horasDiv.classList.remove("md:col-span-1");
+                        horasDiv.classList.add("md:col-span-2");
+
+                        // move o botão de registro para a quarta coluna
+                        btnRegistroDiv.classList.remove("md:col-span-1");
+                        btnRegistroDiv.classList.add("md:col-start-4");
+                    } else {
+                        observacoesDiv.classList.add('hidden');
+
+                        // div horas div volta ao normal
+                        horasDiv.classList.remove("md:col-span-2");
+                        horasDiv.classList.add("md:col-span-1");
+
+                        // move o botão para a posição inicial
+                        btnRegistroDiv.classList.remove("md:col-span-4");
+                        btnRegistroDiv.classList.add("md:col-span-1");
+                    }
+                });
+            });
+        </script>
+
+
 
         <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação ou ordenação -->
         <script>
@@ -611,6 +674,7 @@
                 const contrato = button.dataset.proj;
                 const data = button.dataset.data;
                 const horas = button.dataset.horas;
+                const observacao = button.dataset.observacao;
 
                 // inicializa Select2
                 $('#funcionario_id_edit').select2({
@@ -627,9 +691,18 @@
 
                 document.getElementById('data_edit').value = data;
                 document.getElementById('horas_edit').value = horas;
+                document.getElementById('observacoes_edit').value = observacao !== "None" ? observacao : "";
 
                 if(document.getElementById('funcionario_id_lock')){
                     document.getElementById('funcionario_id_lock').value = colaborador_nome;
+                }
+
+                const observacoesDivEditar = document.getElementById('observacoesDivEditar');
+                if (projetosEspeciais.includes(Number(contrato))) {
+                    // Div de observações aparece
+                    observacoesDivEditar.classList.remove('hidden');
+                } else {
+                    observacoesDivEditar.classList.add('hidden');
                 }
 
                 // Atualiza o action do form
@@ -657,14 +730,25 @@
 
                 const id = button.dataset.id;
                 const colaborador = button.dataset.func;
-                const contrato = button.dataset.proj;
+                const contrato_id = button.dataset.projid;
+                const contrato = button.dataset.projnome;
                 const data = button.dataset.data;
                 const horas = button.dataset.horas;
+                const observacao = button.dataset.observacao;
 
                 document.getElementById('funcionario_del').value = colaborador;
                 document.getElementById('projeto_del').value = contrato;
                 document.getElementById('data_del').value = data;
                 document.getElementById('horas_del').value = horas;
+                document.getElementById('observacoes_del').value = observacao;
+
+                const observacoesDivExcluir = document.getElementById('observacoesDivExcluir');
+                if (projetosEspeciais.includes(Number(contrato_id))) {
+                    // Div de observações aparece
+                    observacoesDivExcluir.classList.remove('hidden');
+                } else {
+                    observacoesDivExcluir.classList.add('hidden');
+                }
 
                 // Atualiza o action do form
                 document.getElementById('formExcluir').action = "{{ url_for('registros.remover', id=0) }}".replace('0', id);

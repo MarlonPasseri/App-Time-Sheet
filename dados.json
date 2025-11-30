@@ -443,140 +443,168 @@
       "funcionario_id": 2,
       "projeto_id": 656,
       "data": "06-2025",
-      "horas_trabalhadas": 10.0
+      "horas_trabalhadas": 10.0,
+      "observacoes": null
     },
     {
       "id": 2,
       "funcionario_id": 2,
       "projeto_id": 1796,
       "data": "06-2025",
-      "horas_trabalhadas": 10.0
+      "horas_trabalhadas": 10.0,
+      "observacoes": null
     },
     {
       "id": 3,
       "funcionario_id": 3,
       "projeto_id": 2516,
       "data": "06-2025",
-      "horas_trabalhadas": 8.0
+      "horas_trabalhadas": 8.0,
+      "observacoes": null
     },
     {
       "id": 4,
       "funcionario_id": 4,
       "projeto_id": 1881,
       "data": "06-2025",
-      "horas_trabalhadas": 9.0
+      "horas_trabalhadas": 9.0,
+      "observacoes": null
     },
     {
       "id": 5,
       "funcionario_id": 2,
       "projeto_id": 1003,
       "data": "06-2025",
-      "horas_trabalhadas": 4.0
+      "horas_trabalhadas": 4.0,
+      "observacoes": null
     },
     {
       "id": 6,
       "funcionario_id": 5,
       "projeto_id": 656,
       "data": "06-2025",
-      "horas_trabalhadas": 4.0
+      "horas_trabalhadas": 4.0,
+      "observacoes": null
     },
     {
       "id": 7,
       "funcionario_id": 5,
       "projeto_id": 669,
       "data": "06-2025",
-      "horas_trabalhadas": 4.0
+      "horas_trabalhadas": 4.0,
+      "observacoes": null
     },
     {
       "id": 8,
       "funcionario_id": 5,
       "projeto_id": 1796,
       "data": "06-2025",
-      "horas_trabalhadas": 7.0
+      "horas_trabalhadas": 7.0,
+      "observacoes": null
     },
     {
       "id": 9,
       "funcionario_id": 5,
       "projeto_id": 1796,
       "data": "06-2025",
-      "horas_trabalhadas": 7.5
+      "horas_trabalhadas": 7.5,
+      "observacoes": null
     },
     {
       "id": 12,
       "funcionario_id": 5,
       "projeto_id": 3040,
       "data": "06-2025",
-      "horas_trabalhadas": 1.0
+      "horas_trabalhadas": 1.0,
+      "observacoes": null
     },
     {
       "id": 14,
       "funcionario_id": 2,
       "projeto_id": 2857,
       "data": "10-2025",
-      "horas_trabalhadas": 12.0
+      "horas_trabalhadas": 12.0,
+      "observacoes": null
     },
     {
       "id": 15,
       "funcionario_id": 2,
       "projeto_id": 9010,
       "data": "10-2025",
-      "horas_trabalhadas": 2.0
+      "horas_trabalhadas": 2.0,
+      "observacoes": null
     },
     {
       "id": 16,
       "funcionario_id": 2,
       "projeto_id": 9021,
       "data": "11-2025",
-      "horas_trabalhadas": 5.0
+      "horas_trabalhadas": 5.0,
+      "observacoes": null
     },
     {
       "id": 17,
       "funcionario_id": 2,
       "projeto_id": 9014,
       "data": "12-2025",
-      "horas_trabalhadas": 20.0
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
     },
     {
       "id": 18,
       "funcionario_id": 2,
       "projeto_id": 9010,
       "data": "10-2025",
-      "horas_trabalhadas": 7.5
+      "horas_trabalhadas": 7.5,
+      "observacoes": null
     },
     {
       "id": 19,
       "funcionario_id": 2,
       "projeto_id": 656,
       "data": "10-2025",
-      "horas_trabalhadas": 80.0
+      "horas_trabalhadas": 80.0,
+      "observacoes": null
     },
     {
       "id": 20,
       "funcionario_id": 6,
       "projeto_id": 9010,
       "data": "10-2025",
-      "horas_trabalhadas": 40.0
+      "horas_trabalhadas": 40.0,
+      "observacoes": null
     },
     {
       "id": 21,
       "funcionario_id": 2,
       "projeto_id": 2950,
       "data": "10-2025",
-      "horas_trabalhadas": 100.0
+      "horas_trabalhadas": 100.0,
+      "observacoes": null
     },
     {
       "id": 22,
       "funcionario_id": 7,
       "projeto_id": 9010,
-      "data": "12-2025",
-      "horas_trabalhadas": 3.0
+      "data": "11-2025",
+      "horas_trabalhadas": 3.0,
+      "observacoes": "a"
     },
     {
       "id": 24,
       "funcionario_id": 7,
       "projeto_id": 9010,
       "data": "11-2025",
-      "horas_trabalhadas": 17.0
+      "horas_trabalhadas": 17.0,
+      "observacoes": "teste2"
+    },
+    {
+      "id": 25,
+      "funcionario_id": 4,
+      "projeto_id": 9010,
+      "data": "11-2025",
+      "horas_trabalhadas": 11.0,
+      "observacoes": "Testando3"
     }
   ],
   "usuarios": [
