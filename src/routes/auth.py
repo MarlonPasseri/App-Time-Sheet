@@ -117,42 +117,74 @@ def perfil():
         return redirect(url_for('auth.login'))
 
     if request.method == 'POST':
-        # nome = request.form.get('nome', '').strip()
-        senha_atual = request.form.get('senha_atual', '').strip()
-        nova_senha = request.form.get('nova_senha', '').strip()
-        confirmar_senha = request.form.get('confirmar_senha', '').strip()
+        acao = request.form.get('acao')
 
-        # --- Atualização de nome ---
-        # if nome and nome != usuario.nome:
-        #     sucesso, mensagem = db.atualizar_usuario(usuario.id, nome=nome)
-        #     if sucesso:
-        #         session['usuario_nome'] = nome
-        #         flash('Nome atualizado com sucesso!', 'success')
-        #     else:
-        #         flash(f'Erro ao atualizar nome: {mensagem}', 'danger')
+        # -------- ALTERAR SENHA --------
+        if acao == 'alterar_senha':
 
-        # --- Atualização de senha ---
-        # if senha_atual or nova_senha or confirmar_senha:
-        if not any([senha_atual, nova_senha, confirmar_senha]):
-            flash('Preencha todos os campos para alterar a senha.', 'danger')
+            # nome = request.form.get('nome', '').strip()
+            senha_atual = request.form.get('senha_atual', '').strip()
+            nova_senha = request.form.get('nova_senha', '').strip()
+            confirmar_senha = request.form.get('confirmar_senha', '').strip()
 
-        # Se começou a preencher algo → validar normalmente
-        elif not all([senha_atual, nova_senha, confirmar_senha]):
-            flash('Preencha todos os campos para alterar a senha.', 'danger')
+            # --- Atualização de nome ---
+            # if nome and nome != usuario.nome:
+            #     sucesso, mensagem = db.atualizar_usuario(usuario.id, nome=nome)
+            #     if sucesso:
+            #         session['usuario_nome'] = nome
+            #         flash('Nome atualizado com sucesso!', 'success')
+            #     else:
+            #         flash(f'Erro ao atualizar nome: {mensagem}', 'danger')
 
-        elif not usuario.verificar_senha(senha_atual):
-            flash('Senha atual incorreta.', 'danger')
+            # --- Atualização de senha ---
+            # if senha_atual or nova_senha or confirmar_senha:
+            if not any([senha_atual, nova_senha, confirmar_senha]):
+                flash('Preencha todos os campos para alterar a senha.', 'danger')
 
-        elif nova_senha != confirmar_senha:
-            flash('As novas senhas não coincidem.', 'danger')
+            # Se começou a preencher algo → validar normalmente
+            elif not all([senha_atual, nova_senha, confirmar_senha]):
+                flash('Preencha todos os campos para alterar a senha.', 'danger')
 
-        else:
-            sucesso, mensagem = db.atualizar_usuario(usuario.id, senha=nova_senha)
-            if sucesso:
-                flash('Senha atualizada com sucesso!', 'success')
+            elif not usuario.verificar_senha(senha_atual):
+                flash('Senha atual incorreta.', 'danger')
+
+            elif nova_senha != confirmar_senha:
+                flash('As novas senhas não coincidem.', 'danger')
+
             else:
-                flash(f'Erro ao atualizar senha: {mensagem}', 'danger')
+                sucesso, mensagem = db.atualizar_usuario(usuario.id, senha=nova_senha)
+                if sucesso:
+                    flash('Senha atualizada com sucesso!', 'success')
+                else:
+                    flash(f'Erro ao atualizar senha: {mensagem}', 'danger')
 
+        # -------- ALTERAR IMAGEM --------
+        elif acao == 'alterar_imagem':
+            imagem_perfil = request.form.get('foto')
+            if imagem_perfil:
+                sucesso, mensagem = db.atualizar_usuario(usuario.id, img_perfil=imagem_perfil)
+                if sucesso:
+                    flash('Imagem de perfil atualizada com sucesso!', 'success')
+                else:
+                    flash(f'Erro ao atualizar imagem de perfil: {mensagem}', 'danger')
+            # if 'imagem' not in request.files:
+            #     flash('Nenhuma imagem enviada.', 'danger')
+            # else:
+            #     imagem = request.files['imagem']
+
+            #     if imagem.filename == '':
+            #         flash('Nenhuma imagem selecionada.', 'danger')
+            #     else:
+            #         # Salvar a imagem (você já deve ter a lógica de upload)
+            #         caminho = salvar_imagem(imagem, usuario.id)
+
+            #         sucesso, mensagem = db.atualizar_usuario(usuario.id, imagem=caminho)
+            #         flash(
+            #             'Imagem atualizada com sucesso!' if sucesso else mensagem,
+            #             'success' if sucesso else 'danger'
+            #         )
+
+        # Atualiza o objeto usuário após qualquer alteração
         usuario = db.obter_usuario(usuario_id)
 
     return render_template(

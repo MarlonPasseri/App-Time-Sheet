@@ -5,13 +5,14 @@ import re
 from datetime import datetime
 
 class Usuario:
-    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", cod_funcionario=None):
+    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", cod_funcionario=None, img_perfil="../../static/img/user_profile.jpg"):
         self.id = id
         self.nome = nome
         self.email = email
         self.senha_hash = senha_hash
         self.tipo = tipo  # "funcionario" ou "administrador"
         self.cod_funcionario = cod_funcionario  # ID do funcionário
+        self.img_perfil = img_perfil  # Caminho para a imagem de perfil (opcional)
     
     def to_dict(self):
         return {
@@ -21,6 +22,7 @@ class Usuario:
             'senha_hash': self.senha_hash,
             'tipo': self.tipo,
             'cod_funcionario': self.cod_funcionario,
+            'img_perfil': self.img_perfil
         }
     
     @classmethod
@@ -32,6 +34,7 @@ class Usuario:
             senha_hash=data.get('senha_hash'),
             tipo=data.get('tipo', 'funcionario'),
             cod_funcionario=data.get('cod_funcionario'),
+            img_perfil=data.get('img_perfil')
         )
     
     @staticmethod
@@ -223,7 +226,7 @@ class BancoDeDados:
         """Lista todos os usuários."""
         return self.usuarios
     
-    def atualizar_usuario(self, id, nome=None, email=None, senha=None, tipo=None, cod_funcionario="-"):
+    def atualizar_usuario(self, id, nome=None, email=None, senha=None, tipo=None, cod_funcionario="-", img_perfil=None):
         """Atualiza um usuário existente."""
         usuario = self.obter_usuario(id)
         if not usuario:
@@ -278,6 +281,19 @@ class BancoDeDados:
                     return False, f"O código <strong>{cod_funcionario}</strong> já está em uso"
             usuario.cod_funcionario = cod_funcionario
         
+        if img_perfil:
+            if img_perfil == "avatar_homem":
+                caminho_img_perfil = "../../static/img/male_user_profile.jpg"
+            elif img_perfil == "avatar_mulher":
+                caminho_img_perfil = "../../static/img/woman_user_profile.jpg"
+            elif img_perfil == "avatar":
+                caminho_img_perfil = "../../static/img/user_profile.jpg"
+            else:
+                return False, f"Imagem inválida."
+            
+            usuario.img_perfil = caminho_img_perfil
+        
+
         self.salvar_dados()
         return True, "Usuário atualizado com sucesso"
     

@@ -1,221 +1,179 @@
 {% extends 'base.html' %}
 
-<!-- <html class="light" lang="pt-BR">
-<head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Perfil do Funcionário - Geoprojetos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#0D47A1",
-                        "background-light": "#F5F5F5",
-                        "background-dark": "#101c22",
-                    },
-                    fontFamily: {
-                        "display": ["Manrope", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                },
-            },
-        }
-    </script>
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings:
-                'FILL' 0,
-                'wght' 400,
-                'GRAD' 0,
-                'opsz' 24
-        }
-    </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark font-display">
-    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
-        <div class="layout-container flex h-full grow flex-col">
-            <div class="flex flex-1">
-            <aside class="flex flex-col w-64 bg-white dark:bg-background-dark border-r border-gray-200 dark:border-gray-700 p-4">
-                <a href="{{ url_for('index') }}">
-                    <div class="flex items-center justify-center h-20 border-b dark:border-gray-700">
-                        <img alt="Logo Geoprojetos" class="h-10" src="https://geoprojetos.com.br/wp-content/uploads/2025/05/Geoprojetos40anos.png"/>
-                    </div>
-                </a>
-                <div class="flex flex-col flex-1 gap-2">
-                    <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
-                        <span class="material-symbols-outlined">dashboard</span>
-                        <p class="text-sm font-bold">Dashboard</p>
-                    </div>
-                    {% if admin_check %}
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('colaboradores.listar') }}">
-                        <span class="material-symbols-outlined">person</span>
-                        <p class="text-sm font-medium">Colaboradores</p>
-                    </a>
-                    {% endif %}
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.listar') }}">
-                        <span class="material-symbols-outlined">schedule</span>
-                        <p class="text-sm font-medium">Registro de Horas</p>
-                    </a>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('contratos.listar') }}">
-                        <span class="material-symbols-outlined">business_center</span>
-                        <p class="text-sm font-medium">Contratos</p>
-                    </a>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" href="{{ url_for('registros.exportar') }}">
-                        <span class="material-symbols-outlined">assessment</span>
-                        <p class="text-sm font-medium">Relatórios</p>
-                    </a>
-                </div> -->
-                {% block sidebar_extra %}
-                    <div class="flex flex-col gap-3 pt-4 border-t dark:border-gray-700 cursor-pointer mt-auto">
-                        <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('index') }}">
-                            <span class="truncate">Voltar</span>
-                        </a>
-                        <!-- <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('auth.logout') }}">
-                            <span class="truncate">Sair</span>
-                        </a> -->
-                    </div>
-                {% endblock %}
-            <!-- </aside> -->
-            {% block main %}
-            <main class="flex-1 p-8">
-                <div class="max-w-4xl mx-auto">
-                    <div class="flex flex-col gap-8">
-                        <!-- Personal Information Section -->
-                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                            <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Informações Pessoais</p>
-                            <div class="flex p-4 @container">
-                                <div class="flex w-full flex-col gap-6 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
-                                    <div class="flex items-center gap-6">
-                                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24" data-alt="Foto de perfil" style='background-image: url("https://static.vecteezy.com/system/resources/previews/013/360/247/non_2x/default-avatar-photo-icon-social-media-profile-sign-symbol-vector.jpg");'></div>
-                                        <div class="flex flex-col justify-center">
-                                            <p class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">{{ usuario.nome }}</p>
-                                            <p class="text-[#617c89] dark:text-gray-400 text-base font-normal leading-normal">{{ usuario.email }}</p>
-                                        </div>
-                                    </div>
-                                    <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[480px]:w-auto">
-                                        <span class="truncate">Alterar Foto</span>
-                                    </button>
+    {% block sidebar_extra %}
+        <div class="flex flex-col gap-3 pt-4 border-t dark:border-gray-700 cursor-pointer mt-auto">
+            <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('index') }}">
+                <span class="truncate">Voltar</span>
+            </a>
+            <!-- <a class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white text-sm font-bold leading-normal tracking-[0.015em] mt-auto" href="{{ url_for('auth.logout') }}">
+                <span class="truncate">Sair</span>
+            </a> -->
+        </div>
+    {% endblock %}
+    <!-- </aside> -->
+    {% block main %}
+    <main class="flex-1 p-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col gap-8">
+                <!-- Personal Information Section -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                    <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Informações Pessoais</p>
+                    <div class="flex p-4 @container">
+                        <div class="flex w-full flex-col gap-6 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+                            <div class="flex items-center gap-6">
+                                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24" data-alt="Foto de perfil" style="background-image: url('{{ usuario.img_perfil }}');"></div>
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-[#111618] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em]">{{ usuario.nome }}</p>
+                                    <p class="text-[#617c89] dark:text-gray-400 text-base font-normal leading-normal">{{ usuario.email }}</p>
                                 </div>
                             </div>
-                            <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                                <label class="flex flex-col">
-                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nome Completo</p>
-                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="João da Silva Pereira" readonly/>
-                                </label>
-                                <label class="flex flex-col">
-                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">E-mail</p>
-                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-500 dark:text-gray-400 focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-gray-50 dark:bg-gray-700 h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal" disabled="" value="joao.silva@geoprojetos.com.br"/>
-                                </label>
-                                <label class="flex flex-col">
-                                    <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Telefone</p>
-                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="(11) 98765-4321"/>
-                                </label>
-                            </div>
-                            <div class="flex justify-end mt-6 gap-3">
-                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-600 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                                    <span class="truncate">Cancelar</span>
-                                </button>
-                                <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
-                                    <span class="truncate">Salvar Alterações</span>
-                                </button>
-                            </div> -->
+                            <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em] w-full max-w-[480px] @[480px]:w-auto" data-bs-toggle="modal" data-bs-target="#modalFoto">
+                                <span class="truncate">Alterar Foto</span>
+                            </button>
                         </div>
-                        <!-- Change Password Section -->
-                        <form method="POST" action="{{ url_for('auth.perfil') }}">
-                            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                                <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Alterar Senha</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <label class="flex flex-col">
-                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Senha Atual</p>
-                                        <div class="relative flex w-full items-stretch">
-                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="senha_atual" name="senha_atual"/>
-                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('senha_atual'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
-                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
-                                            </button>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                                    <label class="flex flex-col">
-                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nova Senha</p>
-                                        <div class="relative flex w-full items-stretch">
-                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="nova_senha" name="nova_senha"/>
-                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdNField = document.getElementById('nova_senha'); if (pwdNField.type === 'password') { pwdNField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdNField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
-                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
-                                            </button>
-                                        </div>
-                                    </label>
-                                    <label class="flex flex-col">
-                                        <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Confirmar Nova Senha</p>
-                                        <div class="relative flex w-full items-stretch">
-                                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="confirmar_senha" name="confirmar_senha"/>
-                                            <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdCField = document.getElementById('confirmar_senha'); if (pwdCField.type === 'password') { pwdCField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdCField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
-                                                <span class="material-symbols-outlined h-5 w-5">visibility</span>
-                                            </button>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="flex justify-end mt-6">
-                                    <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]" type="submit">
-                                        <span class="truncate">Alterar Senha</span>
+                    </div>
+                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <label class="flex flex-col">
+                            <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nome Completo</p>
+                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="João da Silva Pereira" readonly/>
+                        </label>
+                        <label class="flex flex-col">
+                            <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">E-mail</p>
+                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-500 dark:text-gray-400 focus:outline-0 focus:ring-0 border border-[#dbe2e6] dark:border-gray-600 bg-gray-50 dark:bg-gray-700 h-14 placeholder:text-[#617c89] p-[15px] text-base font-normal leading-normal" disabled="" value="joao.silva@geoprojetos.com.br"/>
+                        </label>
+                        <label class="flex flex-col">
+                            <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Telefone</p>
+                            <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 placeholder:text-[#617c89] dark:placeholder:text-gray-400 p-[15px] text-base font-normal leading-normal" value="(11) 98765-4321"/>
+                        </label>
+                    </div>
+                    <div class="flex justify-end mt-6 gap-3">
+                        <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-600 text-[#111618] dark:text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                            <span class="truncate">Cancelar</span>
+                        </button>
+                        <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                            <span class="truncate">Salvar Alterações</span>
+                        </button>
+                    </div> -->
+                </div>
+                <!-- Change Password Section -->
+                <form method="POST" action="{{ url_for('auth.perfil') }}">
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                        <input type="hidden" name="acao" value="alterar_senha">
+                        <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Alterar Senha</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label class="flex flex-col">
+                                <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Senha Atual</p>
+                                <div class="relative flex w-full items-stretch">
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="senha_atual" name="senha_atual"/>
+                                    <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('senha_atual'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                        <span class="material-symbols-outlined h-5 w-5">visibility</span>
                                     </button>
                                 </div>
-                            </div>
-                        </form>
-                        <!-- Notifications Section -->
-                        <!-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                            <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Notificações</p>
-                            <div class="space-y-4">
-                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                                    <div>
-                                        <p class="text-[#111618] dark:text-white font-medium">Lembrete de ponto</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">Receba um lembrete para registrar seu ponto de entrada e saída.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input checked="" class="sr-only peer" type="checkbox" value=""/>
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                                    </label>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            <label class="flex flex-col">
+                                <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Nova Senha</p>
+                                <div class="relative flex w-full items-stretch">
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="nova_senha" name="nova_senha"/>
+                                    <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdNField = document.getElementById('nova_senha'); if (pwdNField.type === 'password') { pwdNField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdNField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                        <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                    </button>
                                 </div>
-                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                                    <div>
-                                        <p class="text-[#111618] dark:text-white font-medium">Aprovação de horas extras</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">Seja notificado quando suas horas extras forem aprovadas ou rejeitadas.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input checked="" class="sr-only peer" type="checkbox" value=""/>
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                                    </label>
+                            </label>
+                            <label class="flex flex-col">
+                                <p class="text-[#111618] dark:text-gray-300 text-base font-medium leading-normal pb-2">Confirmar Nova Senha</p>
+                                <div class="relative flex w-full items-stretch">
+                                    <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111618] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#dbe2e6] dark:border-gray-600 bg-white dark:bg-gray-700 focus:border-primary h-14 p-[15px] text-base font-normal leading-normal" placeholder="************" type="password" id="confirmar_senha" name="confirmar_senha"/>
+                                    <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdCField = document.getElementById('confirmar_senha'); if (pwdCField.type === 'password') { pwdCField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdCField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                        <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                    </button>
                                 </div>
-                                <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
-                                    <div>
-                                        <p class="text-[#111618] dark:text-white font-medium">Comunicados da empresa</p>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400">Receba avisos e comunicados importantes da Geoprojetos.</p>
-                                    </div>
-                                    <label class="relative inline-flex items-center cursor-pointer">
-                                        <input class="sr-only peer" type="checkbox" value=""/>
-                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div> -->
+                            </label>
+                        </div>
+                        <div class="flex justify-end mt-6">
+                            <button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]" type="submit">
+                                <span class="truncate">Alterar Senha</span>
+                            </button>
+                        </div>
                     </div>
+                </form>
+                <!-- Notifications Section -->
+                <!-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                    <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Notificações</p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <div>
+                                <p class="text-[#111618] dark:text-white font-medium">Lembrete de ponto</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Receba um lembrete para registrar seu ponto de entrada e saída.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input checked="" class="sr-only peer" type="checkbox" value=""/>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <div>
+                                <p class="text-[#111618] dark:text-white font-medium">Aprovação de horas extras</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Seja notificado quando suas horas extras forem aprovadas ou rejeitadas.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input checked="" class="sr-only peer" type="checkbox" value=""/>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+                            <div>
+                                <p class="text-[#111618] dark:text-white font-medium">Comunicados da empresa</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Receba avisos e comunicados importantes da Geoprojetos.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input class="sr-only peer" type="checkbox" value=""/>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </main>
+    <!-- Modal troca de imagem -->
+    <div class="modal fade" id="modalFoto" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+
+                <h2 class="text-lg font-bold mb-4">Escolha uma foto de perfil</h2>
+
+                <div class="flex gap-6 justify-center">
+
+                    <form method="POST" action="{{ url_for('auth.perfil') }}">
+                        <input type="hidden" name="acao" value="alterar_imagem">
+                        <input type="hidden" name="foto" value="avatar_homem">
+                        <button type="submit">
+                            <img src="../../static/img/male_user_profile.jpg" class="w-24 h-24 rounded-full cursor-pointer">
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ url_for('auth.perfil') }}">
+                        <input type="hidden" name="acao" value="alterar_imagem">
+                        <input type="hidden" name="foto" value="avatar_mulher">
+                        <button type="submit">
+                            <img src="../../static/img/woman_user_profile.jpg" class="w-24 h-24 rounded-full cursor-pointer">
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ url_for('auth.perfil') }}">
+                        <input type="hidden" name="acao" value="alterar_imagem">
+                        <input type="hidden" name="foto" value="avatar">
+                        <button type="submit">
+                            <img src="../../static/img/user_profile.jpg" class="w-24 h-24 rounded-full cursor-pointer">
+                        </button>
+                    </form>
+
                 </div>
-            </main>
-            {% endblock %}
-            <!-- </div> -->
-        <!-- </div>
+
+            </div>
+        </div>
     </div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</html> -->
+
+    {% endblock %}
