@@ -74,9 +74,9 @@
                     <p class="text-sm {% if request.endpoint == 'index' %} font-bold {% else %} font-medium {% endif %}">Dashboard</p>
                 </a>
                 {% if admin_check %}
-                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'colaboradores.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('colaboradores.listar') }}">
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint.startswith('colaboradores.') %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('colaboradores.listar') }}">
                     <span class="material-symbols-outlined">person</span>
-                    <p class="text-sm {% if request.endpoint == 'colaboradores.listar' %} font-bold {% else %} font-medium {% endif %}">Colaboradores</p>
+                    <p class="text-sm {% if request.endpoint.startswith('colaboradores.') %} font-bold {% else %} font-medium {% endif %}">Colaboradores</p>
                 </a>
                 {% endif %}
                 <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'registros.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('registros.listar') }}">
