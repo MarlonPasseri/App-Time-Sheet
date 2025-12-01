@@ -614,7 +614,8 @@
       "email": "admin@geoprojetos.com.br",
       "senha_hash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
       "tipo": "administrador",
-      "cod_funcionario": null
+      "cod_funcionario": null,
+      "img_perfil": "https://us.123rf.com/450wm/tuktukdesign/tuktukdesign2201/tuktukdesign220100003/181857638-vetor-de-%C3%ADcone-de-avatar-s%C3%ADmbolo-de-perfil-de-usu%C3%A1rio-feminino-para-neg%C3%B3cios-em-uma-ilustra%C3%A7%C3%A3o-de.jpg?ver=6"
     },
     {
       "id": 2,
@@ -622,7 +623,8 @@
       "email": "marlon.soares@geoprojetos.com.br",
       "senha_hash": "8d84c33305d5cb0ff0db30b72b9a7ce1f18876e66112ed9e4dfaa2efded5d223",
       "tipo": "funcionario",
-      "cod_funcionario": "4"
+      "cod_funcionario": "4",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     },
     {
       "id": 3,
@@ -630,7 +632,8 @@
       "email": "teste3@geoprojetos.com.br",
       "senha_hash": "289160db0d9f39f9ae1754c4ec9c16f90b50e32e09c5fb5481ae642b3d3d1a36",
       "tipo": "funcionario",
-      "cod_funcionario": "6"
+      "cod_funcionario": "6",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     },
     {
       "id": 4,
@@ -638,7 +641,8 @@
       "email": "testeb@geoprojetos.com.br",
       "senha_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
       "tipo": "funcionario",
-      "cod_funcionario": "8"
+      "cod_funcionario": "8",
+      "img_perfil": "https://us.123rf.com/450wm/tuktukdesign/tuktukdesign2201/tuktukdesign220100003/181857638-vetor-de-%C3%ADcone-de-avatar-s%C3%ADmbolo-de-perfil-de-usu%C3%A1rio-feminino-para-neg%C3%B3cios-em-uma-ilustra%C3%A7%C3%A3o-de.jpg?ver=6"
     },
     {
       "id": 5,
@@ -646,7 +650,8 @@
       "email": "testec@geoprojetos.com.br",
       "senha_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
       "tipo": "funcionario",
-      "cod_funcionario": "9"
+      "cod_funcionario": "9",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     },
     {
       "id": 6,
@@ -654,7 +659,8 @@
       "email": "tested@geoprojetos.com.br",
       "senha_hash": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
       "tipo": "funcionario",
-      "cod_funcionario": "-"
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     },
     {
       "id": 7,
@@ -662,7 +668,8 @@
       "email": "testee@geoprojetos.com.br",
       "senha_hash": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5",
       "tipo": "funcionario",
-      "cod_funcionario": "-"
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     }
   ]
 }

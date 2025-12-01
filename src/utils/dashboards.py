@@ -79,8 +79,8 @@ def obter_dados_dashboard(usuario_id):
     usuario = db.obter_usuario(usuario_id)
 
     # Se for funcionário, mostra só os registros dele
-    if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
-        registros = db.listar_registros_horas(funcionario_id=usuario.funcionario_id)
+    if usuario and usuario.tipo == 'funcionario':
+        registros = db.listar_registros_horas(funcionario_id=usuario.id)
     else:
         registros = db.listar_registros_horas()
     

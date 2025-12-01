@@ -9,6 +9,7 @@ from src.routes.registros import registros_bp
 from src.routes.auth import auth_bp
 from src.utils.auth_utils import login_required
 from src.utils.dashboards import *
+from src.models.database import db
 import secrets
 
 app = Flask(__name__)
@@ -31,7 +32,7 @@ def index():
     meses, horas_mensais = calcular_horas_por_mes(usuario_id)
     total_horas_mes, nome_mes_atual = calcular_total_horas_mes(usuario_id)
 
-    usuario = session.get('usuario_nome')
+    usuario = db.obter_usuario(usuario_id)
     admin_check = session.get('usuario_tipo') == 'administrador'
 
     # Passar os dados para o template

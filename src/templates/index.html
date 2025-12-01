@@ -3,7 +3,7 @@
     {% block main %}
         <!-- HeadlineText -->
         <h1 class="text-text-primary dark:text-white tracking-light text-[32px] font-bold leading-tight">Dashboard</h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-1 mb-6">Bem-vindo de volta, {{ usuario }}! Aqui está um resumo da sua semana.</p>
+        <p class="text-gray-500 dark:text-gray-400 mt-1 mb-6">Bem-vindo de volta, {{ usuario.nome }}! Aqui está um resumo da sua semana.</p>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left Column -->
             <div class="lg:col-span-2 flex flex-col gap-6">

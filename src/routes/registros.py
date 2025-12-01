@@ -110,6 +110,7 @@ def listar():
 
     return render_template(
         'registros/listar.html',
+        usuario=usuario,
         registros=registros_pag,
         funcionarios=funcionarios,
         projetos=projetos,
@@ -299,6 +300,10 @@ def exportar():
     funcionarios = [f for f in funcionarios if f.tipo != 'administrador']
     
     projetos = db.listar_projetos()
+
+    # Obtém o usuário atual
+    usuario_id = session.get('usuario_id')
+    usuario = db.obter_usuario(usuario_id)
     
     # Obtém a lista de meses/anos disponíveis
     meses_anos = set()
@@ -310,6 +315,7 @@ def exportar():
     
     return render_template(
         'registros/exportar.html',
+        usuario=usuario,
         funcionarios=funcionarios,
         projetos=projetos,
         meses_anos=meses_anos
