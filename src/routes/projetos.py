@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, session
 from src.models.database import db
 from src.utils.auth_utils import login_required, admin_required
 
@@ -8,8 +8,17 @@ projetos_bp = Blueprint('contratos', __name__)
 @login_required
 def listar():
     """Exibe a lista de projetos."""
+
+    # Obtém o usuário atual
+    usuario_id = session.get('usuario_id')
+    usuario = db.obter_usuario(usuario_id)
+
     projetos = db.listar_projetos()
-    return render_template('projetos/listar.html', projetos=projetos)
+    return render_template(
+        'projetos/listar.html',
+        usuario=usuario,
+        projetos=projetos
+    )
 
 @projetos_bp.route('/detalhes/<int:id>')
 @admin_required

@@ -5,14 +5,14 @@ import re
 from datetime import datetime
 
 class Usuario:
-    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", cod_funcionario=None, img_perfil="../../static/img/user_profile.jpg"):
+    def __init__(self, id=None, nome=None, email=None, senha_hash=None, tipo="funcionario", cod_funcionario=None, img_perfil=None):
         self.id = id
         self.nome = nome
         self.email = email
         self.senha_hash = senha_hash
         self.tipo = tipo  # "funcionario" ou "administrador"
         self.cod_funcionario = cod_funcionario  # ID do funcionário
-        self.img_perfil = img_perfil  # Caminho para a imagem de perfil (opcional)
+        self.img_perfil = img_perfil  # URL ou caminho da imagem de perfil
     
     def to_dict(self):
         return {
@@ -141,7 +141,7 @@ class BancoDeDados:
             return False
     
     # Métodos para Usuários
-    def adicionar_usuario(self, nome, email, senha="12345", tipo="funcionario", cod_funcionario="-"):
+    def adicionar_usuario(self, nome, email, senha="12345", tipo="funcionario", cod_funcionario="-", img_perfil=None):
         """Adiciona um novo usuário."""
         # --- Validar nome ---
         nome = nome.strip()
@@ -187,6 +187,9 @@ class BancoDeDados:
         
         # --- Criar hash da senha ---
         senha_hash = Usuario.hash_senha(senha)
+
+        if not img_perfil:
+            img_perfil = "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
         
         usuario = Usuario(
             id=novo_id,
@@ -194,7 +197,8 @@ class BancoDeDados:
             email=email,
             senha_hash=senha_hash,
             tipo=tipo,
-            cod_funcionario=cod_funcionario
+            cod_funcionario=cod_funcionario,
+            img_perfil=img_perfil
         )
         
         self.usuarios.append(usuario)
@@ -283,11 +287,11 @@ class BancoDeDados:
         
         if img_perfil:
             if img_perfil == "avatar_homem":
-                caminho_img_perfil = "../../static/img/male_user_profile.jpg"
+                caminho_img_perfil = "https://static.vecteezy.com/ti/vetor-gratis/p1/52120539-simples-masculino-avatar-silhueta-icone-homem-com-curto-cabelo-do-utilizador-perfis-e-contato-em-formacao-dentro-formularios-isolado-ilustracao-vetor.jpg"
             elif img_perfil == "avatar_mulher":
-                caminho_img_perfil = "../../static/img/woman_user_profile.jpg"
+                caminho_img_perfil = "https://us.123rf.com/450wm/tuktukdesign/tuktukdesign2201/tuktukdesign220100003/181857638-vetor-de-%C3%ADcone-de-avatar-s%C3%ADmbolo-de-perfil-de-usu%C3%A1rio-feminino-para-neg%C3%B3cios-em-uma-ilustra%C3%A7%C3%A3o-de.jpg?ver=6"
             elif img_perfil == "avatar":
-                caminho_img_perfil = "../../static/img/user_profile.jpg"
+                caminho_img_perfil = "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
             else:
                 return False, f"Imagem inválida."
             

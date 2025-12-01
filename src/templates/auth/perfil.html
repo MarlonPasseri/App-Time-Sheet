@@ -55,6 +55,7 @@
                         </button>
                     </div> -->
                 </div>
+                {% if not admin_check %}
                 <!-- Change Password Section -->
                 <form method="POST" action="{{ url_for('auth.perfil') }}">
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
@@ -98,6 +99,7 @@
                         </div>
                     </div>
                 </form>
+                {% endif %}
                 <!-- Notifications Section -->
                 <!-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
                     <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Notificações</p>

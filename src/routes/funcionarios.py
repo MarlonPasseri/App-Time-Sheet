@@ -91,6 +91,7 @@ def listar():
 
         return render_template(
             'funcionarios/listar.html',
+            usuario=usuario,
             funcionarios=funcionarios_pag,
             admin_check=admin_check,
             search=search,  # mantém o valor no input

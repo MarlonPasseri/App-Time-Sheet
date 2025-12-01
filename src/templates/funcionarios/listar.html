@@ -62,6 +62,7 @@
                                                 Código <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
                                             </a>
                                         </th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Foto</th>
                                         <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
                                             <a href="{{ url_for('colaboradores.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=nome&direcao={% if ordenar == 'nome' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
                                                 Nome <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
@@ -88,6 +89,9 @@
                                     {% for funcionario in funcionarios %}
                                         <tr>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.cod_funcionario }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">
+                                                <img alt="User avatar" class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" data-alt="User avatar" src="{{ funcionario.img_perfil }}"/>
+                                            </td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.nome }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.email }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">
