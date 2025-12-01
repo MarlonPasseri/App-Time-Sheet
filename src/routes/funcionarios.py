@@ -120,6 +120,10 @@ def listar():
 @admin_required
 def adicionar():
     """Adiciona um novo funcionário. Acesso restrito a administradores."""
+
+    usuario=db.obter_usuario(session.get('usuario_id'))
+    admin_check = usuario and usuario.tipo == 'administrador'
+
     if request.method == 'POST':
         nome = request.form.get('nome', '').strip()
         email = request.form.get('email', '').strip()
@@ -154,7 +158,9 @@ def adicionar():
 
         try:
             funcionario, message = db.adicionar_usuario(nome=nome, email=email, cod_funcionario=cod_funcionario)
-            flash(f'Colaborador "{funcionario.nome}" adicionado com sucesso!', 'success')
+            flash(
+                Markup(f'Colaborador <strong>{funcionario.nome}</strong> adicionado com sucesso!'), 'success'
+            )
             logging.info(f"Colaborador adicionado: {funcionario.nome} (ID: {funcionario.id})")
             return redirect(url_for('colaboradores.listar'))
         except Exception as e:
@@ -165,6 +171,8 @@ def adicionar():
 
     return render_template(
         'funcionarios/adicionar.html',
+        usuario=usuario,
+        admin_check=admin_check,
         nome=nome if 'nome' in locals() else '',
         email=email if 'email' in locals() else '',
         cod_funcionario=cod_funcionario if 'cod_funcionario' in locals() else ''
@@ -184,35 +192,41 @@ def editar(id):
         return redirect(url_for('colaboradores.listar'))
 
     if request.method == 'POST':
-        nome = request.form.get('nome', '').strip()
-        email = request.form.get('email', '').strip()
-        cod_funcionario = request.form.get('cod_funcionario', '').strip()
-        novaSenha = request.form.get('novaSenha', '').strip()
-        confirmarNovaSenha = request.form.get('confirmarNovaSenha', '').strip()
+        nome = request.form.get('nome_edit', '').strip()
+        email = request.form.get('email_edit', '').strip()
+        cod_funcionario = request.form.get('cod_funcionario_edit', '').strip()
+        novaSenha = request.form.get('novaSenha_edit', '').strip()
+        confirmarNovaSenha = request.form.get('confirmarNovaSenha_edit', '').strip()
 
-        if not nome:
-            flash('O nome do colaborador é obrigatório.', 'danger')
-            return render_template('funcionarios/editar.html', funcionario=funcionario)
+        # if not nome:
+        #     flash('O nome do colaborador é obrigatório.', 'danger')
+        #     return redirect(url_for('colaboradores.listar'))
+        #     # return render_template('funcionarios/editar.html', funcionario=funcionario)
 
-        if not email:
-            flash('O email do colaborador é obrigatório.', 'danger')
-            return render_template('funcionarios/editar.html', funcionario=funcionario)
+        # if not email:
+        #     flash('O email do colaborador é obrigatório.', 'danger')
+        #     return redirect(url_for('colaboradores.listar'))
+        #     # return render_template('funcionarios/editar.html', funcionario=funcionario)
 
-        if not cod_funcionario:
-            flash('O código do colaborador é obrigatório.', 'danger')
-            return render_template('funcionarios/editar.html', funcionario=funcionario)
+        # if not cod_funcionario:
+        #     flash('O código do colaborador é obrigatório.', 'danger')
+        #     return redirect(url_for('colaboradores.listar'))
+        #     # return render_template('funcionarios/editar.html', funcionario=funcionario)
         
         senha = None
         if novaSenha != "" or confirmarNovaSenha != "":
             if not novaSenha:
                 flash('Por favor, insira a nova senha.', 'danger')
-                return render_template('funcionarios/editar.html', funcionario=funcionario)
+                return redirect(url_for('colaboradores.listar'))
+                # return render_template('funcionarios/editar.html', funcionario=funcionario)
             if not confirmarNovaSenha:
                 flash('Por favor, confirme a nova senha.', 'danger')
-                return render_template('funcionarios/editar.html', funcionario=funcionario)
+                return redirect(url_for('colaboradores.listar'))
+                # return render_template('funcionarios/editar.html', funcionario=funcionario)
             if novaSenha != confirmarNovaSenha:
                 flash('As senhas não coincidem.', 'danger')
-                return render_template('funcionarios/editar.html', funcionario=funcionario)
+                return redirect(url_for('colaboradores.listar'))
+                # return render_template('funcionarios/editar.html', funcionario=funcionario)
             senha = novaSenha
 
         try:
@@ -225,13 +239,16 @@ def editar(id):
                 flash(
                     Markup(f"Erro ao atualizar colaborador: {message}"), 'danger'
                 )
+                return redirect(url_for('colaboradores.listar'))
         except Exception as e:
             logging.exception("Erro ao atualizar colaborador:")
             flash(
                 Markup(f"Erro ao atualizar colaborador: {message}"), 'danger'
             )
-
-    return render_template('funcionarios/editar.html', funcionario=funcionario)
+            return redirect(url_for('colaboradores.listar'))
+            
+    return redirect(url_for('colaboradores.listar'))
+    # return render_template('funcionarios/editar.html', funcionario=funcionario)
 
 
 # =====================
@@ -241,16 +258,21 @@ def editar(id):
 @admin_required
 def remover(id):
     """Remove um funcionário. Acesso restrito a administradores."""
+
+    usuario = db.obter_usuario(id)
+
     try:
         sucesso = db.remover_usuario(id)
         if sucesso:
-            flash('Colaborador removido com sucesso!', 'success')
+            flash(
+                Markup(f"Colaborador <strong>{usuario.nome}</strong> removido com sucesso!"), 'success'
+            )
             logging.info(f"Colaborador ID={id} removido do sistema.")
         else:
             flash('Erro ao remover colaborador. Verifique se ele está cadastrado.', 'danger')
     except Exception as e:
         logging.exception("Erro ao remover colaborador:")
-        flash('Erro inesperado ao remover colaborador.', 'danger')
+        flash(f"Erro inesperado ao remover colaborador {usuario.nome}.", 'danger')
 
     return redirect(url_for('colaboradores.listar'))
 

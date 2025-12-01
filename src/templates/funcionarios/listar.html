@@ -96,14 +96,12 @@
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.email }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">
                                                 <div class="flex gap-2 justify-end pr-6">
-                                                    <a href="{{ url_for('colaboradores.editar', id=funcionario.id) }}" class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400" title="Editar Colaborador">
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalEditar" data-id="{{ funcionario.id }}" data-nome="{{ funcionario.nome }}" data-email="{{ funcionario.email }}" data-cod="{{ funcionario.cod_funcionario }}" class="btn-editar text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400" title="Editar Colaborador">
                                                         <span class="material-symbols-outlined">edit</span>
-                                                    </a>
-                                                    <form action="{{ url_for('colaboradores.remover', id=funcionario.id) }}" method="POST" class="d-inline">
-                                                        <button type="submit" class="text-gray-500 dark:text-gray-400 hover:text-red-500" title="Excluir Colaborador">
-                                                            <span class="material-symbols-outlined">delete</span>
-                                                        </button>
-                                                    </form>
+                                                    </button>
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-id="{{ funcionario.id }}" data-nome="{{ funcionario.nome }}" data-email="{{ funcionario.email }}" data-cod="{{ funcionario.cod_funcionario }}" class="btn-excluir text-gray-500 dark:text-gray-400 hover:text-red-500" title="Excluir Colaborador">
+                                                        <span class="material-symbols-outlined">delete</span>
+                                                    </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -203,9 +201,111 @@
                 </div>
             </div>
         </main>
+
+        <!-- Modal editar -->
+        <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered max-w-xl">
+                <div class="modal-content dark:bg-gray-800">
+
+                <div class="modal-header border-b dark:border-gray-700">
+                    <h5 class="modal-title text-xl font-semibold">Editar Colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="formEditar" method="POST" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                        <label for="nome_edit" class="form-label">Nome do Colaborador</label>
+                        <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="nome_edit" name="nome_edit" required>
+                    </div>
+                        <div class="mb-3">
+                            <label for="email_edit" class="form-label">Email do Colaborador</label>
+                            <input type="email" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="email_edit" name="email_edit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cod_funcionario_edit" class="form-label">Código do Colaborador</label>
+                            <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="cod_funcionario_edit" name="cod_funcionario_edit" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="novaSenha_edit" class="form-label">Nova Senha</label>
+                            <div class="relative flex w-full items-stretch">
+                                <input type="password" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="novaSenha_edit" name="novaSenha_edit">
+                                <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300" type="button" tabindex="-1" onclick="const pwdField = document.getElementById('novaSenha_edit'); if (pwdField.type === 'password') { pwdField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                    <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmarNovaSenha_edit" class="form-label">Confirmar Nova Senha</label>
+                            <div class="relative flex w-full items-stretch">
+                                <input type="password" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="confirmarNovaSenha_edit" name="confirmarNovaSenha_edit">
+                                <button class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-300 hover:text-white" type="button" tabindex="-1" onclick="const pwdCField = document.getElementById('confirmarNovaSenha_edit'); if (pwdCField.type === 'password') { pwdCField.type = 'text'; this.firstElementChild.innerHTML = 'visibility_off'; } else { pwdCField.type = 'password'; this.firstElementChild.innerHTML = 'visibility'; }">
+                                    <span class="material-symbols-outlined h-5 w-5">visibility</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-t dark:border-gray-700">
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
+                        Salvar
+                    </button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal excluir -->
+        <div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered max-w-xl">
+                <div class="modal-content dark:bg-gray-800">
+
+                <div class="modal-header border-b dark:border-gray-700">
+                    <h5 class="modal-title text-xl font-semibold">Confirmar Remoção Colaborador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="formExcluir" method="POST" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                        <label for="nome_del" class="form-label">Nome do Colaborador</label>
+                        <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="nome_del" name="nome_del" readonly>
+                    </div>
+                        <div class="mb-3">
+                            <label for="email_del" class="form-label">Email do Colaborador</label>
+                            <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="email_del" name="email_del" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cod_funcionario_del" class="form-label">Código do Colaborador</label>
+                            <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="cod_funcionario_del" name="cod_funcionario_del" readonly>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-t dark:border-gray-700">
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
+                        Remover
+                    </button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
     {% endblock %}
 
-    {% block scripts %}
+    {% block script %}
         <script>
             document.getElementById("formBusca").addEventListener("submit", function(e) {
                 e.preventDefault(); // impede o recarregamento da página
@@ -214,6 +314,55 @@
                 document.getElementById("formBusca").submit();
             });
         </script>
+
+        <!-- Modal editar -->
+        <script>
+            const modalEditar = document.getElementById('modalEditar');
+            // Delegation: escuta em document
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.btn-editar');
+                if (!button) return;
+
+                const id = button.dataset.id;
+                const nome = button.dataset.nome;
+                const email = button.dataset.email;
+                const cod = button.dataset.cod;
+
+                // Preenche os campos do modal com os dados do colaborador
+                document.getElementById('nome_edit').value = nome;
+                document.getElementById('email_edit').value = email;
+                document.getElementById('cod_funcionario_edit').value = cod;
+
+                // Atualiza o action do form
+                document.getElementById('formEditar').action = "{{ url_for('colaboradores.editar', id=0) }}".replace('0', id);
+            });
+
+        </script>
+
+        <!-- Modal excluir -->
+        <script>
+            const modalExcluir = document.getElementById('modalExcluir');
+            // Delegation: escuta em document
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.btn-excluir');
+                if (!button) return;
+
+                const id = button.dataset.id;
+                const nome = button.dataset.nome;
+                const email = button.dataset.email;
+                const cod = button.dataset.cod;
+
+                // Preenche os campos do modal com os dados do colaborador
+                document.getElementById('nome_del').value = nome;
+                document.getElementById('email_del').value = email;
+                document.getElementById('cod_funcionario_del').value = cod;
+
+                // Atualiza o action do form
+                document.getElementById('formExcluir').action = "{{ url_for('colaboradores.remover', id=0) }}".replace('0', id);
+            });
+
+        </script>
+
         <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação ou ordenação -->
         <script>
             (function () {
