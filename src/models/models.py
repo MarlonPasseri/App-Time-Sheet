@@ -606,6 +606,8 @@ class BancoDeDados:
         
         if observacoes is not None and observacoes != "":
             registro.observacoes = observacoes
+        else:
+            registro.observacoes = None
 
         self.salvar_dados()
         return True

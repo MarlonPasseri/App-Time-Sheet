@@ -240,9 +240,6 @@ def editar(id):
         observacoes = request.form.get('observacoes_edit').strip() or ''
 
         projetosEspeciais = [9010, 9014, 9021];
-
-        print("Observação: ", observacoes)
-        print("Tipo:", type(observacoes))
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto

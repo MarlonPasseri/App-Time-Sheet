@@ -586,7 +586,7 @@
         <script>
             const dataInput = document.getElementById("data");
             const dataInputFilter = document.getElementById("mes_ano_filter");
-            const dataEdit = document.getElementById("data_edit");
+            let dataEdit = document.getElementById("data_edit");
 
             dataInput.addEventListener("click", () => {
                 dataInput.showPicker(); // força abrir o seletor
@@ -744,68 +744,99 @@
         <!-- Modal editar -->
         <script>
             const modalEditar = document.getElementById('modalEditar');
-            
-            // Delegation: escuta em document
-            document.addEventListener('click', function(event) {
+            const formEditar = document.getElementById('formEditar');
+
+            const observacoesDivEditar = document.getElementById('observacoesDivEditar');
+            const observacoesEdit = document.getElementById('observacoes_edit');
+            dataEdit = document.getElementById('data_edit');
+            const horasEdit = document.getElementById('horas_edit');
+            const funcionarioLock = document.getElementById('funcionario_id_lock');
+
+            const $funcionarioSelect = $('#funcionario_id_edit');
+            const $projetoSelect = $('#projeto_id_edit');
+
+            // 1) Inicializa Select2 UMA vez só
+            $funcionarioSelect.select2({
+                ...regrasSelect2Colaborador,
+                dropdownParent: $('#modalEditar')
+            });
+
+            $projetoSelect.select2({
+                ...regrasSelect2Contrato,
+                dropdownParent: $('#modalEditar')
+            });
+
+            // 2) Função helper para lidar com observações
+            function atualizarObservacoes(contratoId, observacaoOriginal) {
+                const idNum = Number(contratoId);
+
+                if (projetosEspeciais.includes(idNum)) {
+                    // Mostra o campo
+                    observacoesDivEditar.classList.remove('hidden');
+                    observacoesEdit.setAttribute('required', 'required');
+
+                    // Se veio algo do backend, mantemos. Se não, deixa o valor atual
+                    if (observacaoOriginal && observacaoOriginal !== 'None') {
+                        // Só sobrescreve se o campo estiver vazio,
+                        // assim não apagamos algo que o usuário digitou após mudar o select
+                        if (!observacoesEdit.value) {
+                            observacoesEdit.value = observacaoOriginal;
+                        }
+                    }
+                } else {
+                    // Esconde e limpa para enviar "" para o backend
+                    observacoesDivEditar.classList.add('hidden');
+                    observacoesEdit.removeAttribute('required');
+                    observacoesEdit.value = "";
+                }
+            }
+
+            // 3) Delegação de clique nos botões "editar"
+            document.addEventListener('click', function (event) {
                 const button = event.target.closest('.btn-editar');
                 if (!button) return;
 
-
                 const id = button.dataset.id;
                 const colaborador = button.dataset.func;
-                const colaborador_nome = button.dataset.funcnome;
+                const colaboradorNome = button.dataset.funcnome;
                 const contrato = button.dataset.proj;
                 const data = button.dataset.data;
                 const horas = button.dataset.horas;
-                const observacao = button.dataset.observacao;
+                const observacaoOriginal = button.dataset.observacao || "";
 
-                // inicializa Select2
-                $('#funcionario_id_edit').select2({
-                    ...regrasSelect2Colaborador,
-                    dropdownParent: $('#modalEditar')
-                });
-                $('#projeto_id_edit').select2({
-                    ...regrasSelect2Contrato,
-                    dropdownParent: $('#modalEditar')
-                });
+                // Preenche selects
+                $funcionarioSelect.val(colaborador).trigger('change');
+                $projetoSelect.val(contrato).trigger('change');
 
-                $('#funcionario_id_edit').val(colaborador).trigger('change');
-                $('#projeto_id_edit').val(contrato).trigger('change');
+                // Preenche campos simples
+                dataEdit.value = data;
+                horasEdit.value = horas;
+                observacoesEdit.value = observacaoOriginal !== "None" ? observacaoOriginal : "";
 
-                document.getElementById('data_edit').value = data;
-                document.getElementById('horas_edit').value = horas;
-                document.getElementById('observacoes_edit').value = observacao !== "None" ? observacao : "";
-
-                if(document.getElementById('funcionario_id_lock')){
-                    document.getElementById('funcionario_id_lock').value = colaborador_nome;
+                if (funcionarioLock) {
+                    funcionarioLock.value = colaboradorNome;
                 }
 
-                const observacoesDivEditar = document.getElementById('observacoesDivEditar');
-                const observacoes_edit = document.getElementById('observacoes_edit')
-                if (projetosEspeciais.includes(Number(contrato))) {
-                    // Div de observações aparece
-                    observacoesDivEditar.classList.remove('hidden');
-                    observacoes_edit.setAttribute("required", true)
-                } else {
-                    observacoesDivEditar.classList.add('hidden');
-                    observacoes_edit.removeAttribute("required")
-                }
+                // Ajusta visibilidade / obrigatoriedade das observações com o contrato atual
+                atualizarObservacoes(contrato, observacaoOriginal);
+
+                // 4) Handler de mudança do projeto (sempre limpando o antigo antes)
+                $projetoSelect.off('change.modaleditar').on('change.modaleditar', function () {
+                    let valor = $(this).val();
+
+                    // Se for select2 multiple, vem array; se não, vem string
+                    if (Array.isArray(valor)) {
+                        valor = valor[0];
+                    }
+
+                    atualizarObservacoes(valor, observacaoOriginal);
+                });
 
                 // Atualiza o action do form
-                document.getElementById('formEditar').action = "{{ url_for('registros.editar', id=0) }}".replace('0', id);
+                formEditar.action = "{{ url_for('registros.editar', id=0) }}".replace('0', id);
             });
-
-            modalEditar.addEventListener('hidden.bs.modal', function () {
-                // destrói os selects para evitar sobreposição
-                if ($('#funcionario_id_edit').hasClass("select2-hidden-accessible")) {
-                    $('#funcionario_id_edit').select2('destroy');
-                }
-                if ($('#projeto_id_edit').hasClass("select2-hidden-accessible")) {
-                    $('#projeto_id_edit').select2('destroy');
-                }
-            });
-
         </script>
+
 
         <!-- Modal excluir -->
         <script>            
