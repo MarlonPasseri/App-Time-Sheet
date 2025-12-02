@@ -84,9 +84,9 @@ class BancoDeDados:
     def _carregar_projetos_predefinidos(self):
         """Carrega os projetos predefinidos no sistema."""
         projetos_predefinidos = [
-            {"id": 9010, "nome": "Atividades Internas"},
-            {"id": 9014, "nome": "Propostas"},
-            {"id": 9021, "nome": "Férias e Recessos"}
+            {"id": "9010", "nome": "Atividades Internas"},
+            {"id": "9014", "nome": "Propostas"},
+            {"id": "9021", "nome": "Férias e Recessos"}
         ]
         
         for projeto_data in projetos_predefinidos:
@@ -473,17 +473,19 @@ class BancoDeDados:
     #     return False
     
     # Métodos para Projetos
-    def adicionar_projeto(self, nome):
+    def adicionar_projeto(self, id, nome):
         """Adiciona um novo projeto."""
         # Gera um novo ID (maior ID existente + 1)
-        novo_id = 1
-        if self.projetos:
-            novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
-        
-        projeto = Projeto(id=novo_id, nome=nome)
-        self.projetos.append(projeto)
-        self.salvar_dados()
-        return projeto
+        # novo_id = 1
+        # if self.projetos:
+        #     novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
+        projeto = self.obter_projeto(id)
+        if not projeto:        
+            projeto = Projeto(id=id, nome=nome)
+            self.projetos.append(projeto)
+            self.salvar_dados()
+            return projeto
+        return None
     
     def obter_projeto(self, id):
         """Obtém um projeto pelo ID."""
@@ -491,6 +493,11 @@ class BancoDeDados:
             if projeto.id == id:
                 return projeto
         return None
+    
+    def obter_total_horas_por_projeto(self, projeto_id):
+        """Retorna a soma das horas trabalhadas de um projeto."""
+        registros = self.listar_registros_horas(projeto_id=projeto_id)
+        return sum(r.horas_trabalhadas for r in registros)
     
     def listar_projetos(self):
         """Lista todos os projetos."""

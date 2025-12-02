@@ -171,9 +171,31 @@
                                             <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-medium cursor-pointer">calendar_month</span>
                                         </div>
                                     </div>
-                                    <div class="col-12 text-end">
-                                        <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
-                                        <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary">Limpar Filtros</a>
+                                    <div class="col-12 h-12 text-end">
+                                        <!-- Botão Buscar -->
+                                    <button 
+                                        type="submit"
+                                        class="inline-flex items-center justify-center px-4 min-w-24 h-full rounded-lg
+                                            bg-gray-900 text-white text-sm font-medium
+                                            hover:bg-gray-800 active:bg-gray-700
+                                            dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200
+                                            transition-colors"
+                                    >
+                                        Buscar
+                                    </button>
+
+                                    <!-- Botão Limpar -->
+                                    <a 
+                                        href="{{ url_for('registros.listar') }}"
+                                        class="inline-flex items-center justify-center px-4 min-w-24 h-full rounded-lg
+                                            border border-gray-300 text-gray-700 bg-white text-sm font-medium
+                                            hover:bg-gray-50 active:bg-gray-100
+                                            dark:border-gray-600 dark:text-gray-200 dark:bg-gray-800
+                                            dark:hover:bg-gray-700
+                                            transition-colors"
+                                    >
+                                        Limpar
+                                    </a>
                                     </div>
                                 </form>
                             </div>
@@ -222,7 +244,7 @@
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
                                             <td class="px-6 py-4 text-center">{{ registro.horas_trabalhadas | formatar_horas }}</td>
                                             <td class="px-6 py-4 text-center">
-                                                <button class="btn-editar p-2 text-primary hover:text-primary/80 cursor-pointer"
+                                                <button class="btn-editar text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-blue-400"
                                                 type="button" data-bs-toggle="modal"
                                                 data-bs-target="#modalEditar"
                                                 data-id="{{ registro.id }}"
@@ -235,7 +257,7 @@
                                                 >
                                                     <span class="material-symbols-outlined text-xl">edit</span>
                                                 </button>
-                                                <button type="button" class="btn-excluir p-2 text-error hover:text-error/80"
+                                                <button type="button" class="btn-excluir text-gray-500 dark:text-gray-400 hover:text-red-500"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#modalExcluir"
                                                 data-id="{{ registro.id }}"
@@ -268,10 +290,30 @@
                                         </a>
                                     {% endif %}
 
-                                    {% for p in range(1, total_paginas + 1) %}
+                                    <!-- Quantidade máxima de botões -->
+                                    {% set window = 5 %}
+
+                                    <!-- Calcula primeira página do bloco -->
+                                    {% set start = pagina - 2 %}
+                                    {% if start < 1 %}
+                                        {% set start = 1 %}
+                                    {% endif %}
+
+                                    <!-- Calcula última página do bloco -->
+                                    {% set end = start + window - 1 %}
+                                    {% if end > total_paginas %}
+                                        {% set end = total_paginas %}
+                                        {% set start = end - window + 1 %}
+                                        {% if start < 1 %}
+                                            {% set start = 1 %}
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <!-- Renderiza os botões da janela dinâmica -->
+                                    {% for p in range(start, end + 1) %}
                                         <a href="?{{ query_string_pages }}&pagina={{ p }}"
                                         class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
-                                        {{ p }}
+                                            {{ p }}
                                         </a>
                                     {% endfor %}
 
@@ -282,7 +324,7 @@
                                     {% endif %}
                                 </nav>
                                 <div id="contador-resultados">
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 px-5 text-center">
                                         Mostrando
                                         <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
                                         a
@@ -402,38 +444,74 @@
                     </div>
 
                     <form id="formExcluir" method="POST" action="">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="block font-medium mb-1">Colaborador</label>
-                                <input type="text" id="funcionario_del" name="funcionario_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                        <div class="modal-body space-y-4">
+
+                            <!-- Colaborador -->
+                            <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                                <label for="funcionario_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                    Colaborador
+                                </label>
+                                <span
+                                    id="funcionario_del"
+                                    name="funcionario_del"
+                                    class="block text-sm font-medium text-gray-900 dark:text-white"
+                                ></span>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="block font-medium mb-1">Contrato</label>
-                                <input type="text" id="projeto_del" name="projeto_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
+                            <!-- Contrato -->
+                            <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                                <label for="projeto_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                    Contrato
+                                </label>
+                                <span
+                                    id="projeto_del"
+                                    name="projeto_del"
+                                    class="block text-sm font-medium text-gray-900 dark:text-white"
+                                ></span>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="block font-medium mb-1">Data</label>
-                                <div class="relative flex w-full flex-1 items-stretch rounded-lg">
-                                    <input type="month" id="data_del" name="data_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
-                                    <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-gray-medium cursor-pointer">calendar_month</span>
+                            <!-- Data -->
+                            <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label for="data_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200">
+                                        Data
+                                    </label>
+                                </div>
+                                <span
+                                    id="data_del"
+                                    name="data_del"
+                                    class="block text-sm font-medium text-gray-900 dark:text-white"
+                                ></span>
+                            </div>
+
+                            <!-- Horas Trabalhadas -->
+                            <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                                <label for="horas_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                    Horas Trabalhadas
+                                </label>
+                                <span
+                                    id="horas_del"
+                                    name="horas_del"
+                                    class="block text-sm font-medium text-gray-900 dark:text-white"
+                                ></span>
+                            </div>
+
+                            <!-- Descrição da Atividade (opcional / escondido) -->
+                            <div class="mb-3 hidden" id="observacoesDivExcluir">
+                                <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                                    <label for="observacoes_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                        Descrição da Atividade
+                                    </label>
+                                    <p
+                                        id="observacoes_del"
+                                        name="observacoes_del"
+                                        class="text-sm text-gray-900 dark:text-white whitespace-pre-line"
+                                    ></p>
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="block font-medium mb-1">Horas Trabalhadas</label>
-                                <input type="text" id="horas_del" name="horas_del" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" readonly>
-                            </div>
-
-                            <div class="mb-3 hidden" id="observacoesDivExcluir">
-                                <label class="flex flex-col">
-                                    <label class="block font-medium mb-1">Descrição da Atividade</label>
-                                    <textarea id="observacoes_del" name="observacoes_del" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." readonly></textarea>
-                                </label>
-                            </div>
-
                         </div>
+
 
                         <div class="modal-footer border-t dark:border-gray-700">
                         <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
@@ -744,11 +822,11 @@
                 const horas = button.dataset.horas;
                 const observacao = button.dataset.observacao;
 
-                document.getElementById('funcionario_del').value = colaborador;
-                document.getElementById('projeto_del').value = contrato;
-                document.getElementById('data_del').value = data;
-                document.getElementById('horas_del').value = horas;
-                document.getElementById('observacoes_del').value = observacao;
+                document.getElementById('funcionario_del').innerHTML = colaborador;
+                document.getElementById('projeto_del').innerHTML = contrato;
+                document.getElementById('data_del').innerHTML = data.split("-").reverse().join("-");
+                document.getElementById('horas_del').innerHTML = horas;
+                document.getElementById('observacoes_del').innerHTML = observacao;
 
                 const observacoesDivExcluir = document.getElementById('observacoesDivExcluir');
                 if (projetosEspeciais.includes(Number(contrato_id))) {
