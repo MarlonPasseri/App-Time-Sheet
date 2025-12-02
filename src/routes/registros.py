@@ -29,7 +29,7 @@ def listar():
     if admin_check:
         funcionario_id = request.args.get('funcionario_id_filter', type=int)
     else:
-        funcionario_id = usuario.funcionario_id
+        funcionario_id = usuario.id
 
     # Obtém os registros filtrados
     registros = db.listar_registros_horas(
@@ -149,12 +149,14 @@ def adicionar():
         if admin_check:
             funcionario_id = request.form.get('funcionario_id', type=int)
         else:
-            funcionario_id = usuario.funcionario_id
+            funcionario_id = usuario.id
 
         projeto_id = request.form.get('projeto_id', type=int)
         data_str = request.form.get('data')
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
-        observacoes = request.form.get('observacoes', None)
+        observacoes = request.form.get('observacoes').strip() or ''
+
+        projetosEspeciais = [9010, 9014, 9021];
 
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             try:
@@ -163,18 +165,23 @@ def adicionar():
 
                 # Bloqueia se o mês for futuro
                 if data_obj > hoje.replace(day=1):
-                    flash('Não é possível adicionar registros para meses futuros.', 'warning')
+                    flash('Não é possível adicionar registros para meses futuros.', 'danger')
                     return redirect(url_for('registros.listar'))
 
                 # Se for o mês atual, limita pelas horas do dia atual
                 if data_obj.month == hoje.month and data_obj.year == hoje.year:
                     limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
                     if horas_trabalhadas > limite_horas:
-                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
+                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'danger')
                         return redirect(url_for('registros.listar'))
 
                 # Tudo certo, salva no formato MM-YYYY
                 data = data_obj.strftime('%m-%Y')
+
+                if projeto_id in projetosEspeciais:
+                    if len(observacoes) < 5:
+                        flash(f'É necessário inserir mais detalhes na observação desse GP.', 'danger')
+                        return redirect(url_for('registros.listar'))
 
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
@@ -225,12 +232,17 @@ def editar(id):
         if admin_check:
             funcionario_id = int(request.form.getlist('funcionario_id_edit')[0])  # Corrigido para obter o valor corretamente
         else:
-            funcionario_id = usuario.funcionario_id
+            funcionario_id = usuario.id
 
         projeto_id = int(request.form.getlist('projeto_id_edit')[0])  # Corrigido para obter o valor corretamente
         data_str = request.form.get('data_edit')
         horas_trabalhadas = request.form.get('horas_edit', type=float)
-        observacoes = request.form.get('observacoes_edit', None)
+        observacoes = request.form.get('observacoes_edit').strip() or ''
+
+        projetosEspeciais = [9010, 9014, 9021];
+
+        print("Observação: ", observacoes)
+        print("Tipo:", type(observacoes))
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
@@ -240,18 +252,24 @@ def editar(id):
 
                 # Bloqueia se o mês for futuro
                 if data_obj > hoje.replace(day=1):
-                    flash('Não é possível adicionar registros para meses futuros.', 'warning')
+                    flash('Não é possível adicionar registros para meses futuros.', 'danger')
                     return redirect(url_for('registros.listar'))
 
                 # Se for o mês atual, limita pelas horas do dia atual
                 if data_obj.month == hoje.month and data_obj.year == hoje.year:
                     limite_horas = hoje.day * 24  # Exemplo: dia 5 = 120 horas possíveis
                     if horas_trabalhadas > limite_horas:
-                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'warning')
+                        flash(f'Não é possível adicionar mais de {limite_horas} horas no mês atual.', 'danger')
                         return redirect(url_for('registros.listar'))
 
                 # Tudo certo, salva no formato MM-YYYY
                 data = data_obj.strftime('%m-%Y')
+
+                if projeto_id in projetosEspeciais:
+                    if len(observacoes) < 5:
+                        flash(f'É necessário inserir mais detalhes na observação desse GP.', 'danger')
+                        return redirect(url_for('registros.listar'))
+
                 if db.atualizar_registro_horas(
                     id=id,
                     funcionario_id=funcionario_id,
@@ -304,6 +322,13 @@ def exportar():
     # Obtém o usuário atual
     usuario_id = session.get('usuario_id')
     usuario = db.obter_usuario(usuario_id)
+    admin_check = usuario and usuario.tipo == 'administrador'
+
+    # Se funcionário, força o próprio ID
+    if admin_check:
+        funcionario_id = request.args.get('funcionario_id_filter', type=int)
+    else:
+        funcionario_id = usuario.id
     
     # Obtém a lista de meses/anos disponíveis
     meses_anos = set()
@@ -315,6 +340,8 @@ def exportar():
     
     return render_template(
         'registros/exportar.html',
+        admin_check=admin_check,
+        funcionario_logado=funcionario_id,
         usuario=usuario,
         funcionarios=funcionarios,
         projetos=projetos,
@@ -395,13 +422,13 @@ def exportar_personalizado():
     projeto_id = request.form.get('projeto_id', type=int)
     mes_ano = request.form.get('mes_ano')
     
-    # Verificar se o usuário é administrador ou funcionário
-    usuario_id = session.get('usuario_id')
-    usuario = db.obter_usuario(usuario_id)
+    # # Verificar se o usuário é administrador ou funcionário
+    # usuario_id = session.get('usuario_id')
+    # usuario = db.obter_usuario(usuario_id)
     
-    # Se for funcionário, força o filtro pelo seu próprio ID
-    if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
-        funcionario_id = usuario.funcionario_id
+    # # Se for funcionário, força o filtro pelo seu próprio ID
+    # if usuario and usuario.tipo == 'funcionario' and usuario.funcionario_id:
+    #     funcionario_id = usuario.funcionario_id
     
     # Usar o formato personalizado do template
     try:

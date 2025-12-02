@@ -541,7 +541,7 @@ class BancoDeDados:
             projeto_id=projeto_id,
             data=data,
             horas_trabalhadas=horas_trabalhadas,
-            observacoes=observacoes
+            observacoes=observacoes if observacoes != "" else None
         )
         self.registros_horas.append(registro)
         self.salvar_dados()
@@ -604,7 +604,7 @@ class BancoDeDados:
         if horas_trabalhadas is not None:
             registro.horas_trabalhadas = horas_trabalhadas
         
-        if observacoes is not None:
+        if observacoes is not None and observacoes != "":
             registro.observacoes = observacoes
 
         self.salvar_dados()
