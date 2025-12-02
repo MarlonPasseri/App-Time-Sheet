@@ -124,7 +124,7 @@
                             <div class="md:col-span-4 hidden" id="observacoesDiv">
                                 <label class="flex flex-col">
                                     <p class="text-text-dark dark:text-gray-300 text-base font-medium leading-normal pb-2">Descrição da Atividade</p>
-                                    <textarea id="observacoes" name="observacoes" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." required></textarea>
+                                    <textarea id="observacoes" name="observacoes" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." minlength="5" oninvalid="this.setCustomValidity('Digite pelo menos 5 caracteres')" oninput="this.setCustomValidity('')"></textarea>
                                 </label>
                             </div>
                             <div class=" flex md:col-span-1 items-end" id="btnRegistroDiv">
@@ -369,7 +369,7 @@
                             <div class="mb-3 hidden" id="observacoesDivEditar">
                                 <label class="flex flex-col">
                                     <label class="block font-medium mb-1">Descrição da Atividade</label>
-                                    <textarea id="observacoes_edit" name="observacoes_edit" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." required></textarea>
+                                    <textarea id="observacoes_edit" name="observacoes_edit" class="form-textarea flex w-full min-w-0 flex-1 resize-y overflow-hidden rounded-lg text-text-dark dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark min-h-28 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal" placeholder="Descreva brevemente as atividades realizadas..." minlength="5" oninvalid="this.setCustomValidity('Digite pelo menos 5 caracteres')" oninput="this.setCustomValidity('')"></textarea>
                                 </label>
                             </div>
 
@@ -539,8 +539,12 @@
                     const id = Number(valor?.[0]);
 
                     if (projetosEspeciais.includes(id)) {
+
+                        const observacoes = document.getElementById("observacoes")
+
                         // Div de observações aparece
                         observacoesDiv.classList.remove('hidden');
+                        observacoes.setAttribute("required", true)
 
                         // ajusta o grid da div de horas para ocupar 2 colunas
                         horasDiv.classList.remove("md:col-span-1");
@@ -551,6 +555,7 @@
                         btnRegistroDiv.classList.add("md:col-start-4");
                     } else {
                         observacoesDiv.classList.add('hidden');
+                        observacoes.removeAttribute("required")
 
                         // div horas div volta ao normal
                         horasDiv.classList.remove("md:col-span-2");
@@ -698,11 +703,14 @@
                 }
 
                 const observacoesDivEditar = document.getElementById('observacoesDivEditar');
+                const observacoes_edit = document.getElementById('observacoes_edit')
                 if (projetosEspeciais.includes(Number(contrato))) {
                     // Div de observações aparece
                     observacoesDivEditar.classList.remove('hidden');
+                    observacoes_edit.setAttribute("required", true)
                 } else {
                     observacoesDivEditar.classList.add('hidden');
+                    observacoes_edit.removeAttribute("required")
                 }
 
                 // Atualiza o action do form

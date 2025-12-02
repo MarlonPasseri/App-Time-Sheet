@@ -96,6 +96,7 @@
                 <form method="POST" action="{{ url_for('registros.exportar_excel') }}" id="exportForm">
                     <div class="row mb-4">
                         <div class="col-md-4">
+                            {% if admin_check %}
                             <label for="funcionario_id" class="form-label">Funcionário</label>
                             <select class="form-select" id="funcionario_id" name="funcionario_id">
                                 <option value="">Todos</option>
@@ -103,6 +104,9 @@
                                     <option value="{{ funcionario.id }}">{{ funcionario.nome }}</option>
                                 {% endfor %}
                             </select>
+                            {% else %}
+                            <input type="hidden" name="funcionario_id" value="{{ funcionario_logado }}">
+                            {% endif %}
                         </div>
                         <div class="col-md-4">
                             <label for="projeto_id" class="form-label">Projeto</label>
