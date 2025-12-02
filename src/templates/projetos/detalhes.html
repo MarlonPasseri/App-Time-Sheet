@@ -86,7 +86,7 @@
                             {% set registros = db.listar_registros_horas(projeto_id=projeto.id) %}
                             {% if registros %}
                                 {% for registro in registros %}
-                                    {% set funcionario = db.obter_funcionario(registro.funcionario_id) %}
+                                    {% set funcionario = db.obter_usuario(registro.funcionario_id) %}
                                     <tr>
                                         <td>{{ funcionario.nome if funcionario else 'Desconhecido' }}</td>
                                         <td>{{ registro.data }}</td>

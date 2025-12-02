@@ -117,10 +117,30 @@
                                     </a>
                                 {% endif %}
 
-                                {% for p in range(1, total_paginas + 1) %}
+                                <!-- Quantidade máxima de botões -->
+                                {% set window = 5 %}
+
+                                <!-- Calcula primeira página do bloco -->
+                                {% set start = pagina - 2 %}
+                                {% if start < 1 %}
+                                    {% set start = 1 %}
+                                {% endif %}
+
+                                <!-- Calcula última página do bloco -->
+                                {% set end = start + window - 1 %}
+                                {% if end > total_paginas %}
+                                    {% set end = total_paginas %}
+                                    {% set start = end - window + 1 %}
+                                    {% if start < 1 %}
+                                        {% set start = 1 %}
+                                    {% endif %}
+                                {% endif %}
+
+                                <!-- Renderiza os botões da janela dinâmica -->
+                                {% for p in range(start, end + 1) %}
                                     <a href="?{{ query_string_pages }}&pagina={{ p }}"
                                     class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
-                                    {{ p }}
+                                        {{ p }}
                                     </a>
                                 {% endfor %}
 
@@ -131,7 +151,7 @@
                                 {% endif %}
                             </nav>
                             <div id="contador-resultados">
-                                <p class="text-sm text-gray-700 dark:text-gray-300">
+                                <p class="text-sm text-gray-700 dark:text-gray-300 px-5 text-center">
                                     Mostrando
                                     <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
                                     a
@@ -150,7 +170,7 @@
                                     {% endif %}
                                 {% endfor %}
 
-                                <label for="funcionarios_por_pagina" class="w-full text-sm font-medium">Registros por página:</label>
+                                <label for="funcionarios_por_pagina" class="w-full text-sm font-medium">Colaboradores por página:</label>
                                 <select name="funcionarios_por_pagina" id="funcionarios_por_pagina" onchange="this.form.submit()" class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer">
                                     <option value="5" {% if funcionarios_por_pagina == 5 %}selected{% endif %}>5</option>
                                     <option value="10" {% if funcionarios_por_pagina == 10 %}selected{% endif %}>10</option>

@@ -110,7 +110,7 @@ def listar():
     except Exception as e:
         logging.exception("Erro ao listar funcionários:")
         flash('Erro ao carregar a lista de funcionários.', 'danger')
-        # return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
 
 # =====================

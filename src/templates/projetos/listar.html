@@ -1,150 +1,394 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Time Sheet - Contratos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Colaboradores</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('contratos.listar') }}">Contratos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if session.user_id %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.perfil') }}">👤 Perfil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.logout') }}">🚪 Logout</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+    {% block head %}
+        <link href="https://fonts.googleapis.com" rel="preconnect"/>
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    {% endblock %}
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Lista de Contratos</h2>
-            <div class="d-flex gap-2">
-                <div class="input-group w-auto">
-                    <input type="text" class="form-control filter-input" placeholder="Filtrar contratos..." data-table="tabelaProjetos" data-column="1">
-                    <button class="btn btn-outline-secondary" type="button">Filtrar</button>
+    {% block main %}
+        <main class="flex-1 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+                    <p class="text-[#333333] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Contratos</p>
+                    <button data-bs-toggle="modal" data-bs-target="#modalImportarContratos" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
+                        <span class="material-symbols-outlined">add</span>Importar Lista
+                    </button>
                 </div>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalImportarContratos">
-                    <i class="bi bi-upload"></i> Importar Lista
-                </button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                {% if projetos %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover" id="tabelaProjetos">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome do Contrato</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for projeto in projetos %}
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="lg:col-span-3 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm" id="registros-fragment">
+                        <form method="GET" action="{{ url_for('contratos.listar') }}" id="formBusca" class="row g-3">
+                            <div class="min-w-40 h-12 col-md-8">
+                                <div class="flex flex-1 items-stretch rounded-lg h-full">
+                                    <div class="text-gray-400 dark:text-gray-500 flex border-none bg-background-light dark:bg-gray-700 items-center justify-center pl-4 rounded-l-lg border-r-0">
+                                        <span class="material-symbols-outlined">search</span>
+                                    </div>
+                                    <input 
+                                        type="text"
+                                        name="search"
+                                        placeholder="Buscar por nome ou código..."
+                                        value="{{ search if search else '' }}"
+                                        class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg
+                                        text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none
+                                        bg-background-light dark:bg-gray-700 placeholder:text-gray-400 dark:placeholder-gray-500
+                                        px-4 rounded-l-none border-l-0 pl-2 text-base font-normal h-full"
+                                    />
+                                </div>
+                            </div>
+                            <div class="gap-2 col-md-4 h-12 flex">
+                                <button type="submit" class="btn btn-primary min-w-24">Buscar</button>
+                                <a href="{{ url_for('contratos.listar') }}" class="btn btn-secondary flex items-center justify-center min-w-24">Limpar</a>
+                            </div>
+                        </form>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="border-b border-gray-200 dark:border-gray-700">
                                     <tr>
-                                        <td>{{ projeto.id }}</td>
-                                        <td>{{ projeto.nome }}</td>
-                                        <td>
-                                            <a href="{{ url_for('contratos.detalhes', id=projeto.id) }}" class="btn btn-sm btn-info">
-                                                Detalhes
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                                            <a href="{{ url_for('contratos.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=cod&direcao={% if ordenar == 'cod' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
+                                                COD <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
                                             </a>
-                                        </td>
+                                        </th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">
+                                            <a href="{{ url_for('contratos.listar') }}{% if query_string %}?{{ query_string }}&{% else %}?{% endif %}ordenar=nome&direcao={% if ordenar == 'nome' and direcao == 'asc' %}desc{% else %}asc{% endif %}" class="text-decoration-none ajax-link">
+                                                Contrato <span class="material-symbols-outlined text-sm align-middle">swap_vert</span>
+                                            </a>
+                                        </th>
+                                        <!-- <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Status</th> -->
+                                        <!-- <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Prazo</th> -->
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Horas</th>
+                                        <th class="p-4 text-sm font-semibold text-gray-500 dark:text-gray-400">Ações</th>
                                     </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {% if projetos|length == 0 %}
+                                        <tr>
+                                            <td colspan="5" class="px-6 py-4 text-center text-gray-medium dark:text-gray-500">
+                                                Nenhum contrato cadastrado.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% for projeto in projetos %}
+                                        <tr>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ projeto.id }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ projeto.nome }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ db.obter_total_horas_por_projeto(projeto.id) | formatar_horas }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">
+                                                <a href="{{ url_for('contratos.detalhes', id=projeto.id) }}" class="inline-flex items-center px-3 py-1.5 bg-info/10 text-info rounded-lg text-sm font-medium hover:bg-info/20">
+                                                    <span class="material-symbols-outlined">find_in_page</span>
+                                                </a>
+                                                <button type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-id="{{ projeto.id }}" data-nome="{{ projeto.nome }}" data-totalhora="{{ db.obter_total_horas_por_projeto(projeto.id) | formatar_horas }}" class="btn-excluir text-gray-500 dark:text-gray-400 hover:text-red-500" title="Excluir Projeto">
+                                                    <span class="material-symbols-outlined">delete</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex justify-between items-center p-4">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                {% if pagina > 1 %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ pagina - 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                        <span class="material-symbols-outlined text-base">chevron_left</span>
+                                    </a>
+                                {% endif %}
+
+                                <!-- Quantidade máxima de botões -->
+                                {% set window = 5 %}
+
+                                <!-- Calcula primeira página do bloco -->
+                                {% set start = pagina - 2 %}
+                                {% if start < 1 %}
+                                    {% set start = 1 %}
+                                {% endif %}
+
+                                <!-- Calcula última página do bloco -->
+                                {% set end = start + window - 1 %}
+                                {% if end > total_paginas %}
+                                    {% set end = total_paginas %}
+                                    {% set start = end - window + 1 %}
+                                    {% if start < 1 %}
+                                        {% set start = 1 %}
+                                    {% endif %}
+                                {% endif %}
+
+                                <!-- Renderiza os botões da janela dinâmica -->
+                                {% for p in range(start, end + 1) %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ p }}"
+                                    class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
+                                        {{ p }}
+                                    </a>
                                 {% endfor %}
-                            </tbody>
-                        </table>
+
+
+                                {% if pagina < total_paginas %}
+                                    <a href="?{{ query_string_pages }}&pagina={{ pagina + 1 }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 ajax-link">
+                                        <span class="material-symbols-outlined text-base">chevron_right</span>
+                                    </a>
+                                {% endif %}
+                            </nav>
+                            <div id="contador-resultados">
+                                <p class="text-sm text-gray-700 dark:text-gray-300 px-5 text-center">
+                                    Mostrando 
+                                    <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
+                                    a 
+                                    <span class="font-medium" id="mostrando-ate">{{ mostrando_fim }}</span>
+                                    de 
+                                    <span class="font-medium" id="total-resultados">{{ total_resultados }}</span>
+                                    resultados
+                                </p>
+                            </div>
+
+                            <form method="GET" id="form_pages" class="flex items-center gap-4">
+                                <!-- Mantém os filtros atuais -->
+                                {% for k, v in request.args.items() %}
+                                    {% if k != 'contratos_por_pagina' and k != 'pagina' %}
+                                        <input type="hidden" name="{{ k }}" value="{{ v }}">
+                                    {% endif %}
+                                {% endfor %}
+
+                                <label for="contratos_por_pagina" class="w-full text-sm font-medium">Contratos por página:</label>
+                                <select name="contratos_por_pagina" id="contratos_por_pagina" onchange="this.form.submit()" class="form-select flex w-full min-w-0 resize-none overflow-hidden rounded-lg text-text-primary dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-gray-medium/50 dark:border-gray-700 bg-white dark:bg-background-dark h-14 placeholder:text-gray-medium p-[15px] text-base font-normal leading-normal cursor-pointer">
+                                    <option value="5" {% if contratos_por_pagina == 5 %}selected{% endif %}>5</option>
+                                    <option value="10" {% if contratos_por_pagina == 10 %}selected{% endif %}>10</option>
+                                    <option value="20" {% if contratos_por_pagina == 20 %}selected{% endif %}>20</option>
+                                    <option value="50" {% if contratos_por_pagina == 50 %}selected{% endif %}>50</option>
+                                </select>
+                            </form>
+                        </div>
                     </div>
-                {% else %}
-                    <div class="alert alert-info">
-                        Nenhum contrato cadastrado.
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
+                        <h3 class="text-lg font-bold text-[#333333] dark:text-white mb-2">Cadastrados</h3>
+                        {% if search %}
+                            <div class="text-sm text-gray-500 dark:text-gray-400">com filtro: {{ search }}</div>
+                        {% endif %}
+                        <div class="flex flex-col items-center justify-center p-1">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">Total</span>
+                            {% if search %}
+                                <span class="text-3xl font-bold text-[#333333] dark:text-white">{{ projetos | length }}</span>
+                            {% else %}
+                                <span class="text-3xl font-bold text-[#333333] dark:text-white">{{ total_projetos }}</span>
+                            {% endif %}
+                        </div>
+                        <!-- <div class="mt-6 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-sm text-gray-600 dark:text-gray-300"><span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>Ativo</span>
+                                <span class="font-medium text-[#333333] dark:text-white">3</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-sm text-gray-600 dark:text-gray-300"><span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>Em Espera</span>
+                                <span class="font-medium text-[#333333] dark:text-white">3</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                    <span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span>Atrasado</span>
+                                <span class="font-medium text-[#333333] dark:text-white">1</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="flex items-center text-sm text-gray-600 dark:text-gray-300"><span class="w-3 h-3 rounded-full bg-gray-400 mr-2"></span>Concluído</span>
+                                <span class="font-medium text-[#333333] dark:text-white">5</span>
+                            </div>
+                        </div> -->
                     </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
-
-    <!-- Modal para Importar Contratos -->
-    <div class="modal fade" id="modalImportarContratos" tabindex="-1" aria-labelledby="modalImportarContratosLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalImportarContratosLabel">Importar Lista de Contratos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ url_for('contratos.importar_lista') }}" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="arquivo_contratos" class="form-label">Arquivo Excel (.xlsx)</label>
-                            <input type="file" class="form-control" id="arquivo_contratos" name="arquivo_contratos" accept=".xlsx,.xls" required>
-                            <div class="form-text">
-                                O arquivo deve conter as colunas: ID e Nome (ou GP e Nome)
+            </div>
+        </main>
+
+        <!-- Modal para Importar Contratos -->
+        <div class="modal fade" id="modalImportarContratos" tabindex="-1" aria-labelledby="modalImportarContratosLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalImportarContratosLabel">Importar Lista de Contratos</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ url_for('contratos.importar_lista') }}" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="arquivo_contratos" class="form-label">Arquivo Excel (.xlsx)</label>
+                                <input type="file" class="form-control p-3" id="arquivo_contratos" name="arquivo_contratos" accept=".xlsx,.xls" required>
+                                <div class="form-text">
+                                    O arquivo deve conter as colunas: ID e Nome (ou GP e Nome)
+                                </div>
+                            </div>
+                            <div class="alert alert-info">
+                                <strong>Formato esperado:</strong><br>
+                                - Coluna A: ID/GP do contrato<br>
+                                - Coluna B: Nome do contrato<br>
+                                - Primeira linha pode conter cabeçalhos
                             </div>
                         </div>
-                        <div class="alert alert-info">
-                            <strong>Formato esperado:</strong><br>
-                            - Coluna A: ID/GP do contrato<br>
-                            - Coluna B: Nome do contrato<br>
-                            - Primeira linha pode conter cabeçalhos
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Importar</button>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Importar</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
+        <!-- Modal excluir -->
+        <div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered max-w-xl">
+                <div class="modal-content dark:bg-gray-800">
+
+                <div class="modal-header border-b dark:border-gray-700">
+                    <h5 class="modal-title text-xl font-semibold">Confirmar Remoção Contrato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="formExcluir" method="POST" action="">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <span id="id_contrato_del"></span> - 
+                            <span id="contrato_del"></span>
+                        </div>
+                        <div class="mb-3">
+                            <span>Horas Cadastradas:</span>
+                            <span id="horas_contrato_del"></span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer border-t dark:border-gray-700">
+                    <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/80">
+                        Remover
+                    </button>
+                    </div>
+                </form>
+
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block script %}
+
+        <script>
+            document.getElementById("formBusca").addEventListener("submit", function(e) {
+                e.preventDefault(); // impede o recarregamento da página
+            });
+            document.querySelector("input[name='search']").addEventListener("change", () => {
+                document.getElementById("formBusca").submit();
+            });
+        </script>
+
+        <!-- Modal excluir -->
+        <script>
+            const modalExcluir = document.getElementById('modalExcluir');
+            // Delegation: escuta em document
+            document.addEventListener('click', function(event) {
+                const button = event.target.closest('.btn-excluir');
+                if (!button) return;
+
+                const id = button.dataset.id;
+                const nome = button.dataset.nome;
+                const total_horas = button.dataset.totalhora;
+
+                // Preenche os campos do modal com os dados do colaborador
+                document.getElementById('id_contrato').value = id;
+                document.getElementById('contrato_del').value = email;
+                document.getElementById('horas_contrato_del').value = cod;
+
+                // Atualiza o action do form
+                document.getElementById('formExcluir').action = "{{ url_for('contratos.remover', id=0) }}".replace('0', id);
+            });
+
+        </script>
+
+        <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação, ordenação ou search -->
+        <script>
+            (function () {
+            // Seletor do bloco que será atualizado
+            const targetSelector = '#registros-fragment';
+
+            // Função principal que busca a URL e injeta o tbody novo
+            async function carregarFragmento(url, pushUrl = true) {
+                try {
+                const resp = await fetch(url, { credentials: 'same-origin' });
+                if (!resp.ok) throw new Error('Erro na requisição: ' + resp.status);
+
+                const html = await resp.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // pega o fragmento do servidor
+                const novoFragmento = doc.querySelector(targetSelector);
+                if (!novoFragmento) {
+                    console.warn('Fragmento não encontrado na resposta. Verifique se o servidor retorna #lista-registros no HTML.');
+                    return;
+                }
+
+                // substitui o conteúdo
+                const alvo = document.querySelector(targetSelector);
+                if (!alvo) {
+                    console.warn('Elemento alvo não encontrado no DOM:', targetSelector);
+                    return;
+                }
+                alvo.innerHTML = novoFragmento.innerHTML;
+
+                // atualiza a url no navegador sem recarregar (mantém histórico)
+                if (pushUrl) {
+                    history.pushState({}, '', url);
+                }
+
+                // opcional: você pode re-executar código que precisa rodar após atualização
+                // ex: re-inicializar tooltips, select2, etc.
+                // function initAfterAjax() {
+                // // inicializar select2 novamente
+                // $('#funcionario_id_filter').select2(regrasSelect2Colaborador);
+
+                // $('#projeto_id_filter').select2(regrasSelect2Contrato);
+
+                // } initAfterAjax();
+
+                } catch (err) {
+                console.error('Erro ao carregar fragmento via AJAX:', err);
+                }
+            }
+
+            // Delegation: intercepta todos os cliques em links com .ajax-link
+            document.addEventListener('click', function (ev) {
+                const a = ev.target.closest('a.ajax-link');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href) return;
+                // ignora links externos
+                const sameOrigin = new URL(href, location.href).origin === location.origin;
+                if (!sameOrigin) return;
+
+                ev.preventDefault();
+                carregarFragmento(href, true);
+            });
+
+            // Tratamento de navegação do browser (back/forward)
+            window.addEventListener('popstate', function () {
+                // quando o usuário clica em voltar/avançar, carrega a URL atual
+                carregarFragmento(location.href, false);
+            });
+
+            // Se você tem um form de filtros que usa GET, intercepta submit e usa fetch:
+            // const filtroForm = document.getElementById('form_filter'); // ajuste id se diferente
+            // if (filtroForm) {
+            //     filtroForm.addEventListener('submit', function (e) {
+            //     e.preventDefault();
+            //     const params = new URLSearchParams(new FormData(filtroForm)).toString();
+            //     const url = location.pathname + (params ? '?' + params : '');
+            //     carregarFragmento(url, true);
+            //     });
+
+            //     // opcional: interceptar onchange para submits automáticos
+            //     filtroForm.addEventListener('change', function () {
+            //     // se quiser enviar on change, descomente:
+            //     // e.preventDefault();
+            //     // const params = new URLSearchParams(new FormData(filtroForm)).toString();
+            //     // carregarFragmento(location.pathname + (params ? '?' + params : ''), true);
+            //     });
+            // }
+            })();
+        </script>
+    {% endblock %}

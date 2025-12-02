@@ -268,10 +268,30 @@
                                         </a>
                                     {% endif %}
 
-                                    {% for p in range(1, total_paginas + 1) %}
+                                    <!-- Quantidade máxima de botões -->
+                                    {% set window = 5 %}
+
+                                    <!-- Calcula primeira página do bloco -->
+                                    {% set start = pagina - 2 %}
+                                    {% if start < 1 %}
+                                        {% set start = 1 %}
+                                    {% endif %}
+
+                                    <!-- Calcula última página do bloco -->
+                                    {% set end = start + window - 1 %}
+                                    {% if end > total_paginas %}
+                                        {% set end = total_paginas %}
+                                        {% set start = end - window + 1 %}
+                                        {% if start < 1 %}
+                                            {% set start = 1 %}
+                                        {% endif %}
+                                    {% endif %}
+
+                                    <!-- Renderiza os botões da janela dinâmica -->
+                                    {% for p in range(start, end + 1) %}
                                         <a href="?{{ query_string_pages }}&pagina={{ p }}"
                                         class="{% if p == pagina %}z-10 bg-primary/20 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium{% else %}bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 relative inline-flex items-center px-4 py-2 border text-sm font-medium{% endif %} ajax-link">
-                                        {{ p }}
+                                            {{ p }}
                                         </a>
                                     {% endfor %}
 
@@ -282,7 +302,7 @@
                                     {% endif %}
                                 </nav>
                                 <div id="contador-resultados">
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                                    <p class="text-sm text-gray-700 dark:text-gray-300 px-5 text-center">
                                         Mostrando
                                         <span class="font-medium" id="mostrando-de">{{ mostrando_inicio }}</span>
                                         a
