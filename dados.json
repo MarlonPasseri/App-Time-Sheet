@@ -555,7 +555,7 @@
       "funcionario_id": 2,
       "projeto_id": 9010,
       "data": "10-2025",
-      "horas_trabalhadas": 7.5,
+      "horas_trabalhadas": 8.0,
       "observacoes": null
     },
     {
@@ -605,6 +605,46 @@
       "data": "11-2025",
       "horas_trabalhadas": 11.0,
       "observacoes": "Testando3"
+    },
+    {
+      "id": 26,
+      "funcionario_id": 4,
+      "projeto_id": 9010,
+      "data": "11-2025",
+      "horas_trabalhadas": 26.0,
+      "observacoes": "teste"
+    },
+    {
+      "id": 27,
+      "funcionario_id": 4,
+      "projeto_id": 656,
+      "data": "11-2025",
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
+    },
+    {
+      "id": 28,
+      "funcionario_id": 4,
+      "projeto_id": 9010,
+      "data": "11-2025",
+      "horas_trabalhadas": 2.0,
+      "observacoes": "teste4"
+    },
+    {
+      "id": 29,
+      "funcionario_id": 4,
+      "projeto_id": 9014,
+      "data": "11-2025",
+      "horas_trabalhadas": 26.0,
+      "observacoes": "teste5"
+    },
+    {
+      "id": 30,
+      "funcionario_id": 4,
+      "projeto_id": 669,
+      "data": "12-2025",
+      "horas_trabalhadas": 10.0,
+      "observacoes": null
     }
   ],
   "usuarios": [
@@ -646,12 +686,12 @@
     },
     {
       "id": 5,
-      "nome": "TesteC",
+      "nome": "TesteC C",
       "email": "testec@geoprojetos.com.br",
-      "senha_hash": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3",
+      "senha_hash": "1b22a24404c8fdca57ba9a49ddb302f0becc85fe4e93c9b412055451463dbe8e",
       "tipo": "funcionario",
       "cod_funcionario": "9",
-      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/p1/52120539-simples-masculino-avatar-silhueta-icone-homem-com-curto-cabelo-do-utilizador-perfis-e-contato-em-formacao-dentro-formularios-isolado-ilustracao-vetor.jpg"
     },
     {
       "id": 6,
