@@ -84,9 +84,9 @@ class BancoDeDados:
     def _carregar_projetos_predefinidos(self):
         """Carrega os projetos predefinidos no sistema."""
         projetos_predefinidos = [
-            {"id": 9010, "nome": "Atividades Internas"},
-            {"id": 9014, "nome": "Propostas"},
-            {"id": 9021, "nome": "Férias e Recessos"}
+            {"id": "9010", "nome": "Atividades Internas"},
+            {"id": "9014", "nome": "Propostas"},
+            {"id": "9021", "nome": "Férias e Recessos"}
         ]
         
         for projeto_data in projetos_predefinidos:

@@ -1,117 +1,108 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>App Time Sheet - Detalhes do Projeto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">Controle de Horas</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Início</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('colaboradores.listar') }}">Funcionários</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ url_for('contratos.listar') }}">Projetos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.listar') }}">Registros de Horas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('registros.exportar') }}">Exportar Relatórios</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    <div class="container mt-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
+{% block main %}
+<div class="w-full">
+    <div class="max-w-5xl mx-auto px-4 py-6">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Detalhes do Projeto</h2>
-            <a href="{{ url_for('contratos.listar') }}" class="btn btn-secondary">
+        <!-- Cabeçalho -->
+        <div class="flex items-center justify-between gap-3 mb-6">
+            <p class="text-dark dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">
+                Detalhes do Projeto
+            </p>
+
+            <a href="{{ url_for('contratos.listar') }}"
+            class="inline-flex items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
                 Voltar para Lista
             </a>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Informações do Projeto</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>ID:</strong> {{ projeto.id }}</p>
+        <div class="space-y-6">
+
+            <!-- Card: Informações do Projeto -->
+            <section class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm p-5 md:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-semibold text-gray-800 dark:text-gray-100">
+                        Informações do Projeto
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- ID -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                        <span class="block text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                            ID
+                        </span>
+                        <span class="block mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                            {{ projeto.id }}
+                        </span>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Nome:</strong> {{ projeto.nome }}</p>
+
+                    <!-- Nome -->
+                    <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                        <span class="block text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                            Nome
+                        </span>
+                        <span class="block mt-1 text-sm font-medium text-gray-900 dark:text-white">
+                            {{ projeto.nome }}
+                        </span>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="card">
-            <div class="card-header">
-                <h5>Registros de Horas neste Projeto</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Funcionário</th>
-                                <th>Data</th>
-                                <th>Horas Trabalhadas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% set registros = db.listar_registros_horas(projeto_id=projeto.id) %}
-                            {% if registros %}
+            <!-- Card: Registros de Horas -->
+            <section class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm p-5 md:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-semibold text-gray-800 dark:text-gray-100">
+                        Registros de Horas neste Projeto
+                    </h2>
+                </div>
+
+                {% set registros = db.listar_registros_horas(projeto_id=projeto.id) %}
+
+                {% if registros %}
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
+                                    <th class="px-4 py-2 text-left text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                                        Funcionário
+                                    </th>
+                                    <th class="px-4 py-2 text-left text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                                        Data
+                                    </th>
+                                    <th class="px-4 py-2 text-left text-xs font-semibold tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                                        Horas Trabalhadas
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
                                 {% for registro in registros %}
                                     {% set funcionario = db.obter_usuario(registro.funcionario_id) %}
-                                    <tr>
-                                        <td>{{ funcionario.nome if funcionario else 'Desconhecido' }}</td>
-                                        <td>{{ registro.data }}</td>
-                                        <td>{{ registro.horas_trabalhadas }}</td>
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-900/40">
+                                        <td class="px-4 py-2 text-sm text-gray-800 dark:text-gray-100">
+                                            {{ funcionario.nome if funcionario else 'Desconhecido' }}
+                                        </td>
+                                        <td class="px-4 py-2 text-sm text-gray-700 dark:text-gray-200">
+                                            {{ registro.data }}
+                                        </td>
+                                        <td class="px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ registro.horas_trabalhadas }}
+                                        </td>
                                     </tr>
                                 {% endfor %}
-                            {% else %}
-                                <tr>
-                                    <td colspan="3" class="text-center">Nenhum registro de horas para este projeto.</td>
-                                </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="mt-2 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/40 px-4 py-6 text-center">
+                        <p class="text-sm text-gray-600 dark:text-gray-300">
+                            Nenhum registro de horas para este projeto.
+                        </p>
+                    </div>
+                {% endif %}
+            </section>
+
         </div>
     </div>
-
-    <footer class="bg-light py-3 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Sistema de Controle de Horas</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock %}

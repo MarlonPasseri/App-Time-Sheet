@@ -83,7 +83,7 @@
                     <span class="material-symbols-outlined">schedule</span>
                     <p class="text-sm {% if request.endpoint == 'registros.listar' %} font-bold {% else %} font-medium {% endif %}">Registro de Horas</p>
                 </a>
-                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint == 'contratos.listar' %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('contratos.listar') }}">
+                <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer {% if request.endpoint.startswith('contratos.') %} text-primary bg-primary/10 {% endif %}" href="{{ url_for('contratos.listar') }}">
                     <span class="material-symbols-outlined">business_center</span>
                     <p class="text-sm {% if request.endpoint == 'contratos.listar' %} font-bold {% else %} font-medium {% endif %}">Contratos</p>
                 </a>

@@ -9,7 +9,7 @@
         <main class="flex-1 px-4 sm:px-6 lg:px-8">
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-                    <p class="text-[#333333] dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Colaboradores</p>
+                    <p class="text-dark dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Colaboradores</p>
                     <a href="{{ url_for('colaboradores.adicionar') }}" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
                         <span class="material-symbols-outlined">add</span>
                         <span class="truncate">Novo Colaborador</span>
@@ -31,25 +31,47 @@
                                             placeholder="Buscar por nome ou código..."
                                             value="{{ search }}"
                                             class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg
-                                            text-[#333333] dark:text-white focus:outline-0 focus:ring-0 border-none
+                                            text-dark dark:text-white focus:outline-0 focus:ring-0 border-none
                                             bg-background-light dark:bg-gray-700 placeholder:text-gray-400 dark:placeholder-gray-500
                                             px-4 rounded-l-none border-l-0 pl-2 text-base font-normal h-full"
                                         />
                                     </div>
                                 </div>
                                 <div class="gap-2 col-md-4 h-12 flex">
-                                    <button type="submit" class="btn btn-primary min-w-24">Buscar</button>
-                                    <a href="{{ url_for('colaboradores.listar') }}" class="btn btn-secondary flex items-center justify-center min-w-24">Limpar</a>
+                                    <!-- Botão Buscar -->
+                                    <button 
+                                        type="submit"
+                                        class="inline-flex items-center justify-center px-4 min-w-24 h-full rounded-lg
+                                            bg-gray-900 text-white text-sm font-medium
+                                            hover:bg-gray-800 active:bg-gray-700
+                                            dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200
+                                            transition-colors"
+                                    >
+                                        Buscar
+                                    </button>
+
+                                    <!-- Botão Limpar -->
+                                    <a 
+                                        href="{{ url_for('colaboradores.listar') }}"
+                                        class="inline-flex items-center justify-center px-4 min-w-24 h-full rounded-lg
+                                            border border-gray-300 text-gray-700 bg-white text-sm font-medium
+                                            hover:bg-gray-50 active:bg-gray-100
+                                            dark:border-gray-600 dark:text-gray-200 dark:bg-gray-800
+                                            dark:hover:bg-gray-700
+                                            transition-colors"
+                                    >
+                                        Limpar
+                                    </a>
                                 </div>
                             </form>
                             <!-- <div class="flex gap-3 overflow-x-auto">
                                 <button class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-gray-700 px-4">
-                                    <p class="text-[#333333] dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por status</p>
-                                    <span class="material-symbols-outlined text-[#333333] dark:text-gray-300">expand_more</span>
+                                    <p class="text-dark dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por status</p>
+                                    <span class="material-symbols-outlined text-dark dark:text-gray-300">expand_more</span>
                                 </button>
                                 <button class="flex h-12 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-background-light dark:bg-gray-700 px-4">
-                                    <p class="text-[#333333] dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por funcionário</p>
-                                    <span class="material-symbols-outlined text-[#333333] dark:text-gray-300">expand_more</span>
+                                    <p class="text-dark dark:text-gray-300 text-sm font-medium leading-normal">Filtrar por funcionário</p>
+                                    <span class="material-symbols-outlined text-dark dark:text-gray-300">expand_more</span>
                                 </button>
                             </div> -->
                         </div>
@@ -181,7 +203,7 @@
                         </div>
                     </div>
                     <!-- <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-                        <h3 class="text-lg font-bold text-[#333333] dark:text-white mb-4">Colaboradores Cadastrados</h3>
+                        <h3 class="text-lg font-bold text-dark dark:text-white mb-4">Colaboradores Cadastrados</h3>
                         <div class="flex items-center justify-center">
                             <div class="relative w-64 h-64">
                                 <svg class="w-full h-full" viewbox="0 0 36 36">
@@ -192,7 +214,7 @@
                                     <path class="text-gray-400" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="40, 100" stroke-dashoffset="-60" stroke-width="3"></path>
                                 </svg>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span class="text-3xl font-bold text-[#333333] dark:text-white">{{ funcionarios|length }}</span>
+                                    <span class="text-3xl font-bold text-dark dark:text-white">{{ funcionarios|length }}</span>
                                     <span class="text-sm text-gray-500 dark:text-gray-400">Total</span>
                                 </div>
                             </div>
@@ -201,20 +223,20 @@
                             <div class="flex items-center justify-between">
                                 <span class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                     <span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>Cadastro Compelto</span>
-                                <span class="font-medium text-[#333333] dark:text-white">3</span>
+                                <span class="font-medium text-dark dark:text-white">3</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="flex items-center text-sm text-gray-600 dark:text-gray-300"><span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>Em Espera</span>
-                                <span class="font-medium text-[#333333] dark:text-white">3</span>
+                                <span class="font-medium text-dark dark:text-white">3</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="flex items-center text-sm text-gray-600 dark:text-gray-300">
                                     <span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span>Atrasado</span>
-                                <span class="font-medium text-[#333333] dark:text-white">1</span>
+                                <span class="font-medium text-dark dark:text-white">1</span>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="flex items-center text-sm text-gray-600 dark:text-gray-300"><span class="w-3 h-3 rounded-full bg-gray-400 mr-2"></span>Concluído</span>
-                                <span class="font-medium text-[#333333] dark:text-white">5</span>
+                                <span class="font-medium text-dark dark:text-white">5</span>
                             </div>
                         </div>
                     </div> -->
@@ -293,20 +315,34 @@
                 </div>
 
                 <form id="formExcluir" method="POST" action="">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                        <label for="nome_del" class="form-label">Nome do Colaborador</label>
-                        <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="nome_del" name="nome_del" readonly>
-                    </div>
-                        <div class="mb-3">
-                            <label for="email_del" class="form-label">Email do Colaborador</label>
-                            <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="email_del" name="email_del" readonly>
+                    <div class="modal-body space-y-4">
+
+                        <!-- Nome -->
+                        <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                            <label for="nome_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                Nome do Colaborador
+                            </label>
+                            <span id="nome_del" name="nome_del" class="block text-gray-900 dark:text-white font-medium"></span>
                         </div>
-                        <div class="mb-3">
-                            <label for="cod_funcionario_del" class="form-label">Código do Colaborador</label>
-                            <input type="text" class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600" id="cod_funcionario_del" name="cod_funcionario_del" readonly>
+
+                        <!-- Email -->
+                        <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                            <label for="email_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                Email do Colaborador
+                            </label>
+                            <span id="email_del" name="email_del" class="block text-gray-900 dark:text-white font-medium"></span>
                         </div>
+
+                        <!-- Código -->
+                        <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
+                            <label for="cod_funcionario_del" class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                                Código do Colaborador
+                            </label>
+                            <span id="cod_funcionario_del" name="cod_funcionario_del" class="block text-gray-900 dark:text-white font-medium"></span>
+                        </div>
+
                     </div>
+
 
                     <div class="modal-footer border-t dark:border-gray-700">
                     <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg"
@@ -373,9 +409,9 @@
                 const cod = button.dataset.cod;
 
                 // Preenche os campos do modal com os dados do colaborador
-                document.getElementById('nome_del').value = nome;
-                document.getElementById('email_del').value = email;
-                document.getElementById('cod_funcionario_del').value = cod;
+                document.getElementById('nome_del').innerHTML = nome;
+                document.getElementById('email_del').innerHTML = email;
+                document.getElementById('cod_funcionario_del').innerHTML = cod;
 
                 // Atualiza o action do form
                 document.getElementById('formExcluir').action = "{{ url_for('colaboradores.remover', id=0) }}".replace('0', id);

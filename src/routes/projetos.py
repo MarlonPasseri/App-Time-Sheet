@@ -95,12 +95,23 @@ def listar():
 @admin_required
 def detalhes(id):
     """Exibe os detalhes de um projeto. Acesso restrito a administradores."""
+
+    # Obtém o usuário atual
+    usuario_id = session.get('usuario_id')
+    usuario = db.obter_usuario(usuario_id)
+    admin_check = usuario and usuario.tipo == 'administrador'
+
     projeto = db.obter_projeto(id)
     if not projeto:
         flash('Projeto não encontrado!', 'danger')
         return redirect(url_for('contratos.listar'))
     
-    return render_template('projetos/detalhes.html', projeto=projeto, db=db)
+    return render_template(
+        'projetos/detalhes.html',
+        usuario=usuario,
+        admin_check=admin_check,
+        projeto=projeto,
+        db=db)
 
 @projetos_bp.route('/remover/<int:id>', methods=['POST'])
 @admin_required
