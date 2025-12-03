@@ -436,7 +436,7 @@ def exportar_personalizado():
     
     # Usar o formato personalizado do template
     try:
-        arquivo_excel = adaptar_exportacao_relatorio_mensal(
+        arquivo_excel, nome_arquivo = adaptar_exportacao_relatorio_mensal(
             db=db,
             funcionario_id=funcionario_id,
             projeto_id=projeto_id,
