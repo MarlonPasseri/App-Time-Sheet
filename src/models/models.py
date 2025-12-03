@@ -84,13 +84,13 @@ class BancoDeDados:
     def _carregar_projetos_predefinidos(self):
         """Carrega os projetos predefinidos no sistema."""
         projetos_predefinidos = [
-            {"id": "9010", "nome": "Atividades Internas"},
-            {"id": "9014", "nome": "Propostas"},
-            {"id": "9021", "nome": "Férias e Recessos"}
+            {"id": 1,"cod": "9010", "nome": "Atividades Internas"},
+            {"id": 2,"cod": "9014", "nome": "Propostas"},
+            {"id": 3,"cod": "9021", "nome": "Férias e Recessos"}
         ]
         
         for projeto_data in projetos_predefinidos:
-            projeto = Projeto(id=projeto_data["id"], nome=projeto_data["nome"])
+            projeto = Projeto(id=projeto_data["id"], cod=projeto_data["cod"], nome=projeto_data["nome"])
             self.projetos.append(projeto)
         
         print(f"Carregados {len(projetos_predefinidos)} projetos predefinidos.")
@@ -121,10 +121,11 @@ class BancoDeDados:
             self.usuarios = []
             
             # Carrega os projetos pré-definidos
-            self._carregar_projetos_predefinidos()
+            # self._carregar_projetos_predefinidos()
     
     def salvar_dados(self):
         """Salva os dados no arquivo JSON."""
+        
         dados = {
             # 'funcionarios': [f.to_dict() for f in self.funcionarios],
             'projetos': [p.to_dict() for p in self.projetos],
@@ -473,15 +474,19 @@ class BancoDeDados:
     #     return False
     
     # Métodos para Projetos
-    def adicionar_projeto(self, id, nome):
+    def adicionar_projeto(self, cod, nome):
         """Adiciona um novo projeto."""
+
         # Gera um novo ID (maior ID existente + 1)
-        # novo_id = 1
-        # if self.projetos:
-        #     novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
-        projeto = self.obter_projeto(id)
-        if not projeto:        
-            projeto = Projeto(id=id, nome=nome)
+        novo_id = 1
+        if self.projetos:
+            novo_id = max(p.id for p in self.projetos if p.id is not None) + 1
+
+        # Checa se o código já existe em outro projeto
+        projeto = any(p.cod == cod for p in self.projetos)
+
+        if not projeto:
+            projeto = Projeto(id=novo_id, cod=cod, nome=nome)
             self.projetos.append(projeto)
             self.salvar_dados()
             return projeto
@@ -503,11 +508,16 @@ class BancoDeDados:
         """Lista todos os projetos."""
         return self.projetos
     
-    def atualizar_projeto(self, id, nome):
+    def atualizar_projeto(self, id, cod, nome):
         """Atualiza um projeto existente."""
         projeto = self.obter_projeto(id)
-        if projeto:
+
+        # Checa se o código já existe em outro projeto
+        projeto_cod = any(p.cod == cod for p in self.projetos)
+
+        if projeto and not projeto_cod:
             projeto.nome = nome
+            projeto.cod = cod
             self.salvar_dados()
             return True
         return False
@@ -638,19 +648,25 @@ class BancoDeDados:
 #         return cls(id=data.get('id'), nome=data.get('nome'))
 
 class Projeto:
-    def __init__(self, id=None, nome=None):
+    def __init__(self, id=None, nome=None, cod=None):
         self.id = id
         self.nome = nome
+        self.cod = cod
     
     def to_dict(self):
         return {
             'id': self.id,
-            'nome': self.nome
+            'nome': self.nome,
+            'cod': self.cod
         }
     
     @classmethod
     def from_dict(cls, data):
-        return cls(id=data.get('id'), nome=data.get('nome'))
+        return cls(
+            id=data.get('id'),
+            nome=data.get('nome'),
+            cod=data.get('cod')
+        )
 
 class RegistroHoras:
     def __init__(self, id=None, funcionario_id=None, projeto_id=None, data=None, horas_trabalhadas=None, observacoes=None):

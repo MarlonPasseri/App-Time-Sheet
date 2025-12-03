@@ -14,7 +14,7 @@ def calcular_horas_por_projeto(usuario_id):
     horas_por_projeto = {}
     for registro in registros:
         projeto = db.obter_projeto(registro.projeto_id)
-        nome_projeto = projeto.nome if projeto else "Desconhecido"
+        nome_projeto = f"{projeto.cod}-{projeto.nome}" if projeto else "Desconhecido"
         horas_por_projeto[nome_projeto] = horas_por_projeto.get(nome_projeto, 0) + registro.horas_trabalhadas
 
     projetos = list(horas_por_projeto.keys())

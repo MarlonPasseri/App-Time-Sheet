@@ -53,7 +53,7 @@ def listar():
         registro_view = {
             'id': registro.id,
             'funcionario': funcionario.nome if funcionario else 'Desconhecido',
-            'projeto': f"{projeto.id} | {projeto.nome}" if projeto else 'Desconhecido',
+            'projeto': f"{projeto.cod} | {projeto.nome}" if projeto else 'Desconhecido',
             'data': registro.data,
             'horas_trabalhadas': registro.horas_trabalhadas,
             # Passagens para o modal de edição
@@ -156,7 +156,7 @@ def adicionar():
         horas_trabalhadas = request.form.get('horas_trabalhadas', type=float)
         observacoes = request.form.get('observacoes').strip() or ''
 
-        projetosEspeciais = [9010, 9014, 9021];
+        projetosEspeciais = [1, 2, 3];
 
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             try:
@@ -182,6 +182,8 @@ def adicionar():
                     if len(observacoes) < 5:
                         flash(f'É necessário inserir mais detalhes na observação desse GP.', 'danger')
                         return redirect(url_for('registros.listar'))
+                else:
+                    observacoes = None
 
                 registro = db.adicionar_registro_horas(
                     funcionario_id=funcionario_id,
@@ -215,6 +217,7 @@ def adicionar():
 @registros_bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 def editar(id):
     """Edita um registro de horas existente."""
+
     registro = db.obter_registro_horas(id)
     if not registro:
         flash('Registro não encontrado!', 'danger')
@@ -239,7 +242,7 @@ def editar(id):
         horas_trabalhadas = request.form.get('horas_edit', type=float)
         observacoes = request.form.get('observacoes_edit').strip() or ''
 
-        projetosEspeciais = [9010, 9014, 9021];
+        projetosEspeciais = [1, 2, 3];
         
         if funcionario_id and projeto_id and data_str and horas_trabalhadas:
             # Converte a data para o formato correto
@@ -266,6 +269,8 @@ def editar(id):
                     if len(observacoes) < 5:
                         flash(f'É necessário inserir mais detalhes na observação desse GP.', 'danger')
                         return redirect(url_for('registros.listar'))
+                else:
+                    observacoes = None
 
                 if db.atualizar_registro_horas(
                     id=id,
@@ -300,6 +305,7 @@ def editar(id):
 @registros_bp.route('/remover/<int:id>', methods=['POST'])
 def remover(id):
     """Remove um registro de horas."""
+
     if db.remover_registro_horas(id):
         flash('Registro de horas removido com sucesso!', 'success')
     else:
@@ -308,6 +314,7 @@ def remover(id):
     return redirect(url_for('registros.listar'))
 
 @registros_bp.route('/exportar', methods=['GET'])
+@login_required
 def exportar():
     """Exibe a página de exportação de relatórios."""
     funcionarios = db.listar_usuarios()
