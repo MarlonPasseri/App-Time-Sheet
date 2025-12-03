@@ -154,7 +154,7 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
             ws.cell(row=row_index, column=column_start+1, value=funcionario.nome)  # Nome Colaborador
             ws.cell(row=row_index, column=column_start+2, value=mes_ano)  # Mês
             ws.cell(row=row_index, column=column_start+3, value=horas_totais)  # Horas Mês
-            ws.cell(row=row_index, column=column_start+4, value=projeto_id)  # GP (código do projeto)
+            ws.cell(row=row_index, column=column_start+4, value=projeto.cod)  # GP (código do projeto)
             ws.cell(row=row_index, column=column_start+5, value=horas_projeto)  # Horas Trabalhadas
             ws.cell(row=row_index, column=column_start+6, value=proporcao)  # Proporção de Hora
             
@@ -166,16 +166,16 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
             ws.cell(row=row_index, column=column_start+6).number_format = '0.00%' # Proporção de Hora
             
             # Observações para projetos especiais
-            if projeto_id == 9014:  # GP 9014 (Propostas)
+            if projeto.cod == "9014":  # GP 9014 (Propostas)
                 # Buscar observações nos registros deste projeto
                 observacoes = [r.observacoes for r in registros_proj if hasattr(r, 'observacoes') and r.observacoes]
                 ws.cell(row=row_index, column=column_start+8, value=", ".join(observacoes) if observacoes else "")
             
-            if projeto_id == 9010:  # GP 9010 (Atividades Internas)
+            if projeto.cod == "9010":  # GP 9010 (Atividades Internas)
                 observacoes = [r.observacoes for r in registros_proj if hasattr(r, 'observacoes') and r.observacoes]
                 ws.cell(row=row_index, column=column_start+9, value=", ".join(observacoes) if observacoes else "")
             
-            if projeto_id == 9021:  # GP 9021 (Férias e Recessos)
+            if projeto.cod == "9021":  # GP 9021 (Férias e Recessos)
                 observacoes = [r.observacoes for r in registros_proj if hasattr(r, 'observacoes') and r.observacoes]
                 ws.cell(row=row_index, column=column_start+10, value=", ".join(observacoes) if observacoes else "")
             

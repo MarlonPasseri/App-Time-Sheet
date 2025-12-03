@@ -53,9 +53,9 @@ def listar():
         if ordenar:
             reverse = direcao == 'desc'
             if ordenar == 'cod':
-                funcionarios.sort(key=lambda f: f.cod_funcionario, reverse=reverse)
+                funcionarios = sorted(funcionarios, key=lambda f: f.cod_funcionario, reverse=reverse)
             elif ordenar == 'nome':
-                funcionarios.sort(key=lambda f: f.nome, reverse=reverse)
+                funcionarios = sorted(funcionarios, key=lambda f: f.nome, reverse=reverse)
             # elif ordenar == 'data':
             #     funcionarios.sort(key=lambda x: x['data'], reverse=not reverse)  # Mais recente primeiro
 

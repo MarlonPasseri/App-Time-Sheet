@@ -10,9 +10,11 @@
             <div class="max-w-7xl mx-auto">
                 <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
                     <p class="text-dark dark:text-white text-4xl font-black leading-tight tracking-[-0.033em] min-w-72">Contratos</p>
-                    <button data-bs-toggle="modal" data-bs-target="#modalImportarContratos" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
-                        <span class="material-symbols-outlined">add</span>Importar Lista
-                    </button>
+                    {% if admin_check %}
+                        <button data-bs-toggle="modal" data-bs-target="#modalImportarContratos" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em]">
+                            <span class="material-symbols-outlined">add</span>Importar Lista
+                        </button>
+                    {% endif %}
                 </div>
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
                     <div class="lg:col-span-3 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm" id="registros-fragment">
@@ -93,7 +95,7 @@
                                     {% endif %}
                                     {% for projeto in projetos %}
                                         <tr>
-                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ projeto.id }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ projeto.cod }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ projeto.nome }}</td>
                                             {% if admin_check %}
                                                 <td class="p-4 text-gray-600 dark:text-gray-300">{{ db.obter_total_horas_por_projeto(projeto.id) | formatar_horas }}</td>
@@ -101,7 +103,7 @@
                                                     <a href="{{ url_for('contratos.detalhes', id=projeto.id) }}" class="inline-flex items-center px-3 py-1.5 bg-info/10 text-info rounded-lg text-sm font-medium hover:bg-info/20">
                                                         <span class="material-symbols-outlined">find_in_page</span>
                                                     </a>
-                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-id="{{ projeto.id }}" data-nome="{{ projeto.nome }}" data-totalhora="{{ db.obter_total_horas_por_projeto(projeto.id) | formatar_horas }}" class="btn-excluir text-gray-500 dark:text-gray-400 hover:text-red-500" title="Excluir Projeto">
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#modalExcluir" data-id="{{ projeto.id }}" data-cod="{{ projeto.cod }}" data-nome="{{ projeto.nome }}" data-totalhora="{{ db.obter_total_horas_por_projeto(projeto.id) | formatar_horas }}" class="btn-excluir text-gray-500 dark:text-gray-400 hover:text-red-500" title="Excluir Projeto">
                                                         <span class="material-symbols-outlined">delete</span>
                                                     </button>
                                                 </td>
@@ -244,16 +246,39 @@
                     </div>
                     <form method="POST" action="{{ url_for('contratos.importar_lista') }}" enctype="multipart/form-data">
                         <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="arquivo_contratos" class="form-label">Arquivo Excel (.xlsx)</label>
-                                <input type="file" class="form-control p-3" id="arquivo_contratos" name="arquivo_contratos" accept=".xlsx,.xls" required>
+                            <div class="mb-3 ">
+                                <label for="arquivo_contratos" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Arquivo Excel (.xlsx)
+                                </label>
+                                <!-- Área visual customizada -->
+                                <label
+                                    for="arquivo_contratos"
+                                    class="flex items-center gap-2 px-4 py-3 bg-background-light dark:bg-gray-700 
+                                        border border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer 
+                                        text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600
+                                        transition select-none"
+                                >
+                                    <span class="material-symbols-outlined text-gray-500">upload_file</span>
+                                    <span id="label_arquivo_nome">Selecionar arquivo...</span>
+                                </label>
                                 <div class="form-text">
                                     O arquivo deve conter as colunas: ID e Nome (ou GP e Nome)
                                 </div>
+
+                                <!-- Input real escondido -->
+                                <input
+                                    type="file"
+                                    id="arquivo_contratos"
+                                    name="arquivo_contratos"
+                                    accept=".xlsx,.xls"
+                                    required
+                                    class="hidden"
+                                    onchange="atualizarNomeArquivo(this)"
+                                >
                             </div>
-                            <div class="alert alert-info">
+                            <div class="bg-gray-50 dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-lg p-3">
                                 <strong>Formato esperado:</strong><br>
-                                - Coluna A: ID/GP do contrato<br>
+                                - Coluna A: COD/GP do contrato<br>
                                 - Coluna B: Nome do contrato<br>
                                 - Primeira linha pode conter cabeçalhos
                             </div>
@@ -284,7 +309,7 @@
                             <div class="flex items-start gap-3">
                                 <span class="font-semibold text-gray-700 w-40">Contrato:</span>
                                 <div class="text-gray-900">
-                                    <span id="id_contrato_del" class="font-semibold"></span>
+                                    <span id="cod_contrato_del" class="font-semibold"></span>
                                     <span class="mx-1">-</span>
                                     <span id="contrato_del"></span>
                                 </div>
@@ -334,11 +359,12 @@
                 if (!button) return;
 
                 const id = button.dataset.id;
+                const cod = button.dataset.cod;
                 const nome = button.dataset.nome;
                 const total_horas = button.dataset.totalhora;
 
                 // Preenche os campos do modal com os dados do colaborador
-                document.getElementById('id_contrato_del').innerHTML = id;
+                document.getElementById('cod_contrato_del').innerHTML = cod;
                 document.getElementById('contrato_del').innerHTML = nome;
                 document.getElementById('horas_contrato_del').innerHTML = total_horas;
 
@@ -346,6 +372,14 @@
                 document.getElementById('formExcluir').action = "{{ url_for('contratos.remover', id=0) }}".replace('0', id);
             });
 
+        </script>
+
+        <script>
+            function atualizarNomeArquivo(input) {
+                const label = document.getElementById('label_arquivo_nome');
+                const nome = input.files.length > 0 ? input.files[0].name : "Selecionar arquivo...";
+                label.textContent = nome;
+            }
         </script>
 
         <!-- AJAX para não recarregar a página na mudança de renderização da tabela por paginação, ordenação ou search -->

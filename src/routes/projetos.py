@@ -27,9 +27,9 @@ def listar():
     if ordenar:
         reverse = direcao == 'desc'
         if ordenar == 'cod':
-            projetos.sort(key=lambda p: p.id, reverse=reverse)
+            projetos = sorted(projetos, key=lambda p: p.cod, reverse=reverse)
         elif ordenar == 'nome':
-            projetos.sort(key=lambda p: p.nome, reverse=reverse)
+            projetos = sorted(projetos, key=lambda p: p.nome, reverse=reverse)
 
     # Pega os parâmetros atuais do link e remove o 'ordenar' e 'direcao' para montar uma nova ordem
     from urllib.parse import urlencode
@@ -47,7 +47,7 @@ def listar():
         projetos = [
             p for p in projetos
             if search in p.nome.lower()
-            or search in str(p.id).lower()
+            or search in str(p.cod).lower()
         ]
     
     # --- Paginação ---
@@ -124,14 +124,14 @@ def remover(id):
         sucesso = db.remover_projeto(id)
         if sucesso:
             flash(
-                Markup(f"Contrato <strong>{projeto.id} - {projeto.nome}</strong> removido com sucesso!"), 'success'
+                Markup(f"Contrato <strong>{projeto.cod} - {projeto.nome}</strong> removido com sucesso!"), 'success'
             )
             logging.info(f"Contrato ID={id} removido do sistema.")
         else:
             flash('Erro ao remover contrato. Verifique se ele está cadastrado.', 'danger')
     except Exception as e:
         logging.exception("Erro ao remover contrato:")
-        flash(f"Erro inesperado ao remover contrato {projeto.id} - {projeto.nome}.", 'danger')
+        flash(f"Erro inesperado ao remover contrato {projeto.cod} - {projeto.nome}.", 'danger')
 
     return redirect(url_for('contratos.listar'))
 
@@ -169,36 +169,40 @@ def importar_lista():
         
         # Verifica se o arquivo tem pelo menos 2 colunas
         if len(df.columns) < 2:
-            flash('O arquivo deve ter pelo menos 2 colunas (ID e Nome)!', 'danger')
+            flash('O arquivo deve ter pelo menos 2 colunas (COD e Nome)!', 'danger')
             return redirect(url_for('contratos.listar'))
         
-        # Assume que as duas primeiras colunas são ID e Nome
-        df.columns = ['id', 'nome'] + list(df.columns[2:])
+        # Assume que as duas primeiras colunas são COD e Nome
+        df.columns = ['cod', 'nome'] + list(df.columns[2:])
         
         contratos_importados = 0
         contratos_atualizados = 0
+
+        projetos = db.listar_projetos()
+        # índice por código, para lookup O(1)
+        projetos_por_cod = {p.cod: p for p in projetos}
         
         for index, row in df.iterrows():
             try:
-                # Converte o ID para string para permitir IDs como "GP9014"
-                contrato_id = str(row['id']).strip()
+                # Converte o COD para string para permitir CODs como "GP9014"
+                contrato_cod = str(row['cod']).strip()
                 contrato_nome = str(row['nome']).strip()
                 
                 # Pula linhas vazias ou com dados inválidos
-                if pd.isna(row['id']) or pd.isna(row['nome']) or contrato_nome == '':
+                if pd.isna(row['cod']) or pd.isna(row['nome']) or contrato_nome == '':
                     continue
                 
-                # Verifica se o contrato já existe
-                projeto_existente = db.obter_projeto(contrato_id)
+                # Verifica se o cod contrato já existe
+                projeto_existente = projetos_por_cod.get(contrato_cod)
                 
                 if projeto_existente:
                     # Atualiza o nome se for diferente
                     if projeto_existente.nome != contrato_nome:
-                        db.atualizar_projeto(projeto_existente.id, contrato_nome)
+                        db.atualizar_projeto(id=projeto_existente.id, cod=contrato_cod, nome=contrato_nome)
                         contratos_atualizados += 1
                 else:
                     # Adiciona novo contrato
-                    db.adicionar_projeto(contrato_id, contrato_nome)
+                    db.adicionar_projeto(contrato_cod, contrato_nome)
                     contratos_importados += 1
                     
             except Exception as e:
@@ -217,4 +221,3 @@ def importar_lista():
         flash(f'Erro ao processar arquivo: {str(e)}', 'danger')
     
     return redirect(url_for('contratos.listar'))
-

@@ -1,447 +1,556 @@
 {
   "projetos": [
     {
-      "id": 3007,
-      "nome": "AGIS - Instrumentação - Metro de SP"
+      "id": 1,
+      "nome": "Atividades Internas",
+      "cod": "9010"
     },
     {
-      "id": 3000,
-      "nome": "ARTEMYN - A2630"
+      "id": 2,
+      "nome": "Propostas",
+      "cod": "9014"
     },
     {
-      "id": 3001,
-      "nome": "ATERPA - Instrumentação - Barragem Xingu"
+      "id": 3,
+      "nome": "Férias e Recessos",
+      "cod": "9021"
     },
     {
-      "id": 2449,
-      "nome": "Alumar - Instrumentação ARB 8 e 9"
+      "id": 4,
+      "nome": "Nexa - Barragem do Peixe",
+      "cod": "656"
     },
     {
-      "id": 2880,
-      "nome": "Alumar - Instrumentação ARB10"
+      "id": 5,
+      "nome": "Nexa - Barragem das Pedras",
+      "cod": "669"
     },
     {
-      "id": 2718,
-      "nome": "Alumar - Investigações Geotécnicas"
+      "id": 6,
+      "nome": "Senac - Instrumentação",
+      "cod": "1796"
     },
     {
-      "id": 2942,
-      "nome": "Alumar - Lagoa de Água Bruta"
+      "id": 7,
+      "nome": "Enel - Serviços de Consultoria por demandas",
+      "cod": "1881"
     },
     {
-      "id": 3039,
-      "nome": "Alumar - RDC 4605963"
+      "id": 8,
+      "nome": "Ecovix - Instrumentação",
+      "cod": "1905"
     },
     {
-      "id": 2969,
-      "nome": "Alumar - Sondagem do DET 1"
+      "id": 9,
+      "nome": "MRS - Instrumentação Barbacena",
+      "cod": "1924"
     },
     {
-      "id": 3021,
-      "nome": "Alupar - Investigações Geotécnicas PCH Queluz"
+      "id": 10,
+      "nome": "Heb - Prédio em Campos",
+      "cod": "2139"
     },
     {
-      "id": 3023,
-      "nome": "Aterpa - Drenos na PDE União"
+      "id": 11,
+      "nome": "Enel - Frame Civil",
+      "cod": "2240"
     },
     {
-      "id": 9010,
-      "nome": "Atividades Internas"
+      "id": 12,
+      "nome": "Hydro - Instrumentação",
+      "cod": "2298"
     },
     {
-      "id": 3004,
-      "nome": "BELOCAL / LHOIST - Investigação Geológica - Matozinhos"
+      "id": 13,
+      "nome": "Comosa - PCH Mosquitão",
+      "cod": "2317"
     },
     {
-      "id": 2516,
-      "nome": "Braskem - Apoio Comite"
+      "id": 14,
+      "nome": "Vale - Manutenção",
+      "cod": "2339"
     },
     {
-      "id": 2857,
-      "nome": "Braskem - Inc - São Miguel dos Campos"
+      "id": 15,
+      "nome": "Braskem - Instrumentação Maceió",
+      "cod": "2359"
     },
     {
-      "id": 2359,
-      "nome": "Braskem - Instrumentação Maceió"
+      "id": 16,
+      "nome": "Pavidez - Hydro Fase 3",
+      "cod": "2396"
     },
     {
-      "id": 2548,
-      "nome": "CCR - BR-101 e BR-116"
+      "id": 17,
+      "nome": "Seel - Coronel Domiciano",
+      "cod": "2400"
     },
     {
-      "id": 3005,
-      "nome": "CETENCO - Barragem Igarapeba- São Benedito do Sul"
+      "id": 18,
+      "nome": "Alumar - Instrumentação ARB 8 e 9",
+      "cod": "2449"
     },
     {
-      "id": 2991,
-      "nome": "CETENCO - Instrumentação - Estação PT Grande"
+      "id": 19,
+      "nome": "Vale - Consultoria Instrumentação",
+      "cod": "2510"
     },
     {
-      "id": 2888,
-      "nome": "CIMCOP - Projeto Brucutu"
+      "id": 20,
+      "nome": "Braskem - Apoio Comite",
+      "cod": "2516"
     },
     {
-      "id": 2317,
-      "nome": "Comosa - PCH Mosquitão"
+      "id": 21,
+      "nome": "CCR - BR-101 e BR-116",
+      "cod": "2548"
     },
     {
-      "id": 2868,
-      "nome": "Const. União Realizações - Instrumentação"
+      "id": 22,
+      "nome": "NTS - Instrumentação",
+      "cod": "2556"
     },
     {
-      "id": 3011,
-      "nome": "Construcap - Concessão BR-040"
+      "id": 23,
+      "nome": "Hydro - Automação",
+      "cod": "2565"
     },
     {
-      "id": 3037,
-      "nome": "Copasa - Erosões - Divinópolis"
+      "id": 24,
+      "nome": "Kinfra - KM-217=850 da BR-393RJ",
+      "cod": "2585"
     },
     {
-      "id": 2946,
-      "nome": "Copasa - Monte Carlos"
+      "id": 25,
+      "nome": "Enel - Laranja Doce",
+      "cod": "2586"
     },
     {
-      "id": 3042,
-      "nome": "DER-PI - Estudos, Peças e Técnicas e Projetos"
+      "id": 26,
+      "nome": "Puc - Perreira Passos",
+      "cod": "2597"
     },
     {
-      "id": 2786,
-      "nome": "EDF - Serra de Seridó Fase II"
+      "id": 27,
+      "nome": "SEFAC - Serra do Fação",
+      "cod": "2602"
     },
     {
-      "id": 2667,
-      "nome": "EDF - Taludes Serra do Seridó"
+      "id": 28,
+      "nome": "Vale - Mina do Caue - Itabira",
+      "cod": "2623"
     },
     {
-      "id": 3003,
-      "nome": "EGIS - Alternativa e Projetos de Conteções - BA"
+      "id": 29,
+      "nome": "Pavidez - Reabilitação DRS 1 - Fase 04",
+      "cod": "2664"
     },
     {
-      "id": 2986,
-      "nome": "EGIS - Geofísica TIC H83"
+      "id": 30,
+      "nome": "EDF - Taludes Serra do Seridó",
+      "cod": "2667"
     },
     {
-      "id": 2983,
-      "nome": "EGIS - Geotecnica e Contenção - BR-101"
+      "id": 31,
+      "nome": "Sefac - Erosões 6 e 73",
+      "cod": "2678"
     },
     {
-      "id": 2998,
-      "nome": "EGIS - Sonsagem e Ensaios LAB - 165-2025"
+      "id": 32,
+      "nome": "Possebon - Projeto Executivo",
+      "cod": "2704"
     },
     {
-      "id": 2987,
-      "nome": "EGIS - Sonsagem e Ensaios LAB - TIC H83"
+      "id": 33,
+      "nome": "Vale - Contrato ACG - Instrumentação Convencional",
+      "cod": "2712"
     },
     {
-      "id": 2989,
-      "nome": "EGIS - Túnel Botujuru"
+      "id": 34,
+      "nome": "Alumar - Investigações Geotécnicas",
+      "cod": "2718"
     },
     {
-      "id": 3030,
-      "nome": "ENGEVIX - Plano de instru. da Barragem do Fojo"
+      "id": 35,
+      "nome": "Hydro - Instalação e Automação",
+      "cod": "2747"
     },
     {
-      "id": 2997,
-      "nome": "EPR - Inspeção OAEs"
+      "id": 36,
+      "nome": "Ecorodovia - Investigação Geológica",
+      "cod": "2775"
     },
     {
-      "id": 2978,
-      "nome": "EPR - Instrumentação"
+      "id": 37,
+      "nome": "EDF - Serra de Seridó Fase II",
+      "cod": "2786"
     },
     {
-      "id": 2985,
-      "nome": "EPR - Levantamento de Campo"
+      "id": 38,
+      "nome": "Braskem - Inc - São Miguel dos Campos",
+      "cod": "2857"
     },
     {
-      "id": 3012,
-      "nome": "EPR - ParecerBR-277"
+      "id": 39,
+      "nome": "Const. União Realizações - Instrumentação",
+      "cod": "2868"
     },
     {
-      "id": 3017,
-      "nome": "EPR - Projeto Executo sinistros infra rodoviaria"
+      "id": 40,
+      "nome": "Alumar - Instrumentação ARB10",
+      "cod": "2880"
     },
     {
-      "id": 3013,
-      "nome": "EPR - Projeto de Recomposição de Taludes"
+      "id": 41,
+      "nome": "CIMCOP - Projeto Brucutu",
+      "cod": "2888"
     },
     {
-      "id": 2990,
-      "nome": "EPR - Projeto p/ sinistros de infra rodoviária"
+      "id": 42,
+      "nome": "Light - Segurança de Barragem",
+      "cod": "2913"
     },
     {
-      "id": 2775,
-      "nome": "Ecorodovia - Investigação Geológica"
+      "id": 43,
+      "nome": "Furnas - Campo do Meio",
+      "cod": "2915"
     },
     {
-      "id": 2920,
-      "nome": "Ecorodovia - Rio-Minas - Manilha-Magé"
+      "id": 44,
+      "nome": "PXENERGY - São Mateus do Sul",
+      "cod": "2917"
     },
     {
-      "id": 1905,
-      "nome": "Ecovix - Instrumentação"
+      "id": 45,
+      "nome": "Sesc - Pantanal",
+      "cod": "2919"
     },
     {
-      "id": 2240,
-      "nome": "Enel - Frame Civil"
+      "id": 46,
+      "nome": "Ecorodovia - Rio-Minas - Manilha-Magé",
+      "cod": "2920"
     },
     {
-      "id": 2586,
-      "nome": "Enel - Laranja Doce"
+      "id": 47,
+      "nome": "UFES - Estudo Geotécnico",
+      "cod": "2934"
     },
     {
-      "id": 1881,
-      "nome": "Enel - Serviços de Consultoria por demandas"
+      "id": 48,
+      "nome": "Alumar - Lagoa de Água Bruta",
+      "cod": "2942"
     },
     {
-      "id": 3036,
-      "nome": "FMAC Engenharia - Estudo de Estabilização"
+      "id": 49,
+      "nome": "MAFRIGEO - Barragens Sertãozinho (SP)",
+      "cod": "2943"
     },
     {
-      "id": 2999,
-      "nome": "Fazenda Javary - Visita e Inspeção"
+      "id": 50,
+      "nome": "Copasa - Monte Carlos",
+      "cod": "2946"
     },
     {
-      "id": 2915,
-      "nome": "Furnas - Campo do Meio"
+      "id": 51,
+      "nome": "NOVA 381 - Concessão BR-381",
+      "cod": "2950"
     },
     {
-      "id": 9021,
-      "nome": "Férias e Recessos"
+      "id": 52,
+      "nome": "PXENERGY - RISP - São Mateus do Sul",
+      "cod": "2952"
     },
     {
-      "id": 2139,
-      "nome": "Heb - Prédio em Campos"
+      "id": 53,
+      "nome": "Alumar - Sondagem do DET 1",
+      "cod": "2969"
     },
     {
-      "id": 9022,
-      "nome": "Horas Vagas"
+      "id": 54,
+      "nome": "EPR - Instrumentação",
+      "cod": "2978"
     },
     {
-      "id": 2565,
-      "nome": "Hydro - Automação"
+      "id": 55,
+      "nome": "Vale Verde - PDE Cavalo - Fase 1",
+      "cod": "2982"
     },
     {
-      "id": 2747,
-      "nome": "Hydro - Instalação e Automação"
+      "id": 56,
+      "nome": "EGIS - Geotecnica e Contenção - BR-101",
+      "cod": "2983"
     },
     {
-      "id": 2298,
-      "nome": "Hydro - Instrumentação"
+      "id": 57,
+      "nome": "EPR - Levantamento de Campo",
+      "cod": "2985"
     },
     {
-      "id": 2995,
-      "nome": "Hydro - Mecânica dos solos e asfalto"
+      "id": 58,
+      "nome": "EGIS - Geofísica TIC H83",
+      "cod": "2986"
     },
     {
-      "id": 3031,
-      "nome": "IDEP - Barragem Atalaia"
+      "id": 59,
+      "nome": "EGIS - Sonsagem e Ensaios LAB - TIC H83",
+      "cod": "2987"
     },
     {
-      "id": 3032,
-      "nome": "IDEP - Barragem Castelo"
+      "id": 60,
+      "nome": "EGIS - Túnel Botujuru",
+      "cod": "2989"
     },
     {
-      "id": 3026,
-      "nome": "IDP - Barragem Novo Algodões"
+      "id": 61,
+      "nome": "EPR - Projeto p/ sinistros de infra rodoviária",
+      "cod": "2990"
     },
     {
-      "id": 2585,
-      "nome": "Kinfra - KM-217=850 da BR-393RJ"
+      "id": 62,
+      "nome": "CETENCO - Instrumentação - Estação PT Grande",
+      "cod": "2991"
     },
     {
-      "id": 2913,
-      "nome": "Light - Segurança de Barragem"
+      "id": 63,
+      "nome": "Vale Verde - Instrumentação - Mina de Timpopeba",
+      "cod": "2992"
     },
     {
-      "id": 3041,
-      "nome": "Light - Sondagens Usinas Hidrelétricas Fontes"
+      "id": 64,
+      "nome": "Vale Verde - Instrumentação e Sondagem - Mina de Timpopeba",
+      "cod": "2993"
     },
     {
-      "id": 3014,
-      "nome": "Light - Túnel"
+      "id": 65,
+      "nome": "Hydro - Mecânica dos solos e asfalto",
+      "cod": "2995"
     },
     {
-      "id": 3034,
-      "nome": "Lopes Marinho - Novo Campus do IMPA"
+      "id": 66,
+      "nome": "Possebon - Limpeza drenos - DHP-TGB",
+      "cod": "2996"
     },
     {
-      "id": 2943,
-      "nome": "MAFRIGEO - Barragens Sertãozinho (SP)"
+      "id": 67,
+      "nome": "EPR - Inspeção OAEs",
+      "cod": "2997"
     },
     {
-      "id": 1924,
-      "nome": "MRS - Instrumentação Barbacena"
+      "id": 68,
+      "nome": "EGIS - Sonsagem e Ensaios LAB - 165-2025",
+      "cod": "2998"
     },
     {
-      "id": 9013,
-      "nome": "Marketing"
+      "id": 69,
+      "nome": "Fazenda Javary - Visita e Inspeção",
+      "cod": "2999"
     },
     {
-      "id": 3038,
-      "nome": "Mosaic Fertilizantes - Sondagem e Instrumentação"
+      "id": 70,
+      "nome": "ARTEMYN - A2630",
+      "cod": "3000"
     },
     {
-      "id": 3019,
-      "nome": "NOVA 381 - CCGP 0002_25 CQP e BIM"
+      "id": 71,
+      "nome": "ATERPA - Instrumentação - Barragem Xingu",
+      "cod": "3001"
     },
     {
-      "id": 2950,
-      "nome": "NOVA 381 - Concessão BR-381"
+      "id": 72,
+      "nome": "EGIS - Alternativa e Projetos de Conteções - BA",
+      "cod": "3003"
     },
     {
-      "id": 3008,
-      "nome": "NOVA 381 - Monitoramento de Terrapleno e Conteção"
+      "id": 73,
+      "nome": "BELOCAL / LHOIST - Investigação Geológica - Matozinhos",
+      "cod": "3004"
     },
     {
-      "id": 3029,
-      "nome": "NTS - Automação Medidor de Vazão"
+      "id": 74,
+      "nome": "CETENCO - Barragem Igarapeba- São Benedito do Sul",
+      "cod": "3005"
     },
     {
-      "id": 2556,
-      "nome": "NTS - Instrumentação"
+      "id": 75,
+      "nome": "AGIS - Instrumentação - Metro de SP",
+      "cod": "3007"
     },
     {
-      "id": 3022,
-      "nome": "NTS - Leitura Inclinômetros SHAFT GASTAU"
+      "id": 76,
+      "nome": "NOVA 381 - Monitoramento de Terrapleno e Conteção",
+      "cod": "3008"
     },
     {
-      "id": 669,
-      "nome": "Nexa - Barragem das Pedras"
+      "id": 77,
+      "nome": "Projeta - Coleta Denison - Alumar DET2",
+      "cod": "3009"
     },
     {
-      "id": 656,
-      "nome": "Nexa - Barragem do Peixe"
+      "id": 78,
+      "nome": "RDC 4598558 - Investigação Geotécnica (Campo e Lab.)",
+      "cod": "3010"
     },
     {
-      "id": 3024,
-      "nome": "Nova 381 - Elaboração de Portfolio de Projetos - Pacote 1"
+      "id": 79,
+      "nome": "Construcap - Concessão BR-040",
+      "cod": "3011"
     },
     {
-      "id": 3025,
-      "nome": "Nova 381 - Elaboração de Portfolio de Projetos - Pacote 2"
+      "id": 80,
+      "nome": "EPR - ParecerBR-277",
+      "cod": "3012"
     },
     {
-      "id": 2952,
-      "nome": "PXENERGY - RISP - São Mateus do Sul"
+      "id": 81,
+      "nome": "EPR - Projeto de Recomposição de Taludes",
+      "cod": "3013"
     },
     {
-      "id": 2917,
-      "nome": "PXENERGY - São Mateus do Sul"
+      "id": 82,
+      "nome": "Light - Túnel",
+      "cod": "3014"
     },
     {
-      "id": 2396,
-      "nome": "Pavidez - Hydro Fase 3"
+      "id": 83,
+      "nome": "EPR - Projeto Executo sinistros infra rodoviaria",
+      "cod": "3017"
     },
     {
-      "id": 3028,
-      "nome": "Pavidez - Instrumentação - Faixa 5"
+      "id": 84,
+      "nome": "Vale - RC 19923380 Sistemas Estabilização",
+      "cod": "3018"
     },
     {
-      "id": 3040,
-      "nome": "Pavidez - Mosaic Fertilizantes"
+      "id": 85,
+      "nome": "NOVA 381 - CCGP 0002_25 CQP e BIM",
+      "cod": "3019"
     },
     {
-      "id": 2664,
-      "nome": "Pavidez - Reabilitação DRS 1 - Fase 04"
+      "id": 86,
+      "nome": "Alupar - Investigações Geotécnicas PCH Queluz",
+      "cod": "3021"
     },
     {
-      "id": 2996,
-      "nome": "Possebon - Limpeza drenos - DHP-TGB"
+      "id": 87,
+      "nome": "NTS - Leitura Inclinômetros SHAFT GASTAU",
+      "cod": "3022"
     },
     {
-      "id": 2704,
-      "nome": "Possebon - Projeto Executivo"
+      "id": 88,
+      "nome": "Aterpa - Drenos na PDE União",
+      "cod": "3023"
     },
     {
-      "id": 3009,
-      "nome": "Projeta - Coleta Denison - Alumar DET2"
+      "id": 89,
+      "nome": "Nova 381 - Elaboração de Portfolio de Projetos - Pacote 1",
+      "cod": "3024"
     },
     {
-      "id": 9014,
-      "nome": "Propostas"
+      "id": 90,
+      "nome": "Nova 381 - Elaboração de Portfolio de Projetos - Pacote 2",
+      "cod": "3025"
     },
     {
-      "id": 2597,
-      "nome": "Puc - Perreira Passos"
+      "id": 91,
+      "nome": "IDP - Barragem Novo Algodões",
+      "cod": "3026"
     },
     {
-      "id": 3033,
-      "nome": "Quanta Consultoria - Parque Linear e Mergulhão"
+      "id": 92,
+      "nome": "Sesc - Sondagem",
+      "cod": "3027"
     },
     {
-      "id": 3010,
-      "nome": "RDC 4598558 - Investigação Geotécnica (Campo e Lab.)"
+      "id": 93,
+      "nome": "Pavidez - Instrumentação - Faixa 5",
+      "cod": "3028"
     },
     {
-      "id": 2602,
-      "nome": "SEFAC - Serra do Fação"
+      "id": 94,
+      "nome": "NTS - Automação Medidor de Vazão",
+      "cod": "3029"
     },
     {
-      "id": 2400,
-      "nome": "Seel - Coronel Domiciano"
+      "id": 95,
+      "nome": "ENGEVIX - Plano de instru. da Barragem do Fojo",
+      "cod": "3030"
     },
     {
-      "id": 2678,
-      "nome": "Sefac - Erosões 6 e 73"
+      "id": 96,
+      "nome": "IDEP - Barragem Atalaia",
+      "cod": "3031"
     },
     {
-      "id": 1796,
-      "nome": "Senac - Instrumentação"
+      "id": 97,
+      "nome": "IDEP - Barragem Castelo",
+      "cod": "3032"
     },
     {
-      "id": 2919,
-      "nome": "Sesc - Pantanal"
+      "id": 98,
+      "nome": "Quanta Consultoria - Parque Linear e Mergulhão",
+      "cod": "3033"
     },
     {
-      "id": 3027,
-      "nome": "Sesc - Sondagem"
+      "id": 99,
+      "nome": "Lopes Marinho - Novo Campus do IMPA",
+      "cod": "3034"
     },
     {
-      "id": 9012,
-      "nome": "Treinamento"
+      "id": 100,
+      "nome": "FMAC Engenharia - Estudo de Estabilização",
+      "cod": "3036"
     },
     {
-      "id": 2934,
-      "nome": "UFES - Estudo Geotécnico"
+      "id": 101,
+      "nome": "Copasa - Erosões - Divinópolis",
+      "cod": "3037"
     },
     {
-      "id": 2510,
-      "nome": "Vale - Consultoria Instrumentação"
+      "id": 102,
+      "nome": "Mosaic Fertilizantes - Sondagem e Instrumentação",
+      "cod": "3038"
     },
     {
-      "id": 2712,
-      "nome": "Vale - Contrato ACG - Instrumentação Convencional"
+      "id": 103,
+      "nome": "Alumar - RDC 4605963",
+      "cod": "3039"
     },
     {
-      "id": 2339,
-      "nome": "Vale - Manutenção"
+      "id": 104,
+      "nome": "Pavidez - Mosaic Fertilizantes",
+      "cod": "3040"
     },
     {
-      "id": 2623,
-      "nome": "Vale - Mina do Caue - Itabira"
+      "id": 105,
+      "nome": "Light - Sondagens Usinas Hidrelétricas Fontes",
+      "cod": "3041"
     },
     {
-      "id": 3018,
-      "nome": "Vale - RC 19923380 Sistemas Estabilização"
+      "id": 106,
+      "nome": "DER-PI - Estudos, Peças e Técnicas e Projetos",
+      "cod": "3042"
     },
     {
-      "id": 2992,
-      "nome": "Vale Verde - Instrumentação - Mina de Timpopeba"
+      "id": 107,
+      "nome": "Treinamento",
+      "cod": "9012"
     },
     {
-      "id": 2993,
-      "nome": "Vale Verde - Instrumentação e Sondagem - Mina de Timpopeba"
+      "id": 108,
+      "nome": "Marketing",
+      "cod": "9013"
     },
     {
-      "id": 2982,
-      "nome": "Vale Verde - PDE Cavalo - Fase 1"
+      "id": 109,
+      "nome": "Horas Vagas",
+      "cod": "9022"
     }
   ],
   "registros_horas": [
     {
       "id": 1,
       "funcionario_id": 2,
-      "projeto_id": 656,
+      "projeto_id": 4,
       "data": "06-2025",
       "horas_trabalhadas": 10.0,
       "observacoes": null
@@ -449,7 +558,7 @@
     {
       "id": 2,
       "funcionario_id": 2,
-      "projeto_id": 1796,
+      "projeto_id": 6,
       "data": "06-2025",
       "horas_trabalhadas": 10.0,
       "observacoes": null
@@ -457,7 +566,7 @@
     {
       "id": 3,
       "funcionario_id": 3,
-      "projeto_id": 2516,
+      "projeto_id": 20,
       "data": "06-2025",
       "horas_trabalhadas": 8.0,
       "observacoes": null
@@ -465,7 +574,7 @@
     {
       "id": 4,
       "funcionario_id": 4,
-      "projeto_id": 1881,
+      "projeto_id": 7,
       "data": "06-2025",
       "horas_trabalhadas": 9.0,
       "observacoes": null
@@ -481,7 +590,7 @@
     {
       "id": 6,
       "funcionario_id": 5,
-      "projeto_id": 656,
+      "projeto_id": 4,
       "data": "06-2025",
       "horas_trabalhadas": 4.0,
       "observacoes": null
@@ -489,7 +598,7 @@
     {
       "id": 7,
       "funcionario_id": 5,
-      "projeto_id": 669,
+      "projeto_id": 5,
       "data": "06-2025",
       "horas_trabalhadas": 4.0,
       "observacoes": null
@@ -497,7 +606,7 @@
     {
       "id": 8,
       "funcionario_id": 5,
-      "projeto_id": 1796,
+      "projeto_id": 6,
       "data": "06-2025",
       "horas_trabalhadas": 7.0,
       "observacoes": null
@@ -505,7 +614,7 @@
     {
       "id": 9,
       "funcionario_id": 5,
-      "projeto_id": 1796,
+      "projeto_id": 6,
       "data": "06-2025",
       "horas_trabalhadas": 7.5,
       "observacoes": null
@@ -513,7 +622,7 @@
     {
       "id": 12,
       "funcionario_id": 5,
-      "projeto_id": 3040,
+      "projeto_id": 104,
       "data": "06-2025",
       "horas_trabalhadas": 1.0,
       "observacoes": null
@@ -521,7 +630,7 @@
     {
       "id": 14,
       "funcionario_id": 2,
-      "projeto_id": 2857,
+      "projeto_id": 38,
       "data": "10-2025",
       "horas_trabalhadas": 12.0,
       "observacoes": null
@@ -529,7 +638,7 @@
     {
       "id": 15,
       "funcionario_id": 2,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "10-2025",
       "horas_trabalhadas": 2.0,
       "observacoes": null
@@ -537,7 +646,7 @@
     {
       "id": 16,
       "funcionario_id": 2,
-      "projeto_id": 9021,
+      "projeto_id": 3,
       "data": "11-2025",
       "horas_trabalhadas": 5.0,
       "observacoes": null
@@ -545,7 +654,7 @@
     {
       "id": 17,
       "funcionario_id": 2,
-      "projeto_id": 9014,
+      "projeto_id": 2,
       "data": "12-2025",
       "horas_trabalhadas": 20.0,
       "observacoes": null
@@ -553,7 +662,7 @@
     {
       "id": 18,
       "funcionario_id": 2,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "10-2025",
       "horas_trabalhadas": 8.0,
       "observacoes": null
@@ -561,7 +670,7 @@
     {
       "id": 19,
       "funcionario_id": 2,
-      "projeto_id": 656,
+      "projeto_id": 4,
       "data": "10-2025",
       "horas_trabalhadas": 80.0,
       "observacoes": null
@@ -569,7 +678,7 @@
     {
       "id": 20,
       "funcionario_id": 6,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "10-2025",
       "horas_trabalhadas": 40.0,
       "observacoes": null
@@ -577,7 +686,7 @@
     {
       "id": 21,
       "funcionario_id": 2,
-      "projeto_id": 2950,
+      "projeto_id": 51,
       "data": "10-2025",
       "horas_trabalhadas": 100.0,
       "observacoes": null
@@ -585,7 +694,7 @@
     {
       "id": 22,
       "funcionario_id": 7,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "11-2025",
       "horas_trabalhadas": 3.0,
       "observacoes": "a"
@@ -593,7 +702,7 @@
     {
       "id": 24,
       "funcionario_id": 7,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "11-2025",
       "horas_trabalhadas": 17.0,
       "observacoes": "teste2"
@@ -601,7 +710,7 @@
     {
       "id": 25,
       "funcionario_id": 4,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "11-2025",
       "horas_trabalhadas": 11.0,
       "observacoes": "Testando3"
@@ -609,7 +718,7 @@
     {
       "id": 26,
       "funcionario_id": 4,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "11-2025",
       "horas_trabalhadas": 26.0,
       "observacoes": "teste"
@@ -617,7 +726,7 @@
     {
       "id": 27,
       "funcionario_id": 4,
-      "projeto_id": 656,
+      "projeto_id": 4,
       "data": "11-2025",
       "horas_trabalhadas": 20.0,
       "observacoes": null
@@ -625,7 +734,7 @@
     {
       "id": 28,
       "funcionario_id": 4,
-      "projeto_id": 9010,
+      "projeto_id": 1,
       "data": "11-2025",
       "horas_trabalhadas": 2.0,
       "observacoes": "teste4"
@@ -633,18 +742,10 @@
     {
       "id": 29,
       "funcionario_id": 4,
-      "projeto_id": 9014,
+      "projeto_id": 2,
       "data": "11-2025",
       "horas_trabalhadas": 26.0,
       "observacoes": "teste5"
-    },
-    {
-      "id": 30,
-      "funcionario_id": 4,
-      "projeto_id": 669,
-      "data": "12-2025",
-      "horas_trabalhadas": 10.0,
-      "observacoes": null
     }
   ],
   "usuarios": [

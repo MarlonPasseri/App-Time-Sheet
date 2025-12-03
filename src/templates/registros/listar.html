@@ -86,7 +86,7 @@
                                     <select id="projeto_id" name="projeto_id" multiple required>
                                         <option></option>
                                         {% for projeto in projetos %}
-                                            <option value="{{ projeto.id }}">{{ projeto.id }} | {{ projeto.nome }}</option>
+                                            <option value="{{ projeto.id }}">{{ projeto.cod }} | {{ projeto.nome }}</option>
                                         {% endfor %}
                                     </select>
                                 </label>
@@ -159,7 +159,7 @@
                                             <option></option>
                                             {% for projeto in projetos %}
                                                 <option value="{{ projeto.id }}" {% if filtro_projeto_id == projeto.id %}selected{% endif %}>
-                                                    {{ projeto.id }} | {{ projeto.nome }}
+                                                    {{ projeto.cod }} | {{ projeto.nome }}
                                                 </option>
                                             {% endfor %}
                                         </select>
@@ -238,7 +238,7 @@
                                             <td class="px-6 py-4">
                                                 {{ registro.projeto }}
                                                 {% if registro.observacoes %}
-                                                <span class="material-symbols-outlined text-sm align-middle">attach_file</span>
+                                                    <span class="material-symbols-outlined text-sm align-middle">attach_file</span>
                                                 {% endif %}
                                             </td>
                                             <td class="px-6 py-4 text-center">{{ registro.data }}</td>
@@ -389,7 +389,7 @@
                                     <option></option>
                                     {% for projeto in projetos %}
                                         <option value="{{ projeto.id }}">
-                                            {{ projeto.id }} | {{ projeto.nome }}
+                                            {{ projeto.cod }} | {{ projeto.nome }}
                                         </option>
                                     {% endfor %}
                                 </select>
@@ -566,7 +566,7 @@
             };
 
             // IDs dos projetos que mostram o campo de observações
-            const projetosEspeciais = [9010, 9014, 9021]; 
+            const projetosEspeciais = [1, 2, 3]; 
         </script>
 
         <!-- Selects 2 -->

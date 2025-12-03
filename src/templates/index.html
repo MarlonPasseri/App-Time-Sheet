@@ -143,6 +143,11 @@
             (function() {
                 // == Gráfico de Pizza: Horas por Projeto ==
                 let projetosGrafico = {{ projetos|tojson|safe }};
+
+                const labelsCod = projetosGrafico.map(p => p.split("-")[0]);
+                const nomesProjetos = projetosGrafico.map(p => p.split("-")[1]); 
+
+
                 let horasProjetoGrafico = {{ horas|tojson|safe }};
 
                 if (!projetosGrafico || projetosGrafico.length === 0) {
@@ -151,14 +156,22 @@
                 }
 
                 const dataProjetos = {
-                    labels: projetosGrafico,   // cada fatia representa um projeto
+                    labels: labelsCod,   // cada fatia representa um projeto
                     values: horasProjetoGrafico,      // valores correspondentes às horas
                     type: 'pie',
-                    text: horasProjetoGrafico.map(h => h + ' h'),
+                    text: horasProjetoGrafico.map(h => h + 'h'),
                     textinfo: 'label+text',
-                    hoverinfo: 'label+text+percent',
+                    hoverinfo: 'text',
+
+                    hovertemplate:
+                        // "<b>Cod:</b> %{label}<br>" +
+                        "<b>Nome:</b> %{customdata}<br>" +
+                        "<b>Horas:</b> %{value}h<br>" +
+                        "<b>Percentual:</b> %{percent}<extra></extra>",
+
+                    customdata: nomesProjetos, // usado no hover
                     textposition: 'inside', // 'inside', 'outside' ou 'auto'
-                    // hovertemplate: "%{label}: %{text}<extra></extra>",
+
                     marker: {
                         colors: ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A', '#19D3F3', '#FF6692', '#B6E880'],
                         line: {
@@ -194,11 +207,12 @@
                     y: horasMesesGrafico,
                     type: 'bar',
                     text: horasMesesGrafico.map(h => h.toFixed(2) + 'h'),
-                    textposition: 'outside',
+                    hoverinfo: 'text',
+                    // textposition: 'outside',
                     marker: { 
-                    color: '#005a9c',
-                    line: { color: '#005593', width: 1 }
-                },
+                        color: '#0185b8',
+                        line: { color: '#005593', width: 1 }
+                    },
                 };
 
                 const layoutMeses = {
