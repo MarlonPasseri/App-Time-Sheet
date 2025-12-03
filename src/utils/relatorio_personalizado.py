@@ -5,8 +5,9 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles.numbers import FORMAT_NUMBER_00, FORMAT_DATE_YYYYMMDD2
 import os
 from datetime import datetime
+from io import BytesIO
 
-def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_ano, caminho_saida):
+def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_ano):
     """
     Gera um relatório mensal personalizado no formato do template fornecido pelo usuário.
     
@@ -201,15 +202,12 @@ def gerar_relatorio_mensal_personalizado(registros, funcionarios, projetos, mes_
     ws.column_dimensions['D'].width = 25
     
     # Salvar o arquivo
-    try:
-        wb.save(caminho_saida)
-        return caminho_saida
-    except Exception as e:
-        print(f"Erro ao salvar arquivo Excel: {e}")
-        # Tentar salvar em um local alternativo
-        alt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), f"controle_horas_alt_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx")
-        wb.save(alt_path)
-        return alt_path
+    # Em vez de salvar em arquivo, salvar em memória
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)  # volta o ponteiro pro início
+
+    return output
 
 # Função para adaptar o código de exportação existente
 def adaptar_exportacao_relatorio_mensal(db, funcionario_id=None, projeto_id=None, mes_ano=None):
@@ -223,7 +221,7 @@ def adaptar_exportacao_relatorio_mensal(db, funcionario_id=None, projeto_id=None
         mes_ano: Mês/ano para filtrar no formato "YYYY-MM" (opcional)
     
     Returns:
-        Caminho do arquivo Excel gerado
+        (arquivo_bytes, nome_arquivo)
     """
     try:
         # Obter os registros filtrados
@@ -246,16 +244,17 @@ def adaptar_exportacao_relatorio_mensal(db, funcionario_id=None, projeto_id=None
         # Definir o nome do arquivo de saída
         mes_ano_str = mes_ano if mes_ano else datetime.now().strftime("%Y-%m")
         nome_arquivo = f"controle_horas_{mes_ano_str}.xlsx"
-        caminho_saida = os.path.join(os.path.dirname(os.path.dirname(__file__)), nome_arquivo)
-        
-        # Gerar o relatório personalizado
-        return gerar_relatorio_mensal_personalizado(
+
+        # Gerar o arquivo personalizado
+        arquivo_bytes = gerar_relatorio_mensal_personalizado(
             registros=registros,
             funcionarios=funcionarios,
             projetos=projetos,
-            mes_ano=mes_ano,
-            caminho_saida=caminho_saida
+            mes_ano=mes_ano
         )
+
+        return arquivo_bytes, nome_arquivo
+    
     except Exception as e:
         print(f"Erro na adaptação da exportação: {e}")
         raise
