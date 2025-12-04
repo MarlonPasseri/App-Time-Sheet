@@ -101,8 +101,159 @@
                 </form>
                 {% endif %}
                 <!-- Notifications Section -->
+                {% if admin_check %}
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight">
+                                Configurações de Alertas
+                            </p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                Defina o total de horas do mês atual e gerencie os avisos exibidos para os colaboradores.
+                            </p>
+                        </div>
+                        <span class="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+                            Área do Administrador
+                        </span>
+                    </div>
+
+                    <!-- Form de configuração -->
+                    <form method="POST" action="{{ url_for('auth.perfil') }}" class="space-y-6">
+
+                        <!-- Total de horas do mês atual -->
+                        <div class="flex flex-col gap-2 pb-4">
+                            <label for="horas_mes_atual" class="text-sm font-medium text-[#111618] dark:text-gray-200">
+                                Total de horas do mês atual
+                            </label>
+                            <div class="flex items-center gap-3">
+                                <input
+                                    type="number"
+                                    min="0"
+                                    id="horas_mes_atual"
+                                    name="horas_mes_atual"
+                                    class="w-32 px-3 py-2 rounded-lg border border-[#dbe2e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-[#111618] dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                                />
+                                <span class="text-sm text-gray-500 dark:text-gray-400">
+                                    Defina a meta de horas para o mês em andamento.
+                                </span>
+                                <!-- Botão geral para salvar só a meta de horas -->
+                                <button
+                                    type="submit"
+                                    name="acao"
+                                    value="salvar_config"
+                                    class="ml-auto inline-flex items-center gap-2 rounded-lg bg-gray-900 dark:bg-gray-100 px-4 py-2 text-sm font-semibold text-white dark:text-gray-900 shadow-sm hover:bg-gray-800 dark:hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                >
+                                    <span class="material-symbols-outlined text-base">save</span>
+                                    <span>Salvar configurações</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="POST" action="{{ url_for('auth.perfil') }}" class="space-y-6">
+                        <!-- Cadastro de novo aviso -->
+                        <div class="border-y border-gray-200 dark:border-gray-700 py-4">
+                            <p class="text-sm font-medium text-[#111618] dark:text-gray-200 mb-3">
+                                Novo aviso para colaboradores
+                            </p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                                <div class="md:col-span-1">
+                                    <label for="titulo_aviso" class="text-xs font-medium text-[#111618] dark:text-gray-300">
+                                        Título do aviso
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="titulo_aviso"
+                                        name="titulo_aviso"
+                                        placeholder="Ex.: Fechamento de ponto"
+                                        class="mt-1 w-full px-3 py-2 rounded-lg border border-[#dbe2e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-[#111618] dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                                        required
+                                    />
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="mensagem_aviso" class="text-xs font-medium text-[#111618] dark:text-gray-300">
+                                        Mensagem
+                                    </label>
+                                    <textarea
+                                        id="mensagem_aviso"
+                                        name="mensagem_aviso"
+                                        rows="2"
+                                        placeholder="Descreva o comunicado que será exibido para os colaboradores..."
+                                        class="mt-1 w-full px-3 py-2 rounded-lg border border-[#dbe2e6] dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-[#111618] dark:text-white resize-y focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary"
+                                        required
+                                    ></textarea>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end">
+                                <button
+                                    type="submit"
+                                    name="acao"
+                                    value="criar_aviso"
+                                    class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                >
+                                    <span class="material-symbols-outlined text-base">add</span>
+                                    <span>Criar aviso</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Lista de avisos existentes -->
+                    <div class="mt-6">
+                        <p class="text-sm font-medium text-[#111618] dark:text-gray-200 mb-3">
+                            Avisos ativos
+                        </p>
+
+                        {% if avisos %}
+                            <div class="space-y-3">
+                                {% for aviso in avisos %}
+                                    <div class="flex justify-between items-start p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-700/60">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-semibold text-[#111618] dark:text-white">
+                                                {{ aviso.titulo }}
+                                            </p>
+                                            <p class="text-sm text-gray-600 dark:text-gray-300">
+                                                {{ aviso.mensagem }}
+                                            </p>
+                                            <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                                                Criado em {{ aviso.data }}
+                                            </p>
+                                        </div>
+
+                                        <!-- Ações do aviso -->
+                                        <div class="flex flex-col items-end gap-2 ml-4">
+
+                                            <form method="POST" action="{{ url_for('auth.perfil') }}">
+                                                <input type="hidden" name="acao" value="remover_aviso">
+                                                <button
+                                                    type="submit"
+                                                    name="aviso_id"
+                                                    value="{{ aviso.id }}"
+                                                    class="text-xs inline-flex items-center gap-1 rounded-full border border-red-200 dark:border-red-800 px-3 py-1 text-red-600 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/40 transition"
+                                                >
+                                                    <span class="material-symbols-outlined text-sm">delete</span>
+                                                    <span>Remover</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="flex items-center gap-2 rounded-lg bg-gray-50 dark:bg-gray-700/40 px-3 py-2">
+                                <span class="material-symbols-outlined text-gray-400 text-base">info</span>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    Nenhum aviso cadastrado ainda. Use o formulário acima para criar o primeiro.
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% endif %}
                 <!-- <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
-                    <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Notificações</p>
+                    <p class="text-[#111618] dark:text-white text-2xl font-bold leading-tight tracking-tight mb-6">Alertas Colaboradores</p>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                             <div>
@@ -139,6 +290,7 @@
             </div>
         </div>
     </main>
+
     <!-- Modal troca de imagem -->
     <div class="modal fade" id="modalFoto" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">

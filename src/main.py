@@ -30,10 +30,13 @@ def index():
 
     projetos, horas = calcular_horas_por_projeto(usuario_id)
     meses, horas_mensais = calcular_horas_por_mes(usuario_id)
-    total_horas_mes, nome_mes_atual = calcular_total_horas_mes(usuario_id)
+    total_horas_regis, nome_mes_atual = calcular_total_horas_mes(usuario_id)
 
     usuario = db.obter_usuario(usuario_id)
     admin_check = session.get('usuario_tipo') == 'administrador'
+
+    avisos = db.listar_avisos()
+    total_horas_mes_atual = db.obter_horas_mes_atual()
 
     # Passar os dados para o template
     return render_template(
@@ -41,10 +44,13 @@ def index():
         projetos=projetos, 
         horas=horas, meses=meses, 
         horas_mensais=horas_mensais, 
-        total_horas_mes=total_horas_mes, 
+        total_horas_regis=total_horas_regis, 
         nome_mes_atual=nome_mes_atual, 
         usuario=usuario, 
-        admin_check=admin_check)
+        admin_check=admin_check,
+        avisos=avisos,
+        total_horas_mes_atual=total_horas_mes_atual
+    )
 
 @app.route('/home')
 def home():

@@ -62,6 +62,8 @@ class BancoDeDados:
         self.projetos = []
         self.registros_horas = []
         self.usuarios = []
+        self.configuracoes = Configuracoes()
+
         self.carregar_dados()
         
         # Verificar se existe um administrador, caso contrário, criar um padrão
@@ -106,6 +108,14 @@ class BancoDeDados:
                 self.projetos = [Projeto.from_dict(p) for p in dados.get('projetos', [])]
                 self.registros_horas = [RegistroHoras.from_dict(r) for r in dados.get('registros_horas', [])]
                 self.usuarios = [Usuario.from_dict(u) for u in dados.get('usuarios', [])]
+
+                #Carregar configurações (se não tiver, mantém o default)
+                config_raw = dados.get('configuracoes')
+                if config_raw:
+                    self.configuracoes = Configuracoes.from_dict(config_raw)
+                else:
+                    self.configuracoes = Configuracoes()
+
             except Exception as e:
                 print(f"Erro ao carregar dados: {e}")
                 # Inicializa com listas vazias em caso de erro
@@ -113,12 +123,14 @@ class BancoDeDados:
                 self.projetos = []
                 self.registros_horas = []
                 self.usuarios = []
+                self.configuracoes = Configuracoes()
         else:
             # Inicializa com listas vazias se o arquivo não existir
             # self.funcionarios = []
             self.projetos = []
             self.registros_horas = []
             self.usuarios = []
+            self.configuracoes = Configuracoes()
             
             # Carrega os projetos pré-definidos
             # self._carregar_projetos_predefinidos()
@@ -130,7 +142,8 @@ class BancoDeDados:
             # 'funcionarios': [f.to_dict() for f in self.funcionarios],
             'projetos': [p.to_dict() for p in self.projetos],
             'registros_horas': [r.to_dict() for r in self.registros_horas],
-            'usuarios': [u.to_dict() for u in self.usuarios]
+            'usuarios': [u.to_dict() for u in self.usuarios],
+            'configuracoes': self.configuracoes.to_dict()
         }
         
         try:
@@ -630,6 +643,63 @@ class BancoDeDados:
             self.salvar_dados()
             return True
         return False
+    
+    # ==================================== #
+    #  Métodos para CONFIGURAÇÕES GERAIS
+    # ==================================== #
+
+    # --- Horas do mês atual ---
+
+    def obter_horas_mes_atual(self):
+        return self.configuracoes.horas_mes_atual
+
+    def definir_horas_mes_atual(self, horas):
+        self.configuracoes.horas_mes_atual = horas
+        self.salvar_dados()
+        return True
+
+    # --- Avisos do quadro ---
+
+    def listar_avisos(self):
+        return self.configuracoes.avisos
+
+    def adicionar_aviso(self, titulo, mensagem):
+        avisos = self.configuracoes.avisos
+
+        if len(avisos) < 3:
+            novo_id = 1
+            if avisos:
+                novo_id = max(a.id for a in avisos if a.id is not None) + 1
+
+            aviso = Aviso(
+                id=novo_id,
+                titulo=titulo,
+                mensagem=mensagem,
+            )
+
+            avisos.append(aviso)
+            self.salvar_dados()
+            return aviso, "Aviso adicionado com sucesso"
+        else:
+            return None, "Número máximo de avisos atingido (3), remova algum para adicionar um novo!"
+
+
+    def remover_aviso(self, aviso_id: int):
+        aviso = None
+
+        for aviso in self.configuracoes.avisos:
+            if aviso.id == aviso_id:
+                aviso = aviso
+                break
+        
+        if aviso:
+            print("entrou na remocao")
+            self.configuracoes.avisos.remove(aviso)
+            self.salvar_dados()
+            return True
+        
+        return False
+
 
 # Manter as classes existentes
 # class Funcionario:
@@ -710,3 +780,48 @@ class RegistroHoras:
         # if 'mes_ano_referencia' in data:
         #     registro.mes_ano_referencia = data.get('mes_ano_referencia')
         return registro
+
+class Aviso:
+    def __init__(self, id=None, titulo=None, mensagem=None, data=None):
+        self.id = id
+        self.titulo = titulo
+        self.mensagem = mensagem
+        self.data = data or datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "titulo": self.titulo,
+            "mensagem": self.mensagem,
+            "data": self.data,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            id=data.get("id"),
+            titulo=data.get("titulo"),
+            mensagem=data.get("mensagem"),
+            data=data.get("data"),
+        )
+
+
+class Configuracoes:
+    def __init__(self, horas_mes_atual=None, avisos=None):
+        self.horas_mes_atual = horas_mes_atual   # pode ser int/float
+        self.avisos = avisos or []               # lista de Aviso
+
+    def to_dict(self):
+        return {
+            "horas_mes_atual": self.horas_mes_atual,
+            "avisos": [a.to_dict() for a in self.avisos],
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        avisos_data = data.get("avisos", [])
+        avisos = [Aviso.from_dict(a) for a in avisos_data]
+        return cls(
+            horas_mes_atual=data.get("horas_mes_atual"),
+            avisos=avisos,
+        )
