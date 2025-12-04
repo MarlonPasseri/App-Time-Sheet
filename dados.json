@@ -812,5 +812,22 @@
       "cod_funcionario": "-",
       "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     }
-  ]
+  ],
+  "configuracoes": {
+    "horas_mes_atual": 80,
+    "avisos": [
+      {
+        "id": 1,
+        "titulo": "Teste",
+        "mensagem": "testando quadro de avisos",
+        "data": "03/12/2025 23:28"
+      },
+      {
+        "id": 2,
+        "titulo": "Teste2",
+        "mensagem": "testando quadro de avisos 2",
+        "data": "03/12/2025 23:29"
+      }
+    ]
+  }
 }

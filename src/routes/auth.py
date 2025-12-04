@@ -115,6 +115,8 @@ def perfil():
         session.clear()
         flash('Usuário não encontrado.', 'danger')
         return redirect(url_for('auth.login'))
+    
+    avisos = db.listar_avisos()
 
     if request.method == 'POST':
         acao = request.form.get('acao')
@@ -184,12 +186,43 @@ def perfil():
             #             'success' if sucesso else 'danger'
             #         )
 
+        # -------- ALTERAR TOTAL DE HORAS DO MÊS --------
+        elif acao == "salvar_config":
+            horas = request.form.get("horas_mes_atual", type=int)
+            sucesso = db.definir_horas_mes_atual(horas)
+            if sucesso:
+                flash(f'Hora total do mês atual atualizada com sucesso para {horas}h!', 'success')
+            else:
+                flash('Erro ao atualizar hora total do mês atual', 'danger')
+
+        # -------- ALTERAR QUADRO DE AVISOS --------
+        elif acao == "criar_aviso":
+            titulo = request.form.get("titulo_aviso")
+            mensagem = request.form.get("mensagem_aviso")
+
+            sucesso, mensagem = db.adicionar_aviso(titulo=titulo, mensagem=mensagem)
+            if sucesso:
+                flash('Aviso adicionado com sucesso!', 'success')
+            else:
+                flash(f'Erro ao adicionar aviso: {mensagem}', 'danger')
+        
+        # -------- REMOVER AVISOS --------
+        elif acao == "remover_aviso":
+            aviso_id = request.form.get("aviso_id", type=int)
+
+            sucesso = db.remover_aviso(aviso_id=aviso_id)
+            if sucesso:
+                flash('Aviso removido com sucesso!', 'success')
+            else:
+                flash(f'Erro ao remover aviso', 'danger')
+
         # Atualiza o objeto usuário após qualquer alteração
-        usuario = db.obter_usuario(usuario_id)
+        # usuario = db.obter_usuario(usuario_id)
 
     return render_template(
         'auth/perfil.html',
         usuario=usuario,
-        admin_check = usuario and usuario.tipo == 'administrador'
+        admin_check = usuario and usuario.tipo == 'administrador',
+        avisos=avisos
     )
 
