@@ -746,6 +746,150 @@
       "data": "11-2025",
       "horas_trabalhadas": 26.0,
       "observacoes": "teste5"
+    },
+    {
+      "id": 30,
+      "funcionario_id": 3,
+      "projeto_id": 19,
+      "data": "07-2025",
+      "horas_trabalhadas": 50.0,
+      "observacoes": null
+    },
+    {
+      "id": 31,
+      "funcionario_id": 3,
+      "projeto_id": 3,
+      "data": "11-2025",
+      "horas_trabalhadas": 8.0,
+      "observacoes": "Recesso sexta-feira"
+    },
+    {
+      "id": 32,
+      "funcionario_id": 8,
+      "projeto_id": 80,
+      "data": "11-2025",
+      "horas_trabalhadas": 50.0,
+      "observacoes": null
+    },
+    {
+      "id": 34,
+      "funcionario_id": 11,
+      "projeto_id": 3,
+      "data": "11-2025",
+      "horas_trabalhadas": 80.0,
+      "observacoes": "Férias"
+    },
+    {
+      "id": 35,
+      "funcionario_id": 12,
+      "projeto_id": 51,
+      "data": "12-2025",
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
+    },
+    {
+      "id": 36,
+      "funcionario_id": 13,
+      "projeto_id": 4,
+      "data": "10-2025",
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
+    },
+    {
+      "id": 37,
+      "funcionario_id": 13,
+      "projeto_id": 9,
+      "data": "10-2025",
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
+    },
+    {
+      "id": 38,
+      "funcionario_id": 13,
+      "projeto_id": 35,
+      "data": "10-2025",
+      "horas_trabalhadas": 100.0,
+      "observacoes": null
+    },
+    {
+      "id": 39,
+      "funcionario_id": 13,
+      "projeto_id": 2,
+      "data": "10-2025",
+      "horas_trabalhadas": 4.0,
+      "observacoes": "Problema 01"
+    },
+    {
+      "id": 40,
+      "funcionario_id": 13,
+      "projeto_id": 2,
+      "data": "10-2025",
+      "horas_trabalhadas": 6.0,
+      "observacoes": "Problema 02"
+    },
+    {
+      "id": 41,
+      "funcionario_id": 13,
+      "projeto_id": 2,
+      "data": "10-2025",
+      "horas_trabalhadas": 2.0,
+      "observacoes": "Problema 03"
+    },
+    {
+      "id": 42,
+      "funcionario_id": 13,
+      "projeto_id": 1,
+      "data": "10-2025",
+      "horas_trabalhadas": 8.0,
+      "observacoes": "TimeSheet, Power BI, TI"
+    },
+    {
+      "id": 43,
+      "funcionario_id": 13,
+      "projeto_id": 3,
+      "data": "10-2025",
+      "horas_trabalhadas": 8.0,
+      "observacoes": "Folga - 1 dia - 28/10"
+    },
+    {
+      "id": 44,
+      "funcionario_id": 13,
+      "projeto_id": 4,
+      "data": "11-2025",
+      "horas_trabalhadas": 20.0,
+      "observacoes": null
+    },
+    {
+      "id": 45,
+      "funcionario_id": 13,
+      "projeto_id": 35,
+      "data": "11-2025",
+      "horas_trabalhadas": 120.0,
+      "observacoes": null
+    },
+    {
+      "id": 46,
+      "funcionario_id": 13,
+      "projeto_id": 2,
+      "data": "11-2025",
+      "horas_trabalhadas": 2.0,
+      "observacoes": "Problema 06"
+    },
+    {
+      "id": 47,
+      "funcionario_id": 13,
+      "projeto_id": 2,
+      "data": "11-2025",
+      "horas_trabalhadas": 2.0,
+      "observacoes": "Problema 07"
+    },
+    {
+      "id": 48,
+      "funcionario_id": 13,
+      "projeto_id": 1,
+      "data": "11-2025",
+      "horas_trabalhadas": 24.0,
+      "observacoes": "TI, POWER BI E OUTRAS ATIVIDADES"
     }
   ],
   "usuarios": [
@@ -756,7 +900,7 @@
       "senha_hash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
       "tipo": "administrador",
       "cod_funcionario": null,
-      "img_perfil": "https://us.123rf.com/450wm/tuktukdesign/tuktukdesign2201/tuktukdesign220100003/181857638-vetor-de-%C3%ADcone-de-avatar-s%C3%ADmbolo-de-perfil-de-usu%C3%A1rio-feminino-para-neg%C3%B3cios-em-uma-ilustra%C3%A7%C3%A3o-de.jpg?ver=6"
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/p1/52120539-simples-masculino-avatar-silhueta-icone-homem-com-curto-cabelo-do-utilizador-perfis-e-contato-em-formacao-dentro-formularios-isolado-ilustracao-vetor.jpg"
     },
     {
       "id": 2,
@@ -811,6 +955,60 @@
       "tipo": "funcionario",
       "cod_funcionario": "-",
       "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+    },
+    {
+      "id": 8,
+      "nome": "Marlon Passeri Mello",
+      "email": "marlon.passeri@geoprojetos.com.br",
+      "senha_hash": "6ee5418e37a3d54429b1d91fdfccb86be352d31a90efe484b63920ac500f24a8",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/p1/52120539-simples-masculino-avatar-silhueta-icone-homem-com-curto-cabelo-do-utilizador-perfis-e-contato-em-formacao-dentro-formularios-isolado-ilustracao-vetor.jpg"
+    },
+    {
+      "id": 9,
+      "nome": "teste lalalend",
+      "email": "lalalend@geoprojetos.com.br",
+      "senha_hash": "2d4d874d28c95e93aaf8bd4dfae1770929bce0103d022b0faa7e02c0d3f8d97f",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+    },
+    {
+      "id": 10,
+      "nome": "Felicio Siqueira Neto",
+      "email": "felicio.neto@geoprojetos.com.br",
+      "senha_hash": "682e953df1d152ccfc11a6f12467c9f2c8477577369af0be9e143786987f53f8",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+    },
+    {
+      "id": 11,
+      "nome": "Leonardo Marques",
+      "email": "leonardo.marques@geoprojetos.com.br",
+      "senha_hash": "222fc9c7420b40ba966eb0ff5e57078ae7298cf039a578e3d6aa2fa7c8cd0cda",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+    },
+    {
+      "id": 12,
+      "nome": "Luiz Athayde Rodrigues Neto",
+      "email": "luiz.net@geoprojetos.com.br",
+      "senha_hash": "3184ad299c2dd2c316dbc7d5e74ca0c4100d5fcebac9ef1bde0da191f9478827",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
+    },
+    {
+      "id": 13,
+      "nome": "Tais Araujo dos Santos",
+      "email": "tais.santos@geoprojetos.com.br",
+      "senha_hash": "2eb127f96aecd2ee8607205df404ba0cf5c078ebf8f2c3348a247f0f02bc260e",
+      "tipo": "funcionario",
+      "cod_funcionario": "-",
+      "img_perfil": "https://static.vecteezy.com/ti/vetor-gratis/t1/13360247-de-icone-de-foto-avatar-padrao-simbolo-de-sinal-de-perfil-de-midia-social-vetor.jpg"
     }
   ],
   "configuracoes": {
@@ -818,15 +1016,9 @@
     "avisos": [
       {
         "id": 1,
-        "titulo": "Teste",
-        "mensagem": "testando quadro de avisos",
-        "data": "03/12/2025 23:28"
-      },
-      {
-        "id": 2,
-        "titulo": "Teste2",
-        "mensagem": "testando quadro de avisos 2",
-        "data": "03/12/2025 23:29"
+        "titulo": "Feriados ",
+        "mensagem": "Aos colaboradores colocar 8 horas na GP 9021, referente ao recesso na sexta-feira dia 13\r\n",
+        "data": "04/12/2025 08:56"
       }
     ]
   }
