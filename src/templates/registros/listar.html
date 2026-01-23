@@ -354,6 +354,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mt-10">
+                        <div class="bg-white dark:bg-background-dark/50 p-6 md:p-8 rounded-xl shadow-sm border border-gray-light dark:border-gray-700">
+                            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                <div class="flex items-center gap-4">
+                                    <span id="icone-finalizar-mes" class="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700 text-xl font-bold">
+                                        M
+                                    </span>
+                                    <div>
+                                        <p class="text-text-primary dark:text-white text-lg font-semibold">Finalizar mês</p>
+                                        <p id="texto-finalizar-mes" class="text-sm text-gray-600 dark:text-gray-300">
+                                            {{ usuario.nome }}
+                                        </p>
+                                    </div>
+                                </div>
+                                <button
+                                    id="btn-finalizar-mes"
+                                    type="button"
+                                    data-usuario="{{ usuario.nome }}"
+                                    class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-green-600 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-green-500 transition-colors"
+                                >
+                                    <span class="material-symbols-outlined text-xl">task_alt</span>
+                                    <span>Finalizar mês</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </main>
 
@@ -598,6 +624,60 @@
 
             dataEdit.addEventListener("click", () => {
                 dataEdit.showPicker(); // força abrir o seletor
+            });
+        </script>
+
+        <!-- Botão finalizar mês -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const botaoFinalizar = document.getElementById("btn-finalizar-mes");
+                const iconeFinalizar = document.getElementById("icone-finalizar-mes");
+                const textoFinalizar = document.getElementById("texto-finalizar-mes");
+
+                if (!botaoFinalizar || !iconeFinalizar || !textoFinalizar) {
+                    return;
+                }
+
+                const meses = [
+                    "Janeiro",
+                    "Fevereiro",
+                    "Março",
+                    "Abril",
+                    "Maio",
+                    "Junho",
+                    "Julho",
+                    "Agosto",
+                    "Setembro",
+                    "Outubro",
+                    "Novembro",
+                    "Dezembro"
+                ];
+
+                const obterMesSelecionado = () => {
+                    const valor = dataInput?.value || "";
+                    if (!valor) {
+                        return new Date();
+                    }
+                    const [ano, mes] = valor.split("-");
+                    return new Date(Number(ano), Number(mes) - 1, 1);
+                };
+
+                const atualizarIconeMes = () => {
+                    const dataSelecionada = obterMesSelecionado();
+                    const nomeMes = meses[dataSelecionada.getMonth()] || "Mês";
+                    const inicialMes = nomeMes.charAt(0).toUpperCase();
+                    const nomeUsuario = botaoFinalizar.dataset.usuario || "";
+
+                    iconeFinalizar.textContent = inicialMes;
+                    textoFinalizar.textContent = `${nomeMes} • ${nomeUsuario}`.trim();
+                    botaoFinalizar.setAttribute(
+                        "aria-label",
+                        `Finalizar mês de ${nomeMes} para ${nomeUsuario}`.trim()
+                    );
+                };
+
+                botaoFinalizar.addEventListener("click", atualizarIconeMes);
+                atualizarIconeMes();
             });
         </script>
 
