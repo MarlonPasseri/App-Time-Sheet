@@ -372,6 +372,8 @@
                                     id="btn-finalizar-mes"
                                     type="button"
                                     data-usuario="{{ usuario.nome }}"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalFinalizarMes"
                                     class="flex items-center justify-center gap-2 rounded-lg h-12 px-6 bg-green-600 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-green-500 transition-colors"
                                 >
                                     <span class="material-symbols-outlined text-xl">task_alt</span>
@@ -382,6 +384,32 @@
                     </div>
                 </div>
             </main>
+
+            <!-- Modal finalizar mês -->
+            <div class="modal fade" id="modalFinalizarMes" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered max-w-xl">
+                    <div class="modal-content dark:bg-gray-800">
+                        <div class="modal-header border-b dark:border-gray-700">
+                            <h5 class="modal-title text-xl font-semibold">Finalizar mês</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body space-y-3">
+                            <p class="text-text-primary dark:text-white">
+                                Revise as informações para ter certeza de que está tudo certo e confirme se deseja finalizar o mês.
+                            </p>
+                            <p id="texto-finalizar-modal" class="text-sm text-gray-600 dark:text-gray-300"></p>
+                        </div>
+                        <div class="modal-footer border-t dark:border-gray-700">
+                            <button type="button" class="px-4 py-2 bg-gray-500 text-white rounded-lg" data-bs-dismiss="modal">
+                                Cancelar
+                            </button>
+                            <button type="button" id="confirmar-finalizar-mes" data-bs-dismiss="modal" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500">
+                                Confirmar finalização
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Modal editar -->
             <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
@@ -633,8 +661,10 @@
                 const botaoFinalizar = document.getElementById("btn-finalizar-mes");
                 const iconeFinalizar = document.getElementById("icone-finalizar-mes");
                 const textoFinalizar = document.getElementById("texto-finalizar-mes");
+                const textoModal = document.getElementById("texto-finalizar-modal");
+                const confirmarFinalizacao = document.getElementById("confirmar-finalizar-mes");
 
-                if (!botaoFinalizar || !iconeFinalizar || !textoFinalizar) {
+                if (!botaoFinalizar || !iconeFinalizar || !textoFinalizar || !textoModal || !confirmarFinalizacao) {
                     return;
                 }
 
@@ -670,13 +700,35 @@
 
                     iconeFinalizar.textContent = inicialMes;
                     textoFinalizar.textContent = `${nomeMes} • ${nomeUsuario}`.trim();
+                    textoModal.textContent = `${nomeMes} • ${nomeUsuario}`.trim();
                     botaoFinalizar.setAttribute(
                         "aria-label",
                         `Finalizar mês de ${nomeMes} para ${nomeUsuario}`.trim()
                     );
                 };
 
+                const salvarFinalizacao = () => {
+                    const dataSelecionada = obterMesSelecionado();
+                    const nomeMes = meses[dataSelecionada.getMonth()] || "Mês";
+                    const inicialMes = nomeMes.charAt(0).toUpperCase();
+                    const nomeUsuario = botaoFinalizar.dataset.usuario || "";
+                    const mesAno = `${String(dataSelecionada.getMonth() + 1).padStart(2, "0")}-${dataSelecionada.getFullYear()}`;
+                    const armazenamento = JSON.parse(localStorage.getItem("finalizacoes_mes") || "{}");
+
+                    armazenamento[nomeUsuario] = {
+                        inicial: inicialMes,
+                        mes: nomeMes,
+                        mes_ano: mesAno
+                    };
+
+                    localStorage.setItem("finalizacoes_mes", JSON.stringify(armazenamento));
+                };
+
                 botaoFinalizar.addEventListener("click", atualizarIconeMes);
+                confirmarFinalizacao.addEventListener("click", () => {
+                    salvarFinalizacao();
+                    atualizarIconeMes();
+                });
                 atualizarIconeMes();
             });
         </script>
