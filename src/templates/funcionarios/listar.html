@@ -114,7 +114,12 @@
                                             <td class="p-4 text-gray-600 dark:text-gray-300">
                                                 <img alt="User avatar" class="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-gray-800" data-alt="User avatar" src="{{ funcionario.img_perfil }}"/>
                                             </td>
-                                            <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.nome }}</td>
+                                            <td class="p-4 text-gray-600 dark:text-gray-300">
+                                                <div class="flex items-center gap-2" data-colaborador-nome="{{ funcionario.nome }}">
+                                                    <span class="finalizacao-mes-badge hidden h-6 w-6 items-center justify-center rounded-full bg-green-100 text-green-700 text-xs font-bold"></span>
+                                                    <span>{{ funcionario.nome }}</span>
+                                                </div>
+                                            </td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">{{ funcionario.email }}</td>
                                             <td class="p-4 text-gray-600 dark:text-gray-300">
                                                 <div class="flex gap-2 justify-end pr-6">
@@ -371,6 +376,35 @@
             });
         </script>
 
+        <script>
+            const aplicarBadgesFinalizacao = () => {
+                const armazenamento = JSON.parse(localStorage.getItem("finalizacoes_mes") || "{}");
+                document.querySelectorAll("[data-colaborador-nome]").forEach((linha) => {
+                    const nome = linha.dataset.colaboradorNome || "";
+                    const badge = linha.querySelector(".finalizacao-mes-badge");
+                    const registro = armazenamento[nome];
+
+                    if (!badge) {
+                        return;
+                    }
+
+                    if (registro?.inicial) {
+                        badge.textContent = registro.inicial;
+                        badge.classList.remove("hidden");
+                        badge.classList.add("flex");
+                        badge.setAttribute("title", `Mês finalizado: ${registro.mes}`);
+                    } else {
+                        badge.textContent = "";
+                        badge.classList.add("hidden");
+                        badge.classList.remove("flex");
+                        badge.removeAttribute("title");
+                    }
+                });
+            };
+
+            document.addEventListener("DOMContentLoaded", aplicarBadgesFinalizacao);
+        </script>
+
         <!-- Modal editar -->
         <script>
             const modalEditar = document.getElementById('modalEditar');
@@ -449,6 +483,7 @@
                     return;
                 }
                 alvo.innerHTML = novoFragmento.innerHTML;
+                aplicarBadgesFinalizacao();
 
                 // atualiza a url no navegador sem recarregar (mantém histórico)
                 if (pushUrl) {
